@@ -8,3 +8,4 @@ conf = WechatConf(
     encrypt_mode='safe',  # 可选项：normal/compatible/safe，分别对应于 明文/兼容/安全 模式
     encoding_aes_key='your_encoding_aes_key'  # 如果传入此值则必须保证同时传入 token, appid
 )
+
