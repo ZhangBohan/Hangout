@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 import requests
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
+from wechat.models import WechatAuth, Account
 from wechat_sdk import WechatConf, WechatBasic
 import logging
 
@@ -39,6 +40,9 @@ def callback(request):
 
 
 def auth(request):
+    if request.session['account']:
+        return HttpResponse("ok")
+
     code = request.GET.get('code')
     if not code:
         encoded_url = quote_plus(request.build_absolute_uri(reverse('auth')))
@@ -69,13 +73,22 @@ def auth(request):
     access_token = data.get('access_token')
     refresh_token = data.get('refresh_token')
     openid = data.get('openid')
-    union_id = data.get('unionid')
+    unionid = data.get('unionid')
 
     rv = requests.get('https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN' % (
         access_token, openid))
 
     content = rv.content.decode('utf-8')
     user_data = json.loads(content)
+    user_data.pop('privilege')
+    auth, created = WechatAuth.objects.update_or_create(unionid=unionid,
+                                                        defaults=dict(access_token=access_token,
+                                                                      refresh_token=refresh_token,
+                                                                      **user_data))
+    if created:
+        account = Account.objects.create(nickname=auth.nickname, avatar_url=auth.headimgurl)
+    else:
+        account = Account.objects.get(pk=auth.account_id)
 
-    print('user_data:', user_data)
-    return HttpResponse(rv.content)
+    request.session['account'] = account
+    return HttpResponse("ok")

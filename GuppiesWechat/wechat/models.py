@@ -8,18 +8,10 @@ class Account(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Session(models.Model):
-    account_id = models.ForeignKey("Account")
-    token = models.CharField("token", max_length=255)
-    expired_at = models.DateTimeField()
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
 class WechatAuth(models.Model):
     """
     参数	说明
-    subscribe	用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
+
     openid	用户的标识，对当前公众号唯一
     nickname	用户的昵称
     sex	用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
@@ -30,11 +22,9 @@ class WechatAuth(models.Model):
     headimgurl	用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。
     subscribe_time	用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
     unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。详见：获取用户个人信息（UnionID机制）
-    remark	公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注
-    groupid	用户所在的分组ID
     """
-    subscribe = models.SmallIntegerField("订阅标识")
     openid = models.CharField("openid", max_length=100)
+    unionid = models.CharField("unionid", max_length=100)
     nickname = models.CharField("昵称", max_length=100)
     sex = models.SmallIntegerField("性别", choices=((0, "未知"), (1, "男性"), (2, "女性")))
     city = models.CharField("城市", max_length=100)
@@ -42,10 +32,6 @@ class WechatAuth(models.Model):
     province = models.CharField("省份", max_length=100)
     language = models.CharField("语言", max_length=100)
     headimgurl = models.URLField("头像")
-    subscribe_time = models.BigIntegerField("关注时间", null=True)
-    unionid = models.CharField("unionid", max_length=100)
-    remark = models.CharField("血液", max_length=100, null=True)
-    groupid = models.CharField("分组ID", max_length=100, null=True)
 
     access_token = models.CharField("access_token", max_length=255)
     refresh_token = models.CharField("refresh_token", max_length=255)
