@@ -40,7 +40,7 @@ def callback(request):
 
 
 def auth(request):
-    if request.session['account']:
+    if 'account' in request.session:
         return HttpResponse("ok")
 
     code = request.GET.get('code')
