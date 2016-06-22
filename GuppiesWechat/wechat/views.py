@@ -99,9 +99,9 @@ def auth(request):
                                                                           **user_data))
     account = Account.objects.get_or_create(pk=auth.account_id,
                                             defaults={
-        "nickname": auth.nickname,
-        "avatar_url": auth.avatar_url
-    })
+                                                "nickname": auth.nickname,
+                                                "avatar_url": auth.headimgurl
+                                            })
 
     request.session['account'] = {
         "nickname": account.nickname,
