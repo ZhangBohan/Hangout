@@ -97,10 +97,11 @@ def auth(request):
                                                             defaults=dict(access_token=access_token,
                                                                           refresh_token=refresh_token,
                                                                           **user_data))
-    if created:
-        account = Account.objects.create(nickname=auth.nickname, avatar_url=auth.headimgurl)
-    else:
-        account = Account.objects.get(pk=auth.account_id)
+    account = Account.objects.get_or_create(pk=auth.account_id,
+                                            defaults={
+        "nickname": auth.nickname,
+        "avatar_url": auth.avatar_url
+    })
 
     request.session['account'] = {
         "nickname": account.nickname,
