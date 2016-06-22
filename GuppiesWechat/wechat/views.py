@@ -102,5 +102,9 @@ def auth(request):
     else:
         account = Account.objects.get(pk=auth.account_id)
 
-    request.session['account'] = account
+    request.session['account'] = {
+        "nickname": account.nickname,
+        "avatar_url": account.avatar_url,
+        "id": account.id
+    }
     return HttpResponse("ok")
