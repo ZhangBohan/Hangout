@@ -81,10 +81,19 @@ def auth(request):
     content = rv.content.decode('utf-8')
     user_data = json.loads(content)
     user_data.pop('privilege')
-    auth, created = WechatAuth.objects.update_or_create(unionid=unionid,
-                                                        defaults=dict(access_token=access_token,
-                                                                      refresh_token=refresh_token,
-                                                                      **user_data))
+    created = False
+    if unionid:
+        auth = WechatAuth.objects.get(unionid=unionid)
+        if auth:
+            auth, created = WechatAuth.objects.update_or_create(unionid=unionid,
+                                                                defaults=dict(access_token=access_token,
+                                                                              refresh_token=refresh_token,
+                                                                              **user_data))
+    if not created:
+        auth, created = WechatAuth.objects.update_or_create(openid=openid,
+                                                            defaults=dict(access_token=access_token,
+                                                                          refresh_token=refresh_token,
+                                                                          **user_data))
     if created:
         account = Account.objects.create(nickname=auth.nickname, avatar_url=auth.headimgurl)
     else:
