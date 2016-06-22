@@ -97,11 +97,11 @@ def auth(request):
                                                             defaults=dict(access_token=access_token,
                                                                           refresh_token=refresh_token,
                                                                           **user_data))
-    account = Account.objects.get_or_create(pk=auth.account_id,
-                                            defaults={
-                                                "nickname": auth.nickname,
-                                                "avatar_url": auth.headimgurl
-                                            })
+    account, created = Account.objects.update_or_create(pk=auth.account_id,
+                                                        defaults={
+                                                            "nickname": auth.nickname,
+                                                            "avatar_url": auth.headimgurl
+                                                        })
 
     request.session['account'] = {
         "nickname": account.nickname,
