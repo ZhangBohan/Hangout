@@ -12,7 +12,7 @@ class CommonModelMixin(object):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def incr(self, field: str, count: int=1):
-        self.fields[field] = models.F(field) + count
+        setattr(self, field, models.F(field) + count)
         return self
 
 
@@ -66,10 +66,7 @@ class Photo(CommonModelMixin, models.Model):
     n_total_mark = models.BigIntegerField('总分数', default=0)
     n_account_mark = models.BigIntegerField('打分人数', default=0)
 
-    n_total_commit = models.BigIntegerField('总评论数', default=0)
     n_account_commit = models.BigIntegerField('评论人数', default=0)
-
-    n_total_vote = models.BigIntegerField('总赞数', default=0)
     n_account_vote = models.BigIntegerField('赞人数', default=0)
 
     def __str__(self):
@@ -103,7 +100,7 @@ class Mark(CommonModelMixin, models.Model):
 
     def save(self, *args, **kwargs):
         super(Mark, self).save(*args, **kwargs)
-        self.photo.incr('n_total_mark').incr('n_account_mark').save()
+        self.photo.incr('n_total_mark', self.mark).incr('n_account_mark').save()
 
 
 class Vote(CommonModelMixin, models.Model):
@@ -112,7 +109,7 @@ class Vote(CommonModelMixin, models.Model):
 
     def save(self, *args, **kwargs):
         super(Vote, self).save(*args, **kwargs)
-        self.photo.incr('n_total_vote').incr('n_account_vote').save()
+        self.photo.incr('n_account_vote').save()
 
 
 class Commit(CommonModelMixin, models.Model):
@@ -121,4 +118,4 @@ class Commit(CommonModelMixin, models.Model):
 
     def save(self, *args, **kwargs):
         super(Commit, self).save(*args, **kwargs)
-        self.photo.incr('n_total_commit').incr('n_account_commit').save()
+        self.photo.incr('n_account_commit').save()
