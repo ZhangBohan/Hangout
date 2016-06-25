@@ -1,14 +1,30 @@
+from datetime import datetime, timedelta
+
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.db import models
+from django.contrib.gis.db import models
+from django.db.models.sql import Query
 
 
-class Account(models.Model):
-    nickname = models.CharField("昵称", max_length=100)
-    avatar_url = models.URLField("头像")
+class CommonModelMixin(object):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def incr(self, field: str, count: int=1):
+        self.fields[field] = models.F(field) + count
+        return self
 
-class WechatAuth(models.Model):
+
+class Account(CommonModelMixin, models.Model):
+    nickname = models.CharField("昵称", max_length=100)
+    avatar_url = models.URLField("头像")
+
+    def __str__(self):
+        return self.nickname
+
+
+class WechatAuth(CommonModelMixin, models.Model):
     """
     参数	说明
 
@@ -37,6 +53,72 @@ class WechatAuth(models.Model):
     refresh_token = models.CharField("refresh_token", max_length=255)
     expires_in = models.IntegerField("超时时间", help_text="access_token接口调用凭证超时时间，单位（秒）")
 
-    account_id = models.ForeignKey("Account", null=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    account = models.ForeignKey("Account", null=True)
+
+
+class Photo(CommonModelMixin, models.Model):
+    url = models.URLField("URL")
+    description = models.TextField("描述")
+
+    account = models.ForeignKey("Account")
+    location = models.PointField(blank=True, null=True)
+
+    n_total_mark = models.BigIntegerField('总分数', default=0)
+    n_account_mark = models.BigIntegerField('打分人数', default=0)
+
+    n_total_commit = models.BigIntegerField('总评论数', default=0)
+    n_account_commit = models.BigIntegerField('评论人数', default=0)
+
+    n_total_vote = models.BigIntegerField('总赞数', default=0)
+    n_account_vote = models.BigIntegerField('赞人数', default=0)
+
+    def __str__(self):
+        return self.description
+
+    @classmethod
+    def last_week_best_photo_query(cls) -> Query:
+        now = datetime.now()
+        last_week_start = now - timedelta(days=now.weekday() + 7)
+        last_week_end = last_week_start + timedelta(days=6)
+        # FIXME order by score
+        return cls.objects.filter(created_at__in=(last_week_start, last_week_end))
+
+    @classmethod
+    def newest_photo_query(cls) -> Query:
+        return cls.objects.order_by('-created_at')
+
+    @classmethod
+    def my_photo_query(cls, account_id) -> Query:
+        return cls.objects.filter(account_id=account_id).order_by('-created_at')
+
+    @classmethod
+    def nearby_photo_query(cls, point: Point, radius: int=5000) -> Query:
+        return cls.objects.filter(point__distance_lte=(point, D(m=radius))).order_by('-distance')
+
+
+class Mark(CommonModelMixin, models.Model):
+    account = models.ForeignKey("Account")
+    photo = models.ForeignKey('Photo')
+    mark = models.IntegerField("分数")
+
+    def save(self, *args, **kwargs):
+        super(Mark, self).save(*args, **kwargs)
+        self.photo.incr('n_total_mark').incr('n_account_mark').save()
+
+
+class Vote(CommonModelMixin, models.Model):
+    account = models.ForeignKey("Account")
+    photo = models.ForeignKey('Photo')
+
+    def save(self, *args, **kwargs):
+        super(Vote, self).save(*args, **kwargs)
+        self.photo.incr('n_total_vote').incr('n_account_vote').save()
+
+
+class Commit(CommonModelMixin, models.Model):
+    account = models.ForeignKey("Account")
+    photo = models.ForeignKey('Photo')
+
+    def save(self, *args, **kwargs):
+        super(Commit, self).save(*args, **kwargs)
+        self.photo.incr('n_total_commit').incr('n_account_commit').save()

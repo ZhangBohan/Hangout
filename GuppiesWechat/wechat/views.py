@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 import requests
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
+from wechat.froms import UploadPhotoForm
 from wechat.models import WechatAuth, Account
 from wechat_sdk import WechatConf, WechatBasic
 import logging
@@ -109,3 +110,13 @@ def auth(request):
         "id": account.id
     }
     return HttpResponse("ok")
+
+
+def photos(request):
+    if request.method == request.POST:
+        form = UploadPhotoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("保存成功")
+        return HttpResponse("保存失败", status=500)
+
