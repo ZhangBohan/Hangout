@@ -8,8 +8,6 @@ from django.db.models.sql import Query
 
 
 class CommonModelMixin(object):
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     def incr(self, field: str, count: int=1):
         setattr(self, field, models.F(field) + count)
@@ -19,6 +17,15 @@ class CommonModelMixin(object):
 class Account(CommonModelMixin, models.Model):
     nickname = models.CharField("昵称", max_length=100)
     avatar_url = models.URLField("头像")
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def to_json(self):
+        return {
+            "nickname": self.nickname,
+            "avatar_url": self.avatar_url
+        }
 
     def __str__(self):
         return self.nickname
@@ -55,6 +62,9 @@ class WechatAuth(CommonModelMixin, models.Model):
 
     account = models.ForeignKey("Account", null=True)
 
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Photo(CommonModelMixin, models.Model):
     url = models.URLField("URL")
@@ -68,6 +78,9 @@ class Photo(CommonModelMixin, models.Model):
 
     n_account_commit = models.BigIntegerField('评论人数', default=0)
     n_account_vote = models.BigIntegerField('赞人数', default=0)
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.description
@@ -98,6 +111,9 @@ class Mark(CommonModelMixin, models.Model):
     photo = models.ForeignKey('Photo')
     mark = models.IntegerField("分数")
 
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def save(self, *args, **kwargs):
         super(Mark, self).save(*args, **kwargs)
         self.photo.incr('n_total_mark', self.mark).incr('n_account_mark').save()
@@ -107,6 +123,9 @@ class Vote(CommonModelMixin, models.Model):
     account = models.ForeignKey("Account")
     photo = models.ForeignKey('Photo')
 
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def save(self, *args, **kwargs):
         super(Vote, self).save(*args, **kwargs)
         self.photo.incr('n_account_vote').save()
@@ -115,6 +134,17 @@ class Vote(CommonModelMixin, models.Model):
 class Commit(CommonModelMixin, models.Model):
     account = models.ForeignKey("Account")
     photo = models.ForeignKey('Photo')
+    description = models.TextField("评论")
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def to_json(self):
+        return {
+            "description": self.description,
+            "account": self.account.to_json(),
+            "created_at": self.created_at.strftime('%Y-%m-%D')
+        }
 
     def save(self, *args, **kwargs):
         super(Commit, self).save(*args, **kwargs)
