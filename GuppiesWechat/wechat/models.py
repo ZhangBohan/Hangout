@@ -21,12 +21,6 @@ class Account(CommonModelMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def to_json(self):
-        return {
-            "nickname": self.nickname,
-            "avatar_url": self.avatar_url
-        }
-
     def __str__(self):
         return self.nickname
 
@@ -139,13 +133,9 @@ class Commit(CommonModelMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def to_json(self):
-        return {
-            "description": self.description,
-            "account": self.account.to_json(),
-            "created_at": self.created_at.strftime('%Y-%m-%D')
-        }
-
     def save(self, *args, **kwargs):
         super(Commit, self).save(*args, **kwargs)
         self.photo.incr('n_account_commit').save()
+
+    EXCLUDE_FIELDS = ('updated_at',)
+    INCLUDE_PROPERTIES = ('recently', 'fixable')
