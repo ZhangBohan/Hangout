@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 
+from django.db.models import QuerySet
+
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.db import models
 from django.contrib.gis.db import models
-from django.db.models.sql import Query
 
 
 class CommonModelMixin(object):
@@ -70,7 +71,7 @@ class Photo(CommonModelMixin, models.Model):
     n_total_mark = models.BigIntegerField('总分数', default=0)
     n_account_mark = models.BigIntegerField('打分人数', default=0)
 
-    n_account_commit = models.BigIntegerField('评论人数', default=0)
+    n_account_comment = models.BigIntegerField('评论人数', default=0)
     n_account_vote = models.BigIntegerField('赞人数', default=0)
 
     updated_at = models.DateTimeField(auto_now=True)
@@ -80,23 +81,22 @@ class Photo(CommonModelMixin, models.Model):
         return self.description
 
     @classmethod
-    def last_week_best_photo_query(cls) -> Query:
+    def last_week_best_photo_query(cls) -> QuerySet:
         now = datetime.now()
         last_week_start = now - timedelta(days=now.weekday() + 7)
         last_week_end = last_week_start + timedelta(days=6)
-        # FIXME order by score
-        return cls.objects.filter(created_at__in=(last_week_start, last_week_end))
+        return cls.objects.filter(created_at__in=(last_week_start, last_week_end)).order_by('-n_total_mark')
 
     @classmethod
-    def newest_photo_query(cls) -> Query:
+    def newest_photo_query(cls) -> QuerySet:
         return cls.objects.order_by('-created_at')
 
     @classmethod
-    def my_photo_query(cls, account_id) -> Query:
+    def my_photo_query(cls, account_id) -> QuerySet:
         return cls.objects.filter(account_id=account_id).order_by('-created_at')
 
     @classmethod
-    def nearby_photo_query(cls, point: Point, radius: int=5000) -> Query:
+    def nearby_photo_query(cls, point: Point, radius: int=5000) -> QuerySet:
         return cls.objects.filter(point__distance_lte=(point, D(m=radius))).order_by('-distance')
 
 
@@ -125,7 +125,7 @@ class Vote(CommonModelMixin, models.Model):
         self.photo.incr('n_account_vote').save()
 
 
-class Commit(CommonModelMixin, models.Model):
+class Comment(CommonModelMixin, models.Model):
     account = models.ForeignKey("Account")
     photo = models.ForeignKey('Photo')
     description = models.TextField("评论")
@@ -134,8 +134,8 @@ class Commit(CommonModelMixin, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        super(Commit, self).save(*args, **kwargs)
-        self.photo.incr('n_account_commit').save()
+        super(Comment, self).save(*args, **kwargs)
+        self.photo.incr('n_account_comment').save()
 
     EXCLUDE_FIELDS = ('updated_at',)
     INCLUDE_PROPERTIES = ('recently', 'fixable')

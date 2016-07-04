@@ -11,5 +11,8 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
-    url(r'^api/photos/(?P<photo_id>\d+)/commits$', apis.CommitsView.as_view()),
-)
+                        url(r'^api/photos$', apis.PhotosView.as_view()),
+                        url(r'^api/photos/(?P<photo_id>\d+)/comments$', apis.CommentsView.as_view()),
+                        url(r'^api/photos/(?P<photo_id>\d+)/votes$', apis.VotesView.as_view()),
+                        url(r'^api/photos/(?P<photo_id>\d+)/marks$', apis.MarksView.as_view()),
+                        )

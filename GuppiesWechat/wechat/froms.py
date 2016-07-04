@@ -66,7 +66,18 @@ class VoteForm(forms.Form):
         Vote.objects.create(account=self.account, photo=self.photo).save()
 
 
-class CommitForm(forms.Form):
+class DeleteVoteForm(VoteForm):
+
+    def clean(self):
+        vote = Vote.objects.get(photo=self.photo, account=self.account)
+        if not vote:
+            raise ValidationError("未赞")
+
+    def save(self):
+        Vote.objects.filter(account=self.account, photo=self.photo).delete()
+
+
+class CommentForm(forms.Form):
     photo_id = forms.IntegerField(help_text="照片ID")
     description = forms.CharField(widget=forms.Textarea, help_text="描述")
 
@@ -74,7 +85,7 @@ class CommitForm(forms.Form):
         self.account = kwargs.pop('account')
         self.photo = None
 
-        super(CommitForm, self).__init__(*args, **kwargs)
+        super(CommentForm, self).__init__(*args, **kwargs)
 
     def clean_photo_id(self, data):
         photo = Photo.objects.get(pk=data)
@@ -84,4 +95,4 @@ class CommitForm(forms.Form):
 
     def save(self):
         self.cleaned_data.pop('photo_id')
-        Commit.objects.create(account=self.account, photo=self.photo, **self.cleaned_data).save()
+        return Comment.objects.create(account=self.account, photo=self.photo, **self.cleaned_data).save()
