@@ -96,3 +96,7 @@ class CommentForm(forms.Form):
     def save(self):
         self.cleaned_data.pop('photo_id')
         return Comment.objects.create(account=self.account, photo=self.photo, **self.cleaned_data).save()
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField(help_text="文件")

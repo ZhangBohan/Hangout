@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timedelta
 
 from django.db.models import QuerySet
@@ -13,6 +14,10 @@ class CommonModelMixin(object):
     def incr(self, field: str, count: int=1):
         setattr(self, field, models.F(field) + count)
         return self
+
+    def to_json(self):
+        from wechat.apps import WechatJSONEncoder
+        return json.loads(json.dumps(self, cls=WechatJSONEncoder))
 
 
 class Account(CommonModelMixin, models.Model):
