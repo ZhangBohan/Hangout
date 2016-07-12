@@ -22,8 +22,9 @@ class LoginRequiredView(View):
         if 'account' not in request.session:
             if settings.DEBUG:
                 account = Account.objects.first()
-                request.session['account'] = account.to_json()
-            return HttpResponseForbidden()
+                request.session['account'] = account
+            else:
+                return HttpResponseForbidden()
         request.account = request.session['account']
         return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
 
@@ -39,6 +40,15 @@ class PhotosView(LoginRequiredView):
             item = form.save()
             return WechatJsonResponse(item)
         return HttpResponseBadRequest()
+
+
+class PhotoView(LoginRequiredView):
+    def get(self, request, photo_id):
+        photo = Photo.objects.get(pk=photo_id)
+        photo_detail = photo.to_detail_dict(request.account)
+
+        photo.incr('n_total_watched').save()    # 观看数加1
+        return WechatJsonResponse(photo_detail)
 
 
 class CommentsView(LoginRequiredView):
@@ -84,7 +94,7 @@ class FileUploadView(LoginRequiredView):
     def post(self, request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            key = '{user_id}_{timestamp}'.format(user_id=request.account.get('id'), timestamp=time.time())
+            key = '{user_id}_{timestamp}'.format(user_id=request.account.id, timestamp=time.time())
             token = q.upload_token(bucket_name, key, 3600)
 
             ret, info = put_stream(token, key, request.FILES['file'], file_name=key, data_size=len(request.FILES['file']))

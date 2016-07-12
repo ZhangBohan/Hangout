@@ -104,11 +104,7 @@ def auth(request):
                                                             "avatar_url": auth.headimgurl
                                                         })
 
-    request.session['account'] = {
-        "nickname": account.nickname,
-        "avatar_url": account.avatar_url,
-        "id": account.id
-    }
+    request.session['account'] = account
     return HttpResponse("ok")
 
 

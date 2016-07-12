@@ -10,14 +10,48 @@ from django.contrib.gis.db import models
 
 
 class CommonModelMixin(object):
+    EXCLUDE_FIELDS = ()
+    INCLUDE_PROPERTIES = ()
 
-    def incr(self, field: str, count: int=1):
+    def permissions(self, account):
+        return []
+
+    def incr(self, field: str, count: int = 1):
         setattr(self, field, models.F(field) + count)
         return self
 
-    def to_json(self):
-        from wechat.apps import WechatJSONEncoder
-        return json.loads(json.dumps(self, cls=WechatJSONEncoder))
+    def to_dict(self,
+                account: 'Account' = None,
+                extra_data: dict = None,
+                include_properties: iter = None,
+                exclude_fields: tuple = None,
+                is_with_permissions: bool = False
+                ) -> dict:
+        data = {}
+
+        if exclude_fields is None: exclude_fields = ()
+        if hasattr(self, 'EXCLUDE_FIELDS'):
+            exclude_fields += self.EXCLUDE_FIELDS
+
+        if include_properties is None: include_properties = ()
+        if hasattr(self, 'INCLUDE_PROPERTIES'):
+            include_properties += self.INCLUDE_PROPERTIES
+
+        for field in self._meta.fields:
+            if exclude_fields:
+                continue
+            data[field.name] = getattr(self, field.name)
+
+        for field in include_properties:
+            value = getattr(self, field)
+            data[field] = value() if callable(value) else value
+
+        if is_with_permissions:
+            data['permissions'] = self.permissions(account)
+
+        if extra_data is not None:
+            data.update(extra_data)
+        return data
 
 
 class Account(CommonModelMixin, models.Model):
@@ -67,6 +101,8 @@ class WechatAuth(CommonModelMixin, models.Model):
 
 
 class Photo(CommonModelMixin, models.Model):
+    PERMISSION_VIEW_COMMENTS_AND_LIKES = 'VIEW_COMMENTS_AND_LIKES'
+
     url = models.URLField("URL")
     description = models.TextField("描述")
 
@@ -79,11 +115,28 @@ class Photo(CommonModelMixin, models.Model):
     n_account_comment = models.BigIntegerField('评论人数', default=0)
     n_account_vote = models.BigIntegerField('赞人数', default=0)
 
+    n_total_watched = models.BigIntegerField('查看数', default=0)
+
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.description
+
+    def to_detail_dict(self, account):
+        return self.to_dict(include_properties=('is_liked', 'is_voted',), account=account, is_with_permissions=True)
+
+    @property
+    def is_liked(self) -> bool:
+        return Vote.objects.filter(account_id=self.account_id).first() is not None
+
+    @property
+    def is_voted(self) -> bool:
+        return Mark.objects.filter(account_id=self.account_id).first() is not None
+
+    @property
+    def is_commented(self) -> bool:
+        return Comment.objects.filter(account_id=self.account_id).first() is not None
 
     @classmethod
     def last_week_best_photo_query(cls) -> QuerySet:
@@ -101,8 +154,14 @@ class Photo(CommonModelMixin, models.Model):
         return cls.objects.filter(account_id=account_id).order_by('-created_at')
 
     @classmethod
-    def nearby_photo_query(cls, point: Point, radius: int=5000) -> QuerySet:
+    def nearby_photo_query(cls, point: Point, radius: int = 5000) -> QuerySet:
         return cls.objects.filter(point__distance_lte=(point, D(m=radius))).order_by('-distance')
+
+    def permissions(self, account) -> list:
+        permissions_list = []
+        if self.is_commented or self.account_id == account.id:
+            permissions_list.append(self.PERMISSION_VIEW_COMMENTS_AND_LIKES)
+        return permissions_list
 
 
 class Mark(CommonModelMixin, models.Model):
