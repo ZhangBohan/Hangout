@@ -9,11 +9,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
+    latitude = serializers.FloatField(write_only=True, allow_null=True)
+    longitude = serializers.FloatField(write_only=True, allow_null=True)
 
     class Meta:
         model = Photo
-        fields = '__all__'
+        exclude = ('location', )
 
         read_only_fields = ('user',
                             'n_total_mark',
@@ -24,9 +26,18 @@ class PhotoSerializer(serializers.ModelSerializer):
                             'updated_at',
                             'created_at')
 
+    def create(self, validated_data):
+        latitude = validated_data.pop('latitude')
+        longitude = validated_data.pop('longitude')
+        location = None
+        if latitude is not None and longitude is not None:
+            location = Point(latitude, longitude)
+        validated_data['location'] = location
+        photo = super(PhotoSerializer, self).create(validated_data)
+        return photo
 
-class PhotoDetailSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+
+class PhotoDetailSerializer(PhotoSerializer):
     is_marked = serializers.BooleanField(help_text="是否打分")
     is_voted = serializers.BooleanField(help_text="是否赞")
 
@@ -45,7 +56,7 @@ class PhotoDetailSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Comment
