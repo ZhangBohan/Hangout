@@ -19,16 +19,18 @@ bucket_name = 'guppies'
 base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 
 
-class CommentListView(APIView):
-    def get(self, request, photo_id):
-        comments = Comment.objects.filter(photo_id=photo_id)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
+class CommentListView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
-    def post(self, request, photo_id):
-        serializer = CommentSerializer(data=request.data)
+    def get(self, request, *args, **kwargs):
+        self.queryset = self.queryset.filter(photo_id=kwargs.get('photo_id'))
+        return super(CommentListView, self).get(request, args, kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save(photo_id=photo_id, user=request.user)
+            serializer.save(photo_id=kwargs.get('photo_id'), user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -88,6 +90,13 @@ class FileUploadView(APIView):
 class PhotoListView(generics.ListCreateAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PhotoDetailView(APIView):

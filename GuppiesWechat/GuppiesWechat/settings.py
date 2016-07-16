@@ -125,4 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'wechat.apps.CustomPagination',
+    'PAGE_SIZE': 20
+}
