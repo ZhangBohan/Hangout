@@ -2,7 +2,15 @@ from rest_framework import serializers
 from wechat.models import *
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', )
+
+
 class PhotoSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = Photo
         fields = '__all__'
@@ -18,6 +26,7 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 
 class PhotoDetailSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     is_marked = serializers.BooleanField(help_text="是否打分")
     is_voted = serializers.BooleanField(help_text="是否赞")
 
@@ -36,6 +45,8 @@ class PhotoDetailSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = Comment
         fields = '__all__'

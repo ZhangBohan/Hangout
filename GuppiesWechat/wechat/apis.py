@@ -1,6 +1,7 @@
 import time
 
 from django.http import Http404
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,6 +9,7 @@ from wechat.models import *
 from rest_framework import generics
 from wechat.serializers import PhotoSerializer, CommentSerializer, MarkSerializer, PhotoDetailSerializer
 from rest_framework import status
+from rest_framework import permissions
 
 from qiniu import Auth, put_stream
 
@@ -20,6 +22,8 @@ base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 
 
 class CommentListView(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
@@ -36,6 +40,8 @@ class CommentListView(generics.ListCreateAPIView):
 
 
 class VotesView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get_object(self, pk):
         try:
             return Photo.objects.get(pk=pk)
@@ -57,6 +63,8 @@ class VotesView(APIView):
 
 
 class MarksView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get_object(self, pk):
         try:
             return Photo.objects.get(pk=pk)
@@ -74,6 +82,8 @@ class MarksView(APIView):
 
 
 class FileUploadView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     parser_classes = (FileUploadParser,)
 
     def post(self, request, format=None):
@@ -88,6 +98,8 @@ class FileUploadView(APIView):
 
 
 class PhotoListView(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
 
@@ -100,15 +112,19 @@ class PhotoListView(generics.ListCreateAPIView):
 
 
 class PhotoDetailView(APIView):
-    """
-        Retrieve, update or delete a photo instance.
-        """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_object(self, pk):
         try:
             return Photo.objects.get(pk=pk)
         except Photo.DoesNotExist:
             raise Http404
+
+    def get_object_for_change(self, request, pk):
+        photo = self.get_object(pk)
+        if photo.user != request.user:
+            raise PermissionDenied()
+        return photo
 
     def get(self, request, pk, format=None):
         photo = self.get_object(pk)
@@ -118,7 +134,7 @@ class PhotoDetailView(APIView):
         return response
 
     def put(self, request, pk, format=None):
-        photo = self.get_object(pk)
+        photo = self.get_object_for_change(request, pk=pk)
         serializer = PhotoDetailSerializer(photo, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -126,6 +142,6 @@ class PhotoDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        photo = self.get_object(pk)
+        photo = self.get_object_for_change(request, pk=pk)
         photo.delete()
         return Response()
