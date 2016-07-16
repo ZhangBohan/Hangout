@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import User
 from django.db.models import QuerySet
 
 from django.contrib.gis.geos import Point
@@ -10,8 +11,6 @@ from django.contrib.gis.db import models
 
 
 class CommonModelMixin(object):
-    EXCLUDE_FIELDS = ()
-    INCLUDE_PROPERTIES = ()
 
     def permissions(self, account):
         return []
@@ -19,39 +18,6 @@ class CommonModelMixin(object):
     def incr(self, field: str, count: int = 1):
         setattr(self, field, models.F(field) + count)
         return self
-
-    def to_dict(self,
-                account: 'Account' = None,
-                extra_data: dict = None,
-                include_properties: iter = None,
-                exclude_fields: tuple = None,
-                is_with_permissions: bool = False
-                ) -> dict:
-        data = {}
-
-        if exclude_fields is None: exclude_fields = ()
-        if hasattr(self, 'EXCLUDE_FIELDS'):
-            exclude_fields += self.EXCLUDE_FIELDS
-
-        if include_properties is None: include_properties = ()
-        if hasattr(self, 'INCLUDE_PROPERTIES'):
-            include_properties += self.INCLUDE_PROPERTIES
-
-        for field in self._meta.fields:
-            if exclude_fields:
-                continue
-            data[field.name] = getattr(self, field.name)
-
-        for field in include_properties:
-            value = getattr(self, field)
-            data[field] = value() if callable(value) else value
-
-        if is_with_permissions:
-            data['permissions'] = self.permissions(account)
-
-        if extra_data is not None:
-            data.update(extra_data)
-        return data
 
 
 class Account(CommonModelMixin, models.Model):
@@ -94,19 +60,17 @@ class WechatAuth(CommonModelMixin, models.Model):
     refresh_token = models.CharField("refresh_token", max_length=255)
     expires_in = models.IntegerField("超时时间", help_text="access_token接口调用凭证超时时间，单位（秒）")
 
-    account = models.ForeignKey("Account", null=True)
+    user = models.ForeignKey(User, null=True)
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Photo(CommonModelMixin, models.Model):
-    PERMISSION_VIEW_COMMENTS_AND_LIKES = 'VIEW_COMMENTS_AND_LIKES'
-
     url = models.URLField("URL")
     description = models.TextField("描述")
 
-    account = models.ForeignKey("Account")
+    user = models.ForeignKey(User)
     location = models.PointField(blank=True, null=True)
 
     n_total_mark = models.BigIntegerField('总分数', default=0)
@@ -127,16 +91,16 @@ class Photo(CommonModelMixin, models.Model):
         return self.to_dict(include_properties=('is_liked', 'is_voted',), account=account, is_with_permissions=True)
 
     @property
-    def is_liked(self) -> bool:
-        return Vote.objects.filter(account_id=self.account_id).first() is not None
+    def is_voted(self) -> bool:
+        return Vote.objects.filter(user_id=self.user_id).first() is not None
 
     @property
-    def is_voted(self) -> bool:
-        return Mark.objects.filter(account_id=self.account_id).first() is not None
+    def is_marked(self) -> bool:
+        return Mark.objects.filter(user_id=self.user_id).first() is not None
 
     @property
     def is_commented(self) -> bool:
-        return Comment.objects.filter(account_id=self.account_id).first() is not None
+        return Comment.objects.filter(user_id=self.user_id).first() is not None
 
     @classmethod
     def last_week_best_photo_query(cls) -> QuerySet:
@@ -150,22 +114,16 @@ class Photo(CommonModelMixin, models.Model):
         return cls.objects.order_by('-created_at')
 
     @classmethod
-    def my_photo_query(cls, account_id) -> QuerySet:
-        return cls.objects.filter(account_id=account_id).order_by('-created_at')
+    def my_photo_query(cls, user_id) -> QuerySet:
+        return cls.objects.filter(user_id=user_id).order_by('-created_at')
 
     @classmethod
     def nearby_photo_query(cls, point: Point, radius: int = 5000) -> QuerySet:
         return cls.objects.filter(point__distance_lte=(point, D(m=radius))).order_by('-distance')
 
-    def permissions(self, account) -> list:
-        permissions_list = []
-        if self.is_commented or self.account_id == account.id:
-            permissions_list.append(self.PERMISSION_VIEW_COMMENTS_AND_LIKES)
-        return permissions_list
-
 
 class Mark(CommonModelMixin, models.Model):
-    account = models.ForeignKey("Account")
+    user = models.ForeignKey(User)
     photo = models.ForeignKey('Photo')
     mark = models.IntegerField("分数")
 
@@ -178,7 +136,7 @@ class Mark(CommonModelMixin, models.Model):
 
 
 class Vote(CommonModelMixin, models.Model):
-    account = models.ForeignKey("Account")
+    user = models.ForeignKey(User)
     photo = models.ForeignKey('Photo')
 
     updated_at = models.DateTimeField(auto_now=True)
@@ -188,9 +146,13 @@ class Vote(CommonModelMixin, models.Model):
         super(Vote, self).save(*args, **kwargs)
         self.photo.incr('n_account_vote').save()
 
+    def delete(self, using=None, keep_parents=False):
+        super(Vote, self).delete(using, keep_parents)
+        self.photo.incr('n_account_vote', -1).save()
+
 
 class Comment(CommonModelMixin, models.Model):
-    account = models.ForeignKey("Account")
+    user = models.ForeignKey(User)
     photo = models.ForeignKey('Photo')
     description = models.TextField("评论")
 
@@ -200,6 +162,3 @@ class Comment(CommonModelMixin, models.Model):
     def save(self, *args, **kwargs):
         super(Comment, self).save(*args, **kwargs)
         self.photo.incr('n_account_comment').save()
-
-    EXCLUDE_FIELDS = ('updated_at',)
-    INCLUDE_PROPERTIES = ('recently', 'fixable')

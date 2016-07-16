@@ -2,10 +2,11 @@ import json
 from urllib.parse import quote_plus
 
 import requests
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
-from wechat.froms import UploadPhotoForm
-from wechat.models import WechatAuth, Account
+from wechat.models import WechatAuth
 from wechat_sdk import WechatConf, WechatBasic
 import logging
 
@@ -85,34 +86,24 @@ def auth(request):
     user_data.pop('privilege')
     created = False
     if unionid:
-        auth = WechatAuth.objects.get(unionid=unionid)
-        if auth:
-            auth, created = WechatAuth.objects.update_or_create(unionid=unionid,
-                                                                expires_in=expires_in,
-                                                                defaults=dict(access_token=access_token,
-                                                                              refresh_token=refresh_token,
-                                                                              **user_data))
+        wechat_auth = WechatAuth.objects.get(unionid=unionid)
+        if wechat_auth:
+            wechat_auth, created = WechatAuth.objects.update_or_create(unionid=unionid,
+                                                                       expires_in=expires_in,
+                                                                       defaults=dict(access_token=access_token,
+                                                                                     refresh_token=refresh_token,
+                                                                                     **user_data))
     if not created:
-        auth, created = WechatAuth.objects.update_or_create(openid=openid,
-                                                            expires_in=expires_in,
-                                                            defaults=dict(access_token=access_token,
-                                                                          refresh_token=refresh_token,
-                                                                          **user_data))
-    account, created = Account.objects.update_or_create(pk=auth.account_id,
-                                                        defaults={
-                                                            "nickname": auth.nickname,
-                                                            "avatar_url": auth.headimgurl
-                                                        })
+        wechat_auth, created = WechatAuth.objects.update_or_create(openid=openid,
+                                                                   expires_in=expires_in,
+                                                                   defaults=dict(access_token=access_token,
+                                                                                 refresh_token=refresh_token,
+                                                                                 **user_data))
 
-    request.session['account'] = account
+    try:
+        user = User.objects.get(pk=wechat_auth.user_id)
+    except User.DoesNotExist:
+        user = User(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id), password=wechat_auth.openid)
+        user.save()
+    login(request, user)
     return HttpResponse("ok")
-
-
-def photos(request):
-    if request.method == request.POST:
-        form = UploadPhotoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse("保存成功")
-        return HttpResponse("保存失败", status=500)
-
