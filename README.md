@@ -11,7 +11,7 @@
 - [x] 上传照片时同时上传用户坐标`API`
 - [x] 用户头像支持(与用户表一对一关联表)
 - [x] 线上测试微信登录是否可用
-- [ ] django static file
+- [x] django static file
 - [ ] 用户头像保存到七牛
 
 

@@ -24,12 +24,10 @@ base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 class CommentListView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-    def get(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(photo_id=kwargs.get('photo_id'))
-        return super(CommentListView, self).get(request, args, kwargs)
+    def get_queryset(self):
+        return Comment.objects.filter(photo_id=self.kwargs['photo_id'])
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)

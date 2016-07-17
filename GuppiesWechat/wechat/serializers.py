@@ -3,9 +3,12 @@ from wechat.models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
+    nickname = serializers.CharField(source='userinfo.nickname')
+    avatar_url = serializers.URLField(source='userinfo.avatar_url')
+
     class Meta:
         model = User
-        fields = ('id', 'username', )
+        fields = ('id', 'avatar_url', 'nickname', )
 
 
 class PhotoSerializer(serializers.ModelSerializer):
