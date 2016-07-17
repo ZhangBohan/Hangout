@@ -2,7 +2,7 @@ import json
 from urllib.parse import quote_plus
 
 import requests
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
@@ -111,7 +111,13 @@ def auth(request):
     })
     if created:
         userinfo.save()
-
     user.userinfo = userinfo
-    login(request, user)
-    return HttpResponse("ok")
+    auth_user = authenticate(username=user.username, password=user.password)
+    if auth_user is not None:
+        # the password verified for the user
+        if auth_user.is_active:
+            login(request, user)
+            return HttpResponse("ok")
+        else:
+            return HttpResponse("The password is valid, but the account has been disabled!")
+    return HttpResponse("user or password error", status=500)
