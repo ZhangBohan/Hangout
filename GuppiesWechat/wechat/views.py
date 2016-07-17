@@ -101,7 +101,7 @@ def auth(request):
                                                                                  **user_data))
 
     try:
-        user = User.objects.get(pk=wechat_auth.user_id)
+        user = User.objects.get(username='wechat_{auth_id}')
     except User.DoesNotExist:
         user = User(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id), password=wechat_auth.openid)
         user.save()
