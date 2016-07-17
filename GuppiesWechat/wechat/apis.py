@@ -87,14 +87,14 @@ class FileUploadView(APIView):
     parser_classes = (FileUploadParser,)
 
     def post(self, request, format=None):
-        file_obj = request.data['file']
         key = '{user_id}_{timestamp}'.format(user_id=request.user.id, timestamp=time.time())
         token = q.upload_token(bucket_name, key, 3600)
 
-        ret, info = put_stream(token, key, file_obj, file_name=key,
-                               data_size=len(file_obj))
-        print(ret, info)
-        return Response({"url": "{base_url}{key}".format(base_url=base_url, key=key)})
+        return Response({
+            "token": token,
+            "key": key,
+            "url": "{base_url}{key}".format(base_url=base_url, key=key)
+        })
 
 
 class PhotoListView(generics.ListCreateAPIView):
