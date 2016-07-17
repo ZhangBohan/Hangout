@@ -113,7 +113,7 @@ def auth(request):
     if created:
         userinfo.save()
     user.userinfo = userinfo
-    auth_user = authenticate(username=user.username, password=user.password)
+    auth_user = authenticate(username=user.username, password=wechat_auth.openid)
     if auth_user is not None:
         # the password verified for the user
         if auth_user.is_active:
