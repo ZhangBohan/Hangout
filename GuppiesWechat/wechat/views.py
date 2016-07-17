@@ -103,7 +103,8 @@ def auth(request):
     try:
         user = User.objects.get(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id))
     except User.DoesNotExist:
-        user = User(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id), password=wechat_auth.openid)
+        user = User.objects.create_user(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id),
+                                        password=wechat_auth.openid)
         user.save()
     userinfo, created = UserInfo.objects.get_or_create(user=user, defaults={
         "nickname": wechat_auth.nickname,
