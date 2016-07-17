@@ -129,3 +129,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'wechat.apps.CustomPagination',
     'PAGE_SIZE': 20
 }
+
+STATIC_ROOT = BASE_DIR + '/static/'
