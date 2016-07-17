@@ -1,0 +1,72 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页详情</title>
+    <script src="/static/wechat/js/guppies.js"></script>
+    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
+    </script>
+</head>
+<body>
+<div class="doc">
+    <div class="homePage-details">
+        <div class="borderColor"></div>
+        <div class="userInfo-details">
+            <div class="userImg-details"><img src="{{ photo.user.avatar_url }}"/></div>
+            <span>{{ photo.user.nickname }}</span>
+            <em>{{ photo.created_at | naturaltime }}</em>
+        </div>
+        <div class="guppiesInfo">
+            {{ photo.description }}
+        </div>
+        <div class="guppiesImg">
+            <img src="{{ photo.url }}?imageView2/5/w/1280/h/1280"/>
+        </div>
+        <div class="guppiesCheck">
+            <span>查看&nbsp;<em>{{ photo.n_total_watched }}</em></span>
+            <span>收藏&nbsp;<em>{{ photo.n_account_vote }}</em></span>
+            <span>张伯函最终评分:&nbsp;<em>{{ photo.n_avg_mark }}</em></span>
+            <a href="javascript:;">详细规则</a>
+        </div>
+        <div class="userGood">
+            <a href="javascript:;">
+                <p>点赞&nbsp;<em>1000</em></p>
+                <span>A</span>
+                <span>B</span>
+                <span>C</span>
+                <span>D</span>
+                <span>E</span>
+                <span>...</span>
+            </a>
+        </div>
+        <div class="comment">
+            <div class="commentNum">全部评论&nbsp;<span>{{ comments | length }}</span></div>
+            <div class="commentList">
+                {% for comment in comments %}
+                <div class="list">
+                    <div class="listTitle">
+                        <div class="listImg"><img src="{{ comment.user.avatar_url }}"/></div>
+                        <span>{{ comment.user.nickname }}</span>
+                        <em>{{ comment.created_at | naturaltime }}</em>
+                    </div>
+                    <div class="commentCon">
+                        {{ comment.description }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="detailsBanner">
+            <a href="#">收藏</a>
+            <a href="#">已点赞</a>
+            <a href="#">已评分</a>
+            <a href="#">评论</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

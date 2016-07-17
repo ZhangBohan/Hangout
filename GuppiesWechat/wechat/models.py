@@ -15,8 +15,12 @@ class CommonModelMixin(object):
     def permissions(self, account):
         return []
 
-    def incr(self, field: str, count: int = 1):
+    def safe_incr(self, field: str, count: int = 1):
         setattr(self, field, models.F(field) + count)
+        return self
+
+    def incr(self, field: str, count: int = 1):
+        setattr(self, field, getattr(self, field) + count)
         return self
 
 
@@ -87,6 +91,10 @@ class Photo(CommonModelMixin, models.Model):
 
     def to_detail_dict(self, account):
         return self.to_dict(include_properties=('is_liked', 'is_voted',), account=account, is_with_permissions=True)
+
+    @property
+    def n_avg_mark(self):
+        return self.n_total_mark / self.n_account_mark if self.n_account_mark else 0
 
     @property
     def is_voted(self) -> bool:
@@ -160,3 +168,6 @@ class Comment(CommonModelMixin, models.Model):
     def save(self, *args, **kwargs):
         super(Comment, self).save(*args, **kwargs)
         self.photo.incr('n_account_comment').save()
+
+    class Meta:
+        ordering = ('-created_at', )

@@ -1,0 +1,322 @@
+/* 样式重置 */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+dl,
+dd,
+ul,
+ol,
+pre,
+form,
+input,
+textarea,
+th,
+td,
+select {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, "微软雅黑";
+}
+em {
+  font-style: normal;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: #2a2a2a;
+}
+img {
+  border: none;
+  vertical-align: top;
+}
+table {
+  border-collapse: collapse;
+}
+textarea {
+  resize: none;
+  overflow: auto;
+}
+input,
+textarea {
+  resize: none;
+  overflow: auto;
+}
+input[type="submit"],
+input[type="button"] {
+  cursor: pointer;
+  outline: none;
+}
+body {
+  font-size: 0.4375rem;
+}
+/* homePage */
+.doc {
+  position: relative;
+  margin-bottom: 1.6rem;
+}
+.borderColor {
+  height: 0.2rem;
+  background: #dcdcdc;
+}
+.userInfo {
+  height: 2.2rem;
+  width: 9.4rem;
+  margin: 0 auto;
+  position: relative;
+}
+.userInfo .userImg {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  float: left;
+  margin-top: 0.1rem;
+}
+.userInfo .userImg img {
+  width: 100%;
+  border-radius: 50%;
+}
+.userInfo .userName {
+  float: left;
+  margin-left: 0.3rem;
+  margin-top: 0.3rem;
+}
+.userInfo .userTime {
+  float: right;
+  margin-top: 0.3rem;
+}
+.userInfo .userText {
+  height: 0.6rem;
+  position: absolute;
+  top: 1.3rem;
+  line-height: 0.6rem;
+  width: 9.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.guppiesImg {
+  width: 10rem;
+  height: 10rem;
+}
+.guppiesImg img {
+  width: 100%;
+}
+.score {
+  height: 1rem;
+  line-height: 1rem;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #dcdcdc;
+}
+.score span {
+  width: 2.4rem;
+}
+.score span em {
+  color: #7c7c7c;
+}
+.score span .fontColor {
+  color: red;
+}
+.homePage-banner {
+  width: 100%;
+  height: 1.6rem;
+  background: #ffffff;
+  position: fixed;
+  bottom: 0;
+}
+.homePage-banner label input {
+  display: none;
+}
+.homePage-banner span {
+  float: left;
+  width: 20%;
+  text-align: center;
+  height: 1.6rem;
+  line-height: 1.6rem;
+  border-right: 1px solid #dcdcdc;
+  box-sizing: border-box;
+  border-top: 1px solid #dcdcdc;
+}
+.homePage-banner .last span {
+  border-right: none;
+}
+/* 主页详情页 */
+.homePage-details {
+  position: relative;
+  margin-bottom: 1.6rem;
+}
+.homePage-details .userInfo-details {
+  width: 9.4rem;
+  margin: 0 auto;
+  height: 1.3rem;
+  position: relative;
+}
+.homePage-details .userInfo-details .userImg-details {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  top: 0.1rem;
+}
+.homePage-details .userInfo-details .userImg-details img {
+  width: 100%;
+  border-radius: 50%;
+}
+.homePage-details .userInfo-details span {
+  position: absolute;
+  left: 1.2rem;
+  top: 0.4rem;
+}
+.homePage-details .userInfo-details em {
+  position: absolute;
+  right: 0;
+  top: 0.4rem;
+}
+.homePage-details .guppiesInfo {
+  width: 9.4rem;
+  margin: 0 auto 0.2rem;
+  color: #7c7c7c;
+}
+.homePage-details .guppiesCheck {
+  height: 1.8rem;
+  position: relative;
+  border-bottom: 1px solid #dcdcdc;
+}
+.homePage-details .guppiesCheck span:nth-of-type(1) {
+  position: absolute;
+  left: 0.4rem;
+  top: 0.2rem;
+}
+.homePage-details .guppiesCheck span:nth-of-type(1) em {
+  color: #7c7c7c;
+}
+.homePage-details .guppiesCheck span:nth-of-type(2) {
+  position: absolute;
+  left: 3.2rem;
+  top: 0.2rem;
+}
+.homePage-details .guppiesCheck span:nth-of-type(2) em {
+  color: #7c7c7c;
+}
+.homePage-details .guppiesCheck span:nth-of-type(3) {
+  position: absolute;
+  left: 0.4rem;
+  top: 1rem;
+}
+.homePage-details .guppiesCheck span:nth-of-type(3) em {
+  color: red;
+  font-size: 0.5rem;
+}
+.homePage-details .guppiesCheck a {
+  position: absolute;
+  left: 5rem;
+  top: 1.02rem;
+  color: cadetblue;
+}
+.homePage-details .userGood {
+  height: 1.4rem;
+  border-bottom: 1px solid #dcdcdc;
+}
+.homePage-details .userGood p {
+  float: left;
+  margin-left: 0.3rem;
+  height: 1.4rem;
+  line-height: 1.4rem;
+  margin-right: 0.4rem;
+}
+.homePage-details .userGood p em {
+  color: #7c7c7c;
+}
+.homePage-details .userGood span {
+  float: left;
+  height: 1rem;
+  width: 1rem;
+  border: 1px solid #7c7c7c;
+  border-radius: 50%;
+  line-height: 1rem;
+  text-align: center;
+  margin-right: 0.1rem;
+  margin-top: 0.2rem;
+}
+.homePage-details .userGood span:last-of-type {
+  margin-right: 0;
+}
+.homePage-details .comment .commentNum {
+  border-bottom: 1px solid #dcdcdc;
+  height: 1rem;
+  line-height: 1rem;
+  text-indent: 0.3rem;
+}
+.homePage-details .comment .commentNum span {
+  color: #7c7c7c;
+}
+.homePage-details .comment .list {
+  border-bottom: 0.2rem solid #dcdcdc;
+}
+.homePage-details .comment .list .listTitle {
+  height: 1.4rem;
+  position: relative;
+}
+.homePage-details .comment .list .listTitle .listImg {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  position: absolute;
+  left: 0.4rem;
+  top: 0.2rem;
+}
+.homePage-details .comment .list .listTitle .listImg img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.homePage-details .comment .list .listTitle span {
+  position: absolute;
+  left: 1.6rem;
+  top: 0.1rem;
+}
+.homePage-details .comment .list .listTitle em {
+  position: absolute;
+  left: 1.6rem;
+  top: 0.7rem;
+  color: #7c7c7c;
+}
+.homePage-details .comment .list .commentCon {
+  line-height: 0.6rem;
+  width: 9.4rem;
+  margin: 0 auto;
+}
+.homePage-details .commentTips {
+  height: 2rem;
+  background: #dcdcdc;
+  padding-top: 1rem;
+}
+.homePage-details .commentTips p {
+  text-align: center;
+  margin-bottom: 0.1rem;
+}
+.homePage-details .detailsBanner {
+  width: 100%;
+  height: 1.6rem;
+  background: #ffffff;
+  border-top: 1px solid #dcdcdc;
+  position: fixed;
+  bottom: 0;
+}
+.homePage-details .detailsBanner a {
+  float: left;
+  width: 25%;
+  height: 1.6rem;
+  box-sizing: border-box;
+  border-right: 1px solid #dcdcdc;
+  line-height: 1.6rem;
+  text-align: center;
+}

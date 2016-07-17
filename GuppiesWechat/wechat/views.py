@@ -6,7 +6,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
-from wechat.models import WechatAuth, UserInfo
+from wechat.models import WechatAuth, UserInfo, Photo, Comment
 from wechat_sdk import WechatConf, WechatBasic
 import logging
 
@@ -21,8 +21,22 @@ conf = WechatConf(
 wechat_basic = WechatBasic(conf=conf)
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the wechat index.")
+def photo_index(request):
+    photos = Photo.objects.all()
+    return render(request, 'photo_index.html', context={
+        "photos": photos
+    })
+
+
+def photo_detail(request, pk):
+    photo = Photo.objects.get(pk=pk)
+    photo.incr('n_total_watched').save()
+
+    comments = Comment.objects.filter(photo=photo)
+    return render(request, 'photo_detail.html', context={
+        "photo": photo,
+        "comments": comments
+    })
 
 
 def callback(request):
