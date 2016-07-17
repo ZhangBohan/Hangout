@@ -6,7 +6,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
-from wechat.models import WechatAuth
+from wechat.models import WechatAuth, UserInfo
 from wechat_sdk import WechatConf, WechatBasic
 import logging
 
@@ -105,5 +105,13 @@ def auth(request):
     except User.DoesNotExist:
         user = User(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id), password=wechat_auth.openid)
         user.save()
+    userinfo, created = UserInfo.objects.get_or_create(user=user, defaults={
+        "nickname": wechat_auth.nickname,
+        "avatar_url": wechat_auth.headimgurl
+    })
+    if created:
+        userinfo.save()
+
+    user.userinfo = userinfo
     login(request, user)
     return HttpResponse("ok")

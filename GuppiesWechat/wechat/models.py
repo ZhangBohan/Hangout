@@ -20,12 +20,10 @@ class CommonModelMixin(object):
         return self
 
 
-class Account(CommonModelMixin, models.Model):
+class UserInfo(models.Model):
+    user = models.OneToOneField(User)
     nickname = models.CharField("昵称", max_length=100)
     avatar_url = models.URLField("头像")
-
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.nickname
