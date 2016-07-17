@@ -117,7 +117,7 @@ def auth(request):
     if auth_user is not None:
         # the password verified for the user
         if auth_user.is_active:
-            login(request, user)
+            login(request, auth_user)
             return HttpResponse("ok")
         else:
             return HttpResponse("The password is valid, but the account has been disabled!")
