@@ -1,4 +1,5 @@
 {% load humanize %}
+{#{% load l10n %}#}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +30,7 @@
         <div class="guppiesCheck">
             <span>查看&nbsp;<em>{{ photo.n_total_watched }}</em></span>
             <span>收藏&nbsp;<em>{{ photo.n_account_vote }}</em></span>
-            <span>张伯函最终评分:&nbsp;<em>{{ photo.n_avg_mark }}</em></span>
+            <span>{{ photo.n_account_mark }}人最终评分:&nbsp;<em>{{ photo.n_avg_mark }}</em></span>
             <a href="javascript:;">详细规则</a>
         </div>
         <div class="userGood">

@@ -24,10 +24,13 @@ class CommonModelMixin(object):
         return self
 
 
-class UserInfo(models.Model):
+class UserInfo(CommonModelMixin, models.Model):
     user = models.OneToOneField(User)
     nickname = models.CharField("昵称", max_length=100)
     avatar_url = models.URLField("头像")
+    n_photo = models.IntegerField(default=0)
+    n_total_mark = models.BigIntegerField(default=0)
+    n_vote = models.BigIntegerField(default=0)
 
     def __str__(self):
         return self.nickname
@@ -89,8 +92,20 @@ class Photo(CommonModelMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ('-created_at', )
+
     def __str__(self):
         return self.description
+
+    def save(self, *args, **kwargs):
+        photo = super(Photo, self).save(*args, **kwargs)
+        self.user.userinfo.incr('n_photo').save()
+        return photo
+
+    def delete(self, using=None, keep_parents=False):
+        super(Photo, self).delete(using, keep_parents)
+        self.user.userinfo.incr('n_photo', -1).save()
 
     def to_detail_dict(self, account):
         return self.to_dict(include_properties=('is_liked', 'is_voted',), account=account, is_with_permissions=True)
@@ -140,8 +155,10 @@ class Mark(CommonModelMixin, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        super(Mark, self).save(*args, **kwargs)
+        mark = super(Mark, self).save(*args, **kwargs)
         self.photo.incr('n_total_mark', self.mark).incr('n_account_mark').save()
+        self.photo.user.userinfo.incr('n_total_mark', self.mark).save()
+        return mark
 
 
 class Vote(CommonModelMixin, models.Model):
@@ -152,12 +169,15 @@ class Vote(CommonModelMixin, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        super(Vote, self).save(*args, **kwargs)
+        vote = super(Vote, self).save(*args, **kwargs)
         self.photo.incr('n_account_vote').save()
+        self.photo.user.userinfo.incr('n_vote').save()
+        return vote
 
     def delete(self, using=None, keep_parents=False):
         super(Vote, self).delete(using, keep_parents)
         self.photo.incr('n_account_vote', -1).save()
+        self.photo.user.userinfo.incr('n_vote', -1).save()
 
 
 class Comment(CommonModelMixin, models.Model):
@@ -169,8 +189,9 @@ class Comment(CommonModelMixin, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        super(Comment, self).save(*args, **kwargs)
+        comment = super(Comment, self).save(*args, **kwargs)
         self.photo.incr('n_account_comment').save()
+        return comment
 
     class Meta:
         ordering = ('-created_at', )

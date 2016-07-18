@@ -28,7 +28,7 @@ wechat_basic = WechatBasic(conf=conf)
 @login_required
 def photo_index(request):
     photos = Photo.objects.all()
-    return render(request, 'photo_index.html', context={
+    return render(request, 'wechat_photo_index.html', context={
         "photos": photos
     })
 
@@ -40,10 +40,18 @@ def photo_detail(request, pk):
 
     comments = Comment.objects.filter(photo=photo)
     votes = Vote.objects.filter(photo=photo)[:5]
-    return render(request, 'photo_detail.html', context={
+    return render(request, 'wechat_photo_detail.html', context={
         "photo": photo,
         "comments": comments,
         "votes": votes,
+    })
+
+
+@login_required
+def vote_index(request, photo_id):
+    votes = Vote.objects.filter(photo_id=photo_id)
+    return render(request, 'wechat_vote_index.html', context={
+        "votes": votes
     })
 
 
