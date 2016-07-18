@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
+from django.contrib.auth.decorators import login_required
 from wechat.models import WechatAuth, UserInfo, Photo, Comment
 from wechat_sdk import WechatConf, WechatBasic
 import logging
@@ -21,6 +22,7 @@ conf = WechatConf(
 wechat_basic = WechatBasic(conf=conf)
 
 
+@login_required
 def photo_index(request):
     photos = Photo.objects.all()
     return render(request, 'photo_index.html', context={
@@ -28,6 +30,7 @@ def photo_index(request):
     })
 
 
+@login_required
 def photo_detail(request, pk):
     photo = Photo.objects.get(pk=pk)
     photo.incr('n_total_watched').save()
@@ -132,7 +135,7 @@ def auth(request):
         # the password verified for the user
         if auth_user.is_active:
             login(request, auth_user)
-            return HttpResponse("ok")
+            return redirect('photo-index')
         else:
             return HttpResponse("The password is valid, but the account has been disabled!")
     return HttpResponse("user or password error", status=500)

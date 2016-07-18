@@ -132,3 +132,5 @@ REST_FRAMEWORK = {
 }
 
 STATIC_ROOT = BASE_DIR + '/static/'
+
+LOGIN_URL = '/wechat/auth'
