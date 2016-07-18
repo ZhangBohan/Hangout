@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.decorators import login_required
-from wechat.models import WechatAuth, UserInfo, Photo, Comment
+from wechat.models import WechatAuth, UserInfo, Photo, Comment, Vote
 from wechat_sdk import WechatConf, WechatBasic
 import logging
 
@@ -36,9 +36,11 @@ def photo_detail(request, pk):
     photo.incr('n_total_watched').save()
 
     comments = Comment.objects.filter(photo=photo)
+    votes = Vote.objects.filter(photo=photo)[:5]
     return render(request, 'photo_detail.html', context={
         "photo": photo,
-        "comments": comments
+        "comments": comments,
+        "votes": votes,
     })
 
 
