@@ -18,8 +18,8 @@
             <a href="/wechat/photos/{{ photo.id }}">
                 <div class="borderColor"></div>
                 <div class="userInfo">
-                    <div class="userImg"><img src="{{ photo.user.avatar_url }}"/></div>
-                    <span class="userName">{{ photo.user.nickname }}</span>
+                    <div class="userImg"><img src="{{ photo.user.userinfo.avatar_url }}"/></div>
+                    <span class="userName">{{ photo.user.userinfo.nickname }}</span>
                     <span class="userTime">{{ photo.created_at | naturaltime }}</span>
                     <div class="userText">{{ photo.description }}</div>
                 </div>

@@ -16,8 +16,8 @@
     <div class="homePage-details">
         <div class="borderColor"></div>
         <div class="userInfo-details">
-            <div class="userImg-details"><img src="{{ photo.user.avatar_url }}"/></div>
-            <span>{{ photo.user.nickname }}</span>
+            <div class="userImg-details"><img src="{{ photo.user.userinfo.avatar_url }}"/></div>
+            <span>{{ photo.user.userinfo.nickname }}</span>
             <em>{{ photo.created_at | naturaltime }}</em>
         </div>
         <div class="guppiesInfo">
@@ -49,8 +49,8 @@
                 {% for comment in comments %}
                 <div class="list">
                     <div class="listTitle">
-                        <div class="listImg"><img src="{{ comment.user.avatar_url }}"/></div>
-                        <span>{{ comment.user.nickname }}</span>
+                        <div class="listImg"><img src="{{ comment.user.userinfo.avatar_url }}"/></div>
+                        <span>{{ comment.user.userinfo.nickname }}</span>
                         <em>{{ comment.created_at | naturaltime }}</em>
                     </div>
                     <div class="commentCon">
