@@ -1,3 +1,5 @@
+import io
+
 import requests
 from rest_framework import pagination
 from rest_framework.response import Response
@@ -14,7 +16,8 @@ base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 
 def upload_url_to_qiniu(key, url):
     r = requests.get(url)
-    return upload_stream_to_qiniu(key, r.content)
+
+    return upload_stream_to_qiniu(key, io.BytesIO(r.content))
 
 
 def upload_stream_to_qiniu(key, stream):
