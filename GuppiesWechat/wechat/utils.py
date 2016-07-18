@@ -4,7 +4,7 @@ import requests
 from rest_framework import pagination
 from rest_framework.response import Response
 
-from qiniu import Auth, put_stream
+from qiniu import Auth, put_data
 
 access_key = '1H3USr1wF7hQ80AeRlq_BF0KoEnoJq2atE4UULwp'
 secret_key = 'awFedibl6FB3L-4FSXG1NY4Qq3MFwiDoZcNFDKTF'
@@ -17,13 +17,13 @@ base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 def upload_url_to_qiniu(key, url):
     r = requests.get(url)
 
-    return upload_stream_to_qiniu(key, io.BytesIO(r.content))
+    return upload_stream_to_qiniu(key, r.content)
 
 
-def upload_stream_to_qiniu(key, stream):
+def upload_stream_to_qiniu(key, data):
     token = q.upload_token(bucket_name, key, 3600)
 
-    ret, info = put_stream(token, key, stream, file_name=key, data_size=len(stream))
+    ret, info = put_data(token, key, data)
     print(info)
     return "{base_url}{key}".format(base_url=base_url, key=key)
 
