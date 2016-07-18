@@ -60,7 +60,8 @@ def callback(request):
                                     request.GET.get('nonce')):
         return HttpResponse(echostr)
     else:
-        return HttpResponse("error", status=500)
+
+        return HttpResponse(wechat_basic.response_text('工程师正在努力开发中'))
 
 
 def auth(request):
@@ -129,7 +130,7 @@ def auth(request):
                                         password=wechat_auth.openid)
         user.save()
 
-    key = '{user_id}_avatar_{timestamp}'.format(user_id=request.user.id, timestamp=time.time())
+    key = '{user_id}_avatar_{timestamp}'.format(user_id=user.id, timestamp=time.time())
     url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
     userinfo, created = UserInfo.objects.get_or_create(user=user, defaults={
         "nickname": wechat_auth.nickname,
