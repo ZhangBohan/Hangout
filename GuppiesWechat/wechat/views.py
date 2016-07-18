@@ -129,7 +129,7 @@ def auth(request):
                                         password=wechat_auth.openid)
         user.save()
 
-    key = '{user_id}_{timestamp}'.format(user_id=request.account.get('id'), timestamp=time.time())
+    key = '{user_id}_avatar_{timestamp}'.format(user_id=request.user.id, timestamp=time.time())
     url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
     userinfo, created = UserInfo.objects.get_or_create(user=user, defaults={
         "nickname": wechat_auth.nickname,
