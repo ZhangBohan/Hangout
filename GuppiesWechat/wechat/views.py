@@ -1,6 +1,8 @@
 import json
 from urllib.parse import quote_plus
 
+import time
+
 import requests
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
@@ -8,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.decorators import login_required
 from wechat.models import WechatAuth, UserInfo, Photo, Comment, Vote
+from wechat.utils import upload_url_to_qiniu
 from wechat_sdk import WechatConf, WechatBasic
 import logging
 
@@ -125,9 +128,12 @@ def auth(request):
         user = User.objects.create_user(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id),
                                         password=wechat_auth.openid)
         user.save()
+
+    key = '{user_id}_{timestamp}'.format(user_id=request.account.get('id'), timestamp=time.time())
+    url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
     userinfo, created = UserInfo.objects.get_or_create(user=user, defaults={
         "nickname": wechat_auth.nickname,
-        "avatar_url": wechat_auth.headimgurl
+        "avatar_url": url
     })
     if created:
         userinfo.save()

@@ -127,7 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'wechat.apps.CustomPagination',
+    'DEFAULT_PAGINATION_CLASS': 'wechat.utils.CustomPagination',
     'PAGE_SIZE': 20
 }
 

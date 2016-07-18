@@ -6,23 +6,10 @@ from django.db import models
 from django.apps import AppConfig
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
-from rest_framework import pagination
-from rest_framework.response import Response
 
 
 class WechatConfig(AppConfig):
     name = 'wechat'
-
-
-class CustomPagination(pagination.PageNumberPagination):
-    def get_paginated_response(self, data):
-        return Response({
-            'page': self.page.number,
-            'size': self.page_size,
-            'has_next': self.page.paginator.num_pages > self.page.number,
-            'count': self.page.paginator.count,
-            'results': data
-        })
 
 
 class WechatJSONEncoder(DjangoJSONEncoder):
