@@ -67,6 +67,9 @@ class WechatAuth(CommonModelMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.nickname
+
 
 class Photo(CommonModelMixin, models.Model):
     url = models.URLField("URL")
@@ -171,3 +174,6 @@ class Comment(CommonModelMixin, models.Model):
 
     class Meta:
         ordering = ('-created_at', )
+
+    def __str__(self):
+        return self.description
