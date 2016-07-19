@@ -21,3 +21,20 @@
 - [ ] 图片通过七牛token上传逻辑
 - [ ] 图片截取工具(http://fabricjs.com/ maybe?)
 
+## 项目运行
+
+```
+> cd $PROJECT_HOME/GuppiesWechat/GuppiesWechat  # PROJECT_HOME为项目目录
+> source ../.env/bin/activate
+./manage.py runserver
+```
+
+## 项目安装
+
+```
+> brew install python3 postgresql postgis
+
+> createuser --interactive
+
+
+```
