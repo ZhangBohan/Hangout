@@ -1,3 +1,23 @@
-{% for vote in votes %}
-    {{ vote.user.userinfo.nickname }}
-{% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <script src="/static/wechat/js/guppies.js"></script>
+    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
+    </script>
+</head>
+<body>
+<div class="usersList">
+    {% for vote in votes %}
+    <div class="listInfo">
+        <div class="userImg"><img src="{{ vote.user.userinfo.avatar_url }}"/></div>
+        <span>{{ vote.user.userinfo.nickname }}</span>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
