@@ -82,7 +82,8 @@ DATABASES = {
         'NAME': 'guppies_wechat',
         'USER': 'bohanzhang',
         'PASSWORD': '',
-        'HOST': '128.199.202.189',
+        # 'HOST': '128.199.202.189',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
@@ -110,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'zh_Hans'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
