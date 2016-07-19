@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'guppies_wechat',
         'USER': 'bohanzhang',
         'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'HOST': '128.199.202.189',
         'PORT': '5432',
     }
 }
