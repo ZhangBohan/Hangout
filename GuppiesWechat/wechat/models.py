@@ -26,11 +26,11 @@ class CommonModelMixin(object):
 
 class UserInfo(CommonModelMixin, models.Model):
     user = models.OneToOneField(User)
-    nickname = models.CharField("昵称", max_length=100)
-    avatar_url = models.URLField("头像")
-    n_photo = models.IntegerField(default=0)
-    n_total_mark = models.BigIntegerField(default=0)
-    n_vote = models.BigIntegerField(default=0)
+    nickname = models.CharField("昵称", max_length=100, help_text="昵称")
+    avatar_url = models.URLField("头像", help_text="头像")
+    n_photo = models.IntegerField(default=0, help_text="我的照片数")
+    n_total_mark = models.BigIntegerField(default=0, help_text="我的总得分数")
+    n_vote = models.BigIntegerField(default=0, help_text="我的总赞数")
 
     def __str__(self):
         return self.nickname
@@ -75,19 +75,19 @@ class WechatAuth(CommonModelMixin, models.Model):
 
 
 class Photo(CommonModelMixin, models.Model):
-    url = models.URLField("URL")
-    description = models.TextField("描述")
+    url = models.URLField("URL", help_text="URL")
+    description = models.TextField("描述", help_text="描述")
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, help_text="所有者")
     location = models.PointField(blank=True, null=True)
 
-    n_total_mark = models.BigIntegerField('总分数', default=0)
-    n_account_mark = models.BigIntegerField('打分人数', default=0)
+    n_total_mark = models.BigIntegerField('总分数', default=0, help_text="总分数")
+    n_account_mark = models.BigIntegerField('打分人数', default=0, help_text="打分人数")
 
-    n_account_comment = models.BigIntegerField('评论人数', default=0)
-    n_account_vote = models.BigIntegerField('赞人数', default=0)
+    n_account_comment = models.BigIntegerField('评论人数', default=0, help_text="评论人数")
+    n_account_vote = models.BigIntegerField('赞人数', default=0, help_text="赞人数")
 
-    n_total_watched = models.BigIntegerField('查看数', default=0)
+    n_total_watched = models.BigIntegerField('查看数', default=0, help_text="查看数")
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)

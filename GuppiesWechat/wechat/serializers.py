@@ -3,8 +3,8 @@ from wechat.models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
-    nickname = serializers.CharField(source='userinfo.nickname')
-    avatar_url = serializers.URLField(source='userinfo.avatar_url')
+    nickname = serializers.CharField(source='userinfo.nickname', help_text="昵称")
+    avatar_url = serializers.URLField(source='userinfo.avatar_url', help_text="头像")
 
     class Meta:
         model = User
@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True, help_text="所有者")
     latitude = serializers.FloatField(write_only=True, allow_null=True)
     longitude = serializers.FloatField(write_only=True, allow_null=True)
 
