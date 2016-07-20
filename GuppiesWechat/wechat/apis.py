@@ -29,7 +29,22 @@ class CommentListView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Comment.objects.filter(photo_id=self.kwargs['photo_id'])
 
+    def get(self, request, *args, **kwargs):
+        """
+        评论列表
+        ---
+        serializer: CommentSerializer
+        many: true
+        """
+        return super(CommentListView, self).get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
+        """
+        提交评论
+        ---
+        serializer: CommentSerializer
+        many: false
+        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(photo_id=kwargs.get('photo_id'), user=request.user)
@@ -47,6 +62,10 @@ class VotesView(APIView):
             raise Http404
 
     def post(self, request, photo_id):
+        """
+        点赞
+        ---
+        """
         photo = self.get_object(photo_id)
 
         Vote.objects.get_or_create(photo=photo, user=request.user)
@@ -54,6 +73,10 @@ class VotesView(APIView):
         return Response({})
 
     def delete(self, request, photo_id):
+        """
+        取消点赞
+        ---
+        """
         photo = self.get_object(photo_id)
         vote = Vote.objects.get(photo=photo, user=request.user)
         vote.delete()
@@ -70,6 +93,12 @@ class MarksView(APIView):
             raise Http404
 
     def post(self, request, photo_id):
+        """
+        打分
+        ---
+        serializer: MarkSerializer
+        many: false
+        """
         photo = self.get_object(photo_id)
 
         serializer = MarkSerializer(data=request.data)
@@ -101,7 +130,22 @@ class PhotoListView(generics.ListCreateAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        照片列表
+        ---
+        serializer: PhotoSerializer
+        many: true
+        """
+        return super(PhotoListView, self).get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
+        """
+        添加照片
+        ---
+        serializer: PhotoSerializer
+        many: false
+        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -125,6 +169,12 @@ class PhotoDetailView(APIView):
         return photo
 
     def get(self, request, pk, format=None):
+        """
+        取得照片
+        ---
+        serializer: PhotoSerializer
+        many: false
+        """
         photo = self.get_object(pk)
         serializer = PhotoDetailSerializer(photo)
         response = Response(serializer.data)
@@ -132,6 +182,12 @@ class PhotoDetailView(APIView):
         return response
 
     def put(self, request, pk, format=None):
+        """
+        更新照片
+        ---
+        serializer: PhotoSerializer
+        many: false
+        """
         photo = self.get_object_for_change(request, pk=pk)
         serializer = PhotoDetailSerializer(photo, data=request.data)
         if serializer.is_valid():
@@ -140,6 +196,12 @@ class PhotoDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
+        """
+        删除照片
+        ---
+        serializer: PhotoSerializer
+        many: false
+        """
         photo = self.get_object_for_change(request, pk=pk)
         photo.delete()
         return Response()
