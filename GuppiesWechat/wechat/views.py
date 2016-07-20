@@ -55,6 +55,13 @@ def vote_index(request, photo_id):
     })
 
 
+@login_required
+def mine(request):
+    return render(request, 'wechat_mine.html', context={
+        "user": request.user
+    })
+
+
 def callback(request):
     signature = request.GET.get('signature')
     timestamp = request.GET.get('timestamp')

@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>用户列表</title>
+    <title>我的小鱼</title>
+    <script src="/static/wechat/js/jquery-1.11.3.js"></script>
     <script src="/static/wechat/js/guppies.js"></script>
     <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
@@ -13,34 +14,26 @@
 <body>
 <div class="myGuppies">
     <div class="myImg">
-        <div><img src="img/userImg.jpg"/></div>
-        <span>微信名称</span>
+        <div><img src="{{ user.userinfo.avatar_url }}"/></div>
+        <span>{{ user.userinfo.nickname }}</span>
     </div>
     <div class="myInfo">
         <div>
             <p class="first">已晒图</p>
-            <p class="last">12</p>
+            <p class="last">{{ user.userinfo.n_photo }}</p>
         </div>
         <div>
             <p class="first">总得分</p>
-            <p class="last">1200</p>
+            <p class="last">{{ user.userinfo.n_total_mark }}</p>
         </div>
         <div>
             <p class="first">总被赞</p>
-            <p class="last">1234</p>
+            <p class="last">{{ user.userinfo.n_vote }}</p>
         </div>
     </div>
     <div class="storeUp">收藏</div>
-    <div class="homePage-banner">
-        <a href="#"><span>最新晒图</span></a>
-        <a href="#"><span>排行</span></a>
-        <label>
-            <input type="file" id="imgInp"/>
-            <span>上传图片</span>
-        </label>
-        <a href="#"><span>发现</span></a>
-        <a href="#" class="last"><span>我的小鱼</span></a>
-    </div>
+    {% include "_footer_bar.html" %}
 </div>
+{% include "_upload_image_box.html" %}
 </body>
 </html>

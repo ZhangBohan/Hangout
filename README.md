@@ -29,6 +29,8 @@
 ./manage.py runserver
 ```
 
+> 通过`Control + c`关闭项目
+
 ## 项目安装
 
 ```

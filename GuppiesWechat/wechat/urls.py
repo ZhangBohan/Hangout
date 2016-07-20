@@ -6,6 +6,7 @@ from wechat import apis
 urlpatterns = patterns('',
     url(r'^$', views.photo_index, name='index'),
     url(r'^photos/$', views.photo_index, name='photo-index'),
+    url(r'^mine/$', views.mine, name='mine'),
     url(r'^photos/(?P<pk>\d+)/$', views.photo_detail, name='photo-detail'),
     url(r'^photos/(?P<pk>\d+)/votes/$', views.vote_index, name='vote-index'),
     url(r'^callback$', views.callback, name='callback'),

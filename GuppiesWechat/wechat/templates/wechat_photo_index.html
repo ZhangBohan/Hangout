@@ -35,31 +35,8 @@
             </a>
         </div>
     {% endfor %}
-    <div class="homePage-banner">
-        <a href="#"><span>最新晒图</span></a>
-        <a href="#"><span>排行</span></a>
-        <label>
-            <input type="file" id="imgInp"/>
-            <span>上传图片</span>
-        </label>
-        <a href="#"><span>发现</span></a>
-        <a href="#" class="last"><span>我的小鱼</span></a>
-    </div>
+    {% include "_footer_bar.html" %}
 </div>
-<div class="alertBox1" style="display: none;">
-    <div class="floats"></div>
-    <div class="imgCut" id="imgCut1">确认截图&nbsp;></div>
-    <div class="alert">
-        <img id="blah" src=""/>
-    </div>
-    <div class="imgInfo">截取照片中最想展现的部分</div>
-</div>
-<div class="alertBox2" style="display: none;">
-    <div class="floats"></div>
-    <div class="imgCut" id="imgCut2">确认开晒！&nbsp;></div>
-    <div class="alert">
-        <textarea placeholder="输入您想说的话...必须10个字以上呦..."></textarea>
-    </div>
-</div>
+{% include "_upload_image_box.html" %}
 </body>
 </html>
