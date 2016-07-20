@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 
 from wechat import views
 from wechat import apis
@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^photos/(?P<pk>\d+)/votes/$', views.vote_index, name='vote-index'),
     url(r'^callback$', views.callback, name='callback'),
     url(r'^auth$', views.auth, name='auth'),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 )
 
 urlpatterns += patterns('',

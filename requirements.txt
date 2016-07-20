@@ -4,3 +4,4 @@ wechat-sdk
 qiniu
 djangorestframework
 ipython
+django-rest-swagger==0.3.8
