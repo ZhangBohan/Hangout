@@ -116,15 +116,15 @@ class Photo(CommonModelMixin, models.Model):
 
     @property
     def is_voted(self) -> bool:
-        return Vote.objects.filter(user_id=self.user_id).first() is not None
+        return Vote.objects.filter(user_id=self.user_id, photo=self).first() is not None
 
     @property
     def is_marked(self) -> bool:
-        return Mark.objects.filter(user_id=self.user_id).first() is not None
+        return Mark.objects.filter(user_id=self.user_id, photo=self).first() is not None
 
     @property
     def is_commented(self) -> bool:
-        return Comment.objects.filter(user_id=self.user_id).first() is not None
+        return Comment.objects.filter(user_id=self.user_id, photo=self).first() is not None
 
     @classmethod
     def last_week_best_photo_query(cls) -> QuerySet:
