@@ -40,7 +40,7 @@
                 {% for vote in votes %}
                     <span><img src="{{ vote.user.userinfo.avatar_url }}"></span>
                 {% endfor %}
-                <span><a href="javascript:;">...</a></span>
+                <span><a href="/wechat/photos/{{ photo.id }}/votes">...</a></span>
             {% endif %}
         </div>
         <div class="comment">

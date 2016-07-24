@@ -26,6 +26,7 @@ class PhotoSerializer(serializers.ModelSerializer):
                             'n_account_comment',
                             'n_account_vote',
                             'n_total_watched',
+                            'n_favorite',
                             'updated_at',
                             'created_at')
 
