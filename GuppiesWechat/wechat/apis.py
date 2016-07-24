@@ -83,6 +83,37 @@ class VotesView(APIView):
         return Response({})
 
 
+class FavoritesView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_object(self, pk):
+        try:
+            return Photo.objects.get(pk=pk)
+        except Photo.DoesNotExist:
+            raise Http404
+
+    def post(self, request, photo_id):
+        """
+        收藏
+        ---
+        """
+        photo = self.get_object(photo_id)
+
+        Favorite.objects.get_or_create(photo=photo, user=request.user)
+
+        return Response({})
+
+    def delete(self, request, photo_id):
+        """
+        取消收藏
+        ---
+        """
+        photo = self.get_object(photo_id)
+        favorite = Favorite.objects.get(photo=photo, user=request.user)
+        favorite.delete()
+        return Response({})
+
+
 class MarksView(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
@@ -122,6 +153,38 @@ class FileUploadView(APIView):
             "key": key,
             "url": "{base_url}{key}".format(base_url=base_url, key=key)
         })
+
+
+class MinePhotoView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    serializer_class = PhotoSerializer
+
+    def get_queryset(self):
+        order = self.request.query_params.get('order', 'default')
+        query = Photo.objects.filter(user=self.request.user).all()
+        if order in ['n_account_vote', 'n_total_mark']:
+            query = query.order_by('-' + order)
+        return query
+
+    def get(self, request, *args, **kwargs):
+        """
+        照片列表
+        ---
+        serializer: PhotoSerializer
+        many: true
+        parameters:
+            - name: order
+              description: 排序方式
+              type: string
+              paramType: query
+              enum:
+              - default
+              - n_account_vote
+              - n_total_mark
+        """
+
+        return super(MinePhotoView, self).get(request, *args, **kwargs)
 
 
 class PhotoListView(generics.ListCreateAPIView):

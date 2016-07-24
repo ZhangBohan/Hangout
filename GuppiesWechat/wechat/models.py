@@ -31,6 +31,7 @@ class UserInfo(CommonModelMixin, models.Model):
     n_photo = models.IntegerField(default=0, help_text="我的照片数")
     n_total_mark = models.BigIntegerField(default=0, help_text="我的总得分数")
     n_vote = models.BigIntegerField(default=0, help_text="我的总赞数")
+    n_favorite = models.BigIntegerField('收藏数', default=0, help_text="收藏数")
 
     def __str__(self):
         return self.nickname
@@ -88,6 +89,8 @@ class Photo(CommonModelMixin, models.Model):
     n_account_vote = models.BigIntegerField('赞人数', default=0, help_text="赞人数")
 
     n_total_watched = models.BigIntegerField('查看数', default=0, help_text="查看数")
+
+    n_favorite = models.BigIntegerField('收藏数', default=0, help_text="收藏数")
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -198,3 +201,22 @@ class Comment(CommonModelMixin, models.Model):
 
     def __str__(self):
         return self.description
+
+
+class Favorite(CommonModelMixin, models.Model):
+    user = models.ForeignKey(User)
+    photo = models.ForeignKey('Photo')
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        instance = super(Favorite, self).save(*args, **kwargs)
+        self.photo.incr('n_favorite').save()
+        self.photo.user.userinfo.incr('n_favorite').save()
+        return instance
+
+    def delete(self, using=None, keep_parents=False):
+        super(Favorite, self).delete(using, keep_parents)
+        self.photo.incr('n_favorite', -1).save()
+        self.photo.user.userinfo.incr('n_favorite', -1).save()
