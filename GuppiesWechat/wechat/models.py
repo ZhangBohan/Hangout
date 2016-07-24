@@ -1,4 +1,3 @@
-import json
 from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
@@ -33,8 +32,23 @@ class UserInfo(CommonModelMixin, models.Model):
     n_vote = models.BigIntegerField(default=0, help_text="我的总赞数")
     n_favorite = models.BigIntegerField('收藏数', default=0, help_text="收藏数")
 
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.nickname
+
+
+class UserLocation(CommonModelMixin, models.Model):
+    user = models.OneToOneField(User)
+
+    location = models.PointField(blank=True, null=True)
+    city = models.CharField("城市", max_length=100, null=True)
+    country = models.CharField("国家", max_length=100, null=True)
+    province = models.CharField("省份", max_length=100, null=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class WechatAuth(CommonModelMixin, models.Model):
@@ -81,6 +95,9 @@ class Photo(CommonModelMixin, models.Model):
 
     user = models.ForeignKey(User, help_text="所有者")
     location = models.PointField(blank=True, null=True)
+    city = models.CharField("城市", max_length=100, null=True)
+    country = models.CharField("国家", max_length=100, null=True)
+    province = models.CharField("省份", max_length=100, null=True)
 
     n_total_mark = models.BigIntegerField('总分数', default=0, help_text="总分数")
     n_account_mark = models.BigIntegerField('打分人数', default=0, help_text="打分人数")
@@ -102,6 +119,11 @@ class Photo(CommonModelMixin, models.Model):
         return self.description
 
     def save(self, *args, **kwargs):
+        self.province = self.user.userlocation.province
+        self.city = self.user.userlocation.city
+        self.country = self.user.userlocation.country
+        self.location = self.user.userlocation.location
+
         photo = super(Photo, self).save(*args, **kwargs)
         self.user.userinfo.incr('n_photo').save()
         return photo

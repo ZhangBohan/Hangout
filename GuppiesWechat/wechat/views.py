@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.decorators import login_required
-from wechat.models import WechatAuth, UserInfo, Photo, Comment, Vote
+from wechat.models import WechatAuth, UserInfo, Photo, Comment, Vote, UserLocation
 from wechat.utils import upload_url_to_qiniu
 from wechat_sdk import WechatConf, WechatBasic
 import logging
@@ -146,14 +146,24 @@ def auth(request):
         user.save()
 
     key = '{user_id}_avatar_{timestamp}'.format(user_id=user.id, timestamp=time.time())
-    url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
-    userinfo, created = UserInfo.objects.get_or_create(user=user, defaults={
-        "nickname": wechat_auth.nickname,
-        "avatar_url": url
-    })
-    if created:
-        userinfo.save()
-    user.userinfo = userinfo
+    try:
+        UserInfo.objects.get(user=user)
+    except UserInfo.DoesNotExist:
+        url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
+        UserInfo.objects.create(user=user,
+                                nickname=wechat_auth.nickname,
+                                avatar_url=url
+                                ).save()
+
+    try:
+        UserLocation.objects.get(user=user)
+    except UserLocation.DoesNotExist:
+        UserLocation.objects.create(user=user,
+                                    country=wechat_auth.country,
+                                    province=wechat_auth.province,
+                                    city=wechat_auth.city,
+                                    ).save()
+
     auth_user = authenticate(username=user.username, password=wechat_auth.openid)
     if auth_user is not None:
         # the password verified for the user
