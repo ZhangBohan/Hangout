@@ -60,10 +60,10 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="detailsBanner">
-            <a href="#">收藏</a>
-            <a href="#">已点赞</a>
-            <a href="#">已评分</a>
+        <div class="detailsBanner" data-photo-id="{{ photo.id }}">
+            <a href="#">{% if photo.is_favorite %}已{% endif %}收藏</a>
+            <a href="#">{% if photo.is_voted %}已{% endif %}点赞</a>
+            <a href="#">{% if photo.is_marked %}已{% endif %}评分</a>
             <a href="#">评论</a>
         </div>
     </div>
