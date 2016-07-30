@@ -64,10 +64,29 @@
             </div>
         </div>
         <div class="detailsBanner" data-photo-id="{{ photo.id }}">
-            <a class="getStore {% if photo.is_favorite %}active{% endif %}" href="#">{% if photo.is_favorite %}已{% endif %}收藏</a>
-            <a class="getGood {% if photo.is_voted %}active{% endif %}" href="#">{% if photo.is_voted %}已{% endif %}点赞</a>
-            <a class="getScore" href="#">{% if photo.is_marked %}已{% endif %}评分</a>
-            <a href="#">评论</a>
+            <a class="getStore {% if photo.is_favorite %}active{% endif %}" href="javascript:;">{% if photo.is_favorite %}已{% endif %}收藏</a>
+            <a class="getGood {% if photo.is_voted %}active{% endif %}" href="javascript:;">{% if photo.is_voted %}已{% endif %}点赞</a>
+            <a class="getScore {% if photo.is_marked %}active{% endif %}" href="javascript:;">{% if photo.is_marked %}已{% endif %}评分</a>
+            <a class="getComment" href="javascript:;">评论</a>
+        </div>
+    </div>
+</div>
+<div class="alertBox2" style="display: none;">
+    <div class="floats"></div>
+    <div class="alert">
+        <p class="scoreTips">请写下您心中神圣的分数</p>
+        <input type="text" class="scoreInput" placeholder="输入1-100的数字"/>
+        <input type="button" class="scoreButton" value="确定"/>
+    </div>
+</div>
+<div class="alertBox3" style="display: none;">
+    <div class="floats"></div>
+    <div class="alert">
+        <p>发表评论</p>
+        <textarea class="commentVal" placeholder="填写评论内容"></textarea>
+        <div>
+            <input type="button" value="取消" class="cancle"/>
+            <input type="button" value="确定" class="commentButton"/>
         </div>
     </div>
 </div>
@@ -116,13 +135,57 @@
         }
     });
     $('.getScore').click(function(){
+        if(!$('.getScore').hasClass('active')){
+            $('.alertBox2').show();
+        }
+    });
+    $('.scoreButton').click(function(){
         $.ajax({
             method:'POST',
             url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/marks',
+            data:{
+                mark:$('.scoreInput').val()
+            },
             success:function(data){
                 console.log(data);
             }
         });
+        $('.alertBox2').hide();
+        $('.getScore').addClass('active').text('已评分');
+    });
+    $('.getComment').click(function(){
+        $('.alertBox3').show();
+    });
+    $('.cancle').click(function(){
+        $('.alertBox3').hide();
+    });
+    $('.commentButton').click(function(){
+        $.ajax({
+            method:'POST',
+            url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/comments',
+            data:{
+                description:$('.commentVal').val()
+            },
+            success:function(data){
+                console.log(data);
+                //console.log(data.user.avatar_url);
+
+                var html = $(' <div class="list"> '+
+                        ' <div class="listTitle"> '+
+                        ' <div class="listImg"><img src="'+ data.user.avatar_url +'"/></div> '+
+                        ' <span>'+ data.user.nickname +'</span> '+
+                        ' <em>刚刚</em> '+
+                        ' </div> '+
+                        ' <div class="commentCon">'+ data.description +'</div> '+
+                        ' </div> ');
+
+                $('.commentList').prepend(html);
+
+                var num = parseInt($('.commentNum span').text()) + 1;
+                $('.commentNum span').text(num);
+            }
+        });
+        $('.alertBox3').hide();
     });
 </script>
 </body>

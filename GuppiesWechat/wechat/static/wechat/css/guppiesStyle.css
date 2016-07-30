@@ -461,3 +461,75 @@ body {
   line-height: 1rem;
   text-indent: 0.44rem;
 }
+
+
+/* 这个更新代码的时候需要加上下面的的CSS */
+.scoreTips{
+  height: 1.4rem;
+  line-height: 1.4rem;
+  width: 6rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.scoreInput{
+  border: 1px solid #7c7c7c;
+  width: 8rem;
+  height: 2rem;
+  background: #ffffff;
+  position: fixed;
+  z-index: 5;
+  left: 1rem;
+  text-align: center;
+  font-size: 0.46rem;
+}
+.scoreButton{
+  width: 4rem;
+  height: 1rem;
+  background: #ffffff;
+  border: 1px solid #7c7c7c;
+  position: absolute;
+  left: 3rem;
+  bottom: 1rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.alertBox3 .alert{
+  width: 8rem;
+  height: 6.2rem;
+  left: 50%;
+  margin-left: -4rem;
+  background: #ffffff;
+}
+.alertBox3 .alert p{
+  height: 1rem;
+  line-height: 1rem;
+  text-align: center;
+}
+.alertBox3 .alert textarea{
+  box-sizing: border-box;
+  width: 8rem;
+  height: 4rem;
+  border: 2px solid #dcdcdc;
+  font-size: 0.4rem;
+}
+.alertBox3 .alert div{
+  height: 1.1rem;
+  border-top: 1px solid #dcdcdc;
+}
+.alertBox3 .alert div input{
+  width: 4rem;
+  height: 1.2rem;
+  float: left;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: none;
+  border-right: 1px solid #dcdcdc;
+  font-size: 0.4rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+}
+.alertBox3 .alert div input:nth-of-type(2){
+  border-right: none;
+}
+/* 到这里 */
