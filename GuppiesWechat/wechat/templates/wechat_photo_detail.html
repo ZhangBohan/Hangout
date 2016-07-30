@@ -12,6 +12,9 @@
     <script>
         document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
     </script>
+    <style>
+        .active{ color: #31b0d5; }
+    </style>
 </head>
 <body>
 <div class="doc">
@@ -61,12 +64,34 @@
             </div>
         </div>
         <div class="detailsBanner">
-            <a href="#">收藏</a>
-            <a href="#">已点赞</a>
+            <a class="getStore" href="#">收藏</a>
+            <a class="getGood" href="#">已点赞</a>
             <a href="#">已评分</a>
             <a href="#">评论</a>
         </div>
     </div>
 </div>
+<script>
+    // ajax
+    $('.getGood').click(function(){
+        $.ajax({
+            method:'POST',
+            url:'/wechat/api/photos/3/votes',
+            success:function(data){
+                console.log(data);
+                $('.getGood').addClass('active');
+            }
+        })
+    });
+    $('.getStore').click(function(){
+        $.ajax({
+            method:'POST',
+            url:'/wechat/api/photos/3/favorites',
+            success:function(data){
+                console.log(data);
+            }
+        });
+    });
+</script>
 </body>
 </html>
