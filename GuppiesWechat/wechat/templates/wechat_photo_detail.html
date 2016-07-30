@@ -64,9 +64,9 @@
             </div>
         </div>
         <div class="detailsBanner" data-photo-id="{{ photo.id }}">
-            <a class="getStore" href="#">{% if photo.is_favorite %}已{% endif %}收藏</a>
-            <a class="getGood" href="#">{% if photo.is_voted %}已{% endif %}点赞</a>
-            <a href="#">{% if photo.is_marked %}已{% endif %}评分</a>
+            <a class="getStore {% if photo.is_favorite %}active{% endif %}" href="#">{% if photo.is_favorite %}已{% endif %}收藏</a>
+            <a class="getGood {% if photo.is_voted %}active{% endif %}" href="#">{% if photo.is_voted %}已{% endif %}点赞</a>
+            <a class="getScore" href="#">{% if photo.is_marked %}已{% endif %}评分</a>
             <a href="#">评论</a>
         </div>
     </div>
@@ -74,19 +74,51 @@
 <script>
     // ajax
     $('.getGood').click(function(){
-        $.ajax({
-            method:'POST',
-            url:'/wechat/api/photos/3/votes',
-            success:function(data){
-                console.log(data);
-                $('.getGood').addClass('active');
-            }
-        })
+        if($(this).hasClass('active')){
+            $.ajax({
+                method:'DELETE',
+                url:'/wechat/api/photos/' + $('.detailsBanner').data('photo-id') + '/votes',
+                success:function(data){
+                    console.log(data);
+                    $('.getGood').removeClass('active').text('点赞');
+                }
+            })
+        }else{
+            $.ajax({
+                method:'POST',
+                url:'/wechat/api/photos/' + $('.detailsBanner').data('photo-id') + '/votes',
+                success:function(data){
+                    console.log(data);
+                    $('.getGood').addClass('active').text('已点赞');
+                }
+            })
+        }
     });
     $('.getStore').click(function(){
+        if($(this).hasClass('active')){
+            $.ajax({
+                method:'DELETE',
+                url:'/wechat/api/photos/' + $('.detailsBanner').data('photo-id') + '/favorites',
+                success:function(data){
+                    console.log(data);
+                    $('.getStore').removeClass('active').text('收藏');
+                }
+            });
+        }else{
+            $.ajax({
+                method:'POST',
+                url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/favorites',
+                success:function(data){
+                    console.log(data);
+                    $('.getStore').addClass('active').text('已收藏');
+                }
+            });
+        }
+    });
+    $('.getScore').click(function(){
         $.ajax({
             method:'POST',
-            url:'/wechat/api/photos/3/favorites',
+            url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/marks',
             success:function(data){
                 console.log(data);
             }
