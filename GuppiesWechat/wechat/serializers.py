@@ -27,8 +27,11 @@ class PhotoSerializer(serializers.ModelSerializer):
                             'n_account_vote',
                             'n_total_watched',
                             'n_favorite',
+                            'city',
+                            'country',
+                            'province',
                             'updated_at',
-                            'created_at')
+                            'created_at',)
 
     def create(self, validated_data):
         latitude = validated_data.pop('latitude')

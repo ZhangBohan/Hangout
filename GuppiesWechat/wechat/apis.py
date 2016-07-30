@@ -139,12 +139,26 @@ class MarksView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FileUploadView(APIView):
+class QiniuTokenView(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     parser_classes = (FileUploadParser,)
 
-    def post(self, request, format=None):
+    def post(self, request):
+        """
+        取得token
+        ---
+        type:
+          key:
+            required: true
+            type: string
+          url:
+            required: false
+            type: url
+          token:
+            required: true
+            type: string
+        """
         key = '{user_id}_{timestamp}'.format(user_id=request.user.id, timestamp=time.time())
         token = q.upload_token(bucket_name, key, 3600)
 

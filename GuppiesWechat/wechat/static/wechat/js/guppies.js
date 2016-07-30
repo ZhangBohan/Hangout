@@ -16,6 +16,7 @@ $(function(){
         readURL(this);
         $('.alertBox1').show();
         $('body').css('overflow','hidden');
+        qiniu_upload(this);
     });
 
     // 确认开晒
