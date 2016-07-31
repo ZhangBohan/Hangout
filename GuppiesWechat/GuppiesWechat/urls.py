@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^wechat/', include('wechat.urls')),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

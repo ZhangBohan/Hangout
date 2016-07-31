@@ -461,6 +461,173 @@ body {
   line-height: 1rem;
   text-indent: 0.44rem;
 }
+.rankWrap1 .div {
+  background: #ffffff;
+  margin-bottom: 0.4rem;
+}
+.rankWrap1 .div .div1 {
+  height: 1.4rem;
+  line-height: 1.4rem;
+  border-bottom: 1px solid #dcdcdc;
+}
+.rankWrap1 .div .div1 span {
+  float: left;
+  margin-left: 1rem;
+}
+.rankWrap1 .div .div1 em {
+  float: right;
+  margin-right: 1rem;
+}
+.rankWrap2:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.rankWrap2 .div {
+  float: left;
+  width: 3.33rem;
+  height: 4rem;
+  box-sizing: border-box;
+  border-right: 1px solid #dcdcdc;
+  border-bottom: 1px solid #dcdcdc;
+}
+.rankWrap2 .div .imgDiv {
+  width: 3.33rem;
+  height: 3.33rem;
+}
+.rankWrap2 .div .imgDiv img {
+  width: 100%;
+}
+.rankWrap2 .div p {
+  height: 0.66rem;
+  line-height: 0.66rem;
+  text-align: center;
+}
+.rankWrap2 .div:nth-of-type(3n) {
+  border-right: none;
+}
+.rankWrap3 .div1 {
+  width: 10rem;
+  height: 7rem;
+  position: relative;
+}
+.rankWrap3 .div1 .imgDiv1 {
+  position: absolute;
+  width: 10rem;
+  height: 7rem;
+}
+.rankWrap3 .div1 .imgDiv1 img {
+  width: 100%;
+  height: 100%;
+}
+.rankWrap3 .div1 .imgDiv2 {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  left: 2rem;
+  top: 0.5rem;
+}
+.rankWrap3 .div1 .imgDiv2 img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.rankWrap3 .div1 span {
+  position: absolute;
+  color: #ffffff;
+  left: 3.2rem;
+  top: 0.74rem;
+}
+.rankWrap3 .div2 {
+  height: 2.4rem;
+  position: relative;
+  border-bottom: 0.2rem solid #dcdcdc;
+}
+.rankWrap3 .div2 .left {
+  width: 7rem;
+  height: 2.4rem;
+  position: relative;
+}
+.rankWrap3 .div2 .left .imgDiv {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  position: absolute;
+  left: 0.8rem;
+  top: 0.6rem;
+}
+.rankWrap3 .div2 .left .imgDiv img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.rankWrap3 .div2 .left span {
+  position: absolute;
+  left: 2rem;
+  top: 0.6rem;
+}
+.rankWrap3 .div2 .left em {
+  position: absolute;
+  left: 2rem;
+  top: 1.2rem;
+}
+.rankWrap3 .div2 .right {
+  position: absolute;
+  width: 3rem;
+  height: 2.4rem;
+  right: 0;
+  top: 0;
+}
+.rankWrap3 .div2 .right span {
+  position: absolute;
+  top: 1rem;
+  left: 0.2rem;
+}
+.rankWrap3 .div3 {
+  height: 2rem;
+  position: relative;
+  border-bottom: 1px solid #dcdcdc;
+}
+.rankWrap3 .div3 .left {
+  width: 7rem;
+  height: 2rem;
+}
+.rankWrap3 .div3 .left span {
+  position: absolute;
+  left: 0.3rem;
+  top: 0.8rem;
+}
+.rankWrap3 .div3 .left .imgDiv {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  position: absolute;
+  left: 0.8rem;
+  top: 0.5rem;
+}
+.rankWrap3 .div3 .left .imgDiv img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.rankWrap3 .div3 .left em {
+  position: absolute;
+  left: 2rem;
+  top: 0.8rem;
+}
+.rankWrap3 .div3 .right {
+  width: 3rem;
+  height: 2rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.rankWrap3 .div3 .right span {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.2rem;
+}
 
 
 /* 这个更新代码的时候需要加上下面的的CSS */

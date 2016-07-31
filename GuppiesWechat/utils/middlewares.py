@@ -1,3 +1,5 @@
+import logging
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponse, HttpRequest
 
@@ -29,6 +31,7 @@ class ExceptionMiddleware(object):
     def process_exception(self, request, exception):
 
         if request.META.get('CONTENT_TYPE') == 'application/json':
+            logging.exception(exception)
             if isinstance(exception, ObjectDoesNotExist):
                 return JsonResponse({}, status=404)
-        return JsonResponse({}, status=500)
+            return JsonResponse({}, status=500)

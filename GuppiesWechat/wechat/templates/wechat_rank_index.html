@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>小鱼</title>
+    <script src="/static/wechat/js/jquery-1.11.3.js"></script>
+    <script src="/static/wechat/js/guppies.js"></script>
+    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
+    </script>
+</head>
+<body style="background: #dcdcdc;">
+<div class="rankWrap1">
+    <div class="div">
+        <div class="div1">
+            <span>7天内得分</span>
+            <em> > </em>
+        </div>
+        <div class="div1">
+            <span>7天内获赞</span>
+            <em> > </em>
+        </div>
+    </div>
+    <div class="div">
+        <div class="div1">
+            <span>经久不衰得分榜</span>
+            <em> > </em>
+        </div>
+        <div class="div1">
+            <span>经久不衰获赞榜</span>
+            <em> > </em>
+        </div>
+    </div>
+    <div class="div">
+        <div class="div1">
+            <span>平均得分最高玩家</span>
+            <em> > </em>
+        </div>
+        <div class="div1">
+            <span>平均获赞最高玩家</span>
+            <em> > </em>
+        </div>
+    </div>
+    {% include "_footer_bar.html" %}
+</div>
+{% include "_upload_image_box.html" %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>小鱼</title>
+    <script src="/static/wechat/js/jquery-1.11.3.js"></script>
+    <script src="/static/wechat/js/guppies.js"></script>
+    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
+    </script>
+</head>
+<body>
+<div class="rankWrap2">
+    {% for photo in photos %}
+        <div class="div">
+            <div class="imgDiv">
+                <img src="{{ photo.url }}"/>
+            </div>
+            <p>NO.1&nbsp;&nbsp;{{ photo.n_account_vote }}赞</p>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>

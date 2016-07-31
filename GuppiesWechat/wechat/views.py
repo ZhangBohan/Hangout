@@ -62,6 +62,31 @@ def mine(request):
     })
 
 
+@login_required
+def rank_index(request):
+    return render(request, 'wechat_rank_index.html', context={
+        "user": request.user
+    })
+
+
+@login_required
+def rank_scores(request):
+    photos = Photo.objects.all()
+    return render(request, 'wechat_rank_scores.html', context={
+        "user": request.user,
+        "photos": photos
+    })
+
+
+@login_required
+def rank_users(request):
+    userinfos = UserInfo.objects.all()
+    return render(request, 'wechat_rank_users.html', context={
+        "user": request.user,
+        "userinfos": userinfos
+    })
+
+
 def callback(request):
     signature = request.GET.get('signature')
     timestamp = request.GET.get('timestamp')

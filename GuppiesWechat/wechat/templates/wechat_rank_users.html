@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>小鱼</title>
+    <script src="/static/wechat/js/jquery-1.11.3.js"></script>
+    <script src="/static/wechat/js/guppies.js"></script>
+    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <script>
+        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
+    </script>
+</head>
+<body>
+<div class="rankWrap3">
+    {% with userinfo=userinfos|first %}
+        <div class="div1">
+            <div class="imgDiv1"><img src="http://oa3rslghz.bkt.clouddn.com/fish-img2.png"/></div>
+            <div class="imgDiv2"><img src="{{ userinfo.avatar_url }}"></div>
+            <span>{{ userinfo.nickname }} &nbsp;占领了封面</span>
+        </div>
+    {% endwith %}
+
+    <div class="div2">
+        <div class="left">
+            <div class="imgDiv"><img src="{{ user.userinfo.avatar_url }}"/></div>
+            <span>{{ user.userinfo.nickname }}</span>
+            <em>第100名</em>
+        </div>
+        <div class="right"><span>{{ user.userinfo.n_total_mark }}分</span></div>
+    </div>
+
+    {% for userinfo in userinfos %}
+        {% if not loop.first %}
+            <div class="div3">
+                <div class="left">
+                    <span>1</span>
+                    <div class="imgDiv"><img src="{{ userinfo.avatar_url }}"/></div>
+                    <em>{{ userinfo.nickname }}</em>
+                </div>
+                <div class="right"><span>{{ userinfo.n_total_mark }}分</span></div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+</body>
+</html>
