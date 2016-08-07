@@ -6,6 +6,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
+from wechat.models import *
 from wechat.serializers import *
 from rest_framework import status
 from rest_framework import permissions
@@ -317,3 +318,20 @@ class VoteUsersView(generics.ListAPIView):
 
         serializer = self.get_serializer(users, many=True)
         return self.get_paginated_response(serializer.data)
+
+
+class LoginUserView(APIView):
+    def get(self, request):
+        """
+        取得我的信息
+        ---
+        serializer: UserSerializer
+
+        """
+        if isinstance(request.user, AnonymousUser):
+            data = {
+                'login_url': '/auth'
+            }
+            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
