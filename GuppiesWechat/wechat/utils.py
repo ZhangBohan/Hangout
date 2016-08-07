@@ -29,10 +29,12 @@ def upload_stream_to_qiniu(key, data):
 
 
 class CustomPagination(pagination.PageNumberPagination):
+    page_size_query_param = 'page_size'
+
     def get_paginated_response(self, data):
         return Response({
             'page': self.page.number,
-            'size': self.page_size,
+            'page_size': self.page_size,
             'has_next': self.page.paginator.num_pages > self.page.number,
             'count': self.page.paginator.count,
             'results': data

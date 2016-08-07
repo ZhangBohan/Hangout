@@ -5,9 +5,8 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from wechat.models import *
 from rest_framework import generics
-from wechat.serializers import PhotoSerializer, CommentSerializer, MarkSerializer, PhotoDetailSerializer
+from wechat.serializers import *
 from rest_framework import status
 from rest_framework import permissions
 
@@ -282,3 +281,39 @@ class PhotoDetailView(APIView):
         photo = self.get_object_for_change(request, pk=pk)
         photo.delete()
         return Response()
+
+
+class VoteUsersView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        photo = Photo.objects.get(pk=self.kwargs['photo_id'])
+        return Vote.objects.filter(photo=photo).all()
+
+    def get(self, request, *args, **kwargs):
+        """
+        赞用户列表
+        ---
+        parameters:
+            - name: page
+              description: 页数
+              type: integer
+              paramType: query
+              default: 1
+            - name: page_size
+              description: 每页个数
+              type: integer
+              paramType: query
+              default: 20
+
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+
+        users = []
+        for vote in page:
+            users.append(vote.user)
+
+        serializer = self.get_serializer(users, many=True)
+        return self.get_paginated_response(serializer.data)
