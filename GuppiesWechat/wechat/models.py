@@ -148,6 +148,10 @@ class Photo(CommonModelMixin, models.Model):
         return Mark.objects.filter(user_id=self.user_id, photo=self).first() is not None
 
     @property
+    def is_favorited(self) -> bool:
+        return Favorite.objects.filter(user_id=self.user_id, photo=self).first() is not None
+
+    @property
     def is_favorite(self) -> bool:
         return Favorite.objects.filter(user_id=self.user_id, photo=self).first() is not None
 
