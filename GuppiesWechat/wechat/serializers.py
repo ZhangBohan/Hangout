@@ -47,6 +47,7 @@ class PhotoSerializer(serializers.ModelSerializer):
 class PhotoDetailSerializer(PhotoSerializer):
     is_marked = serializers.BooleanField(help_text="是否打分")
     is_voted = serializers.BooleanField(help_text="是否赞")
+    is_favorited = serializers.BooleanField(help_text="是否收藏")
 
     class Meta:
         model = Photo
