@@ -1,0 +1,602 @@
+@base_rem: 75rem;
+
+.image-block(@width, @heigth) {
+    width: @width;
+    height: @heigth;
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.square-image-block(@size) {
+  .image-block(@size, @size);
+}
+
+.round-image-block(@size) {
+    width: @size;
+    height: @size;
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+}
+
+/* 样式重置 */
+body,h1,h2,h3,h4,h5,h6,p,dl,dd,ul,ol,pre,form,input,textarea,th,td,select{margin: 0;padding: 0; font-family: Arial, "微软雅黑"; }
+em{font-style: normal;}
+li{list-style: none;}
+a{text-decoration: none; color: #2a2a2a; }
+img{border: none;vertical-align: top;}
+table{border-collapse: collapse;}
+textarea{resize: none;overflow: auto;}
+input,textarea{resize: none;overflow: auto;}
+/* 首页 */
+body{
+  font-size: 0.347rem;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.container{
+  position: relative;
+  margin-bottom: 1.3rem;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.delete-button {
+    background-color: #fbfbfb;
+    color: #167ee9;
+    font: 25 / @base_rem;
+    padding: 20 / @base_rem 0;
+    text-align: center;
+}
+
+.user{
+  border-bottom: 1px solid #e2e2e2;
+  .userMes{
+    height: 1.36rem;
+    position: relative;
+    .userImg{
+      height: 0.96rem;
+      width: 0.96rem;
+      border: 1px solid #dcdcdc;
+      border-radius: 50%;
+      position: absolute;
+      left: 0.4rem;
+      top: 0.2rem;
+      img{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+    .userName{
+      font-size: (26rem / @base_rem);
+      font-weight: bold;
+      color: #333333;
+      position: absolute;
+      left: 1.6rem;
+      top: 0.53rem;
+    }
+    .userTime{
+      font-size: 0.293rem;
+      color: #999999;
+      position: absolute;
+      top: 0.6rem;
+      right: 0.4rem;
+    }
+  }
+  .fishMes{
+    width: 9.2rem;
+    margin: 0 auto;
+    line-height: 0.507rem;
+    font-size: 0.36rem;
+    color: #333333;
+  }
+  .fishDetail{
+    font-size: 0.347rem;
+    width: 9.2rem;
+    margin: 0 auto;
+    color: #999999;
+    height: 0.65rem;
+    line-height: 0.65rem;
+  }
+  .fishImg{
+    width: 10rem;
+    height: 10rem;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .userExtraWrap{
+    height: 0.96rem;
+    .userExtra{
+      height: 0.4rem;
+      div{
+        box-sizing: border-box;
+        width: 25%;
+        float: left;
+        border-right: 1px solid #e2e2e2;
+        text-align: center;
+        position: relative;
+        top: 0.293rem;
+        color: #999999;
+        span{
+          color: #666666;
+        }
+      }
+      div:last-of-type{
+        border-right: none;
+      }
+      .score{
+        color: #ee4957;
+      }
+    }
+  }
+}
+.banner{
+  position: fixed;
+  bottom: 0;
+  height: 1.3rem;
+  width: 10rem;
+  background: #f9f9f9;
+  border-top: 1px solid #acacac;
+  .bannerList{
+    float: left;
+    width: 20%;
+    height: 1.24rem;
+    .bannerImg{
+      width: 56 / @base_rem;
+      height: 68 / @base_rem;
+      margin: 0.18rem auto 0.08rem;
+      input{
+        display: none;
+      }
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .bannerMes{
+      text-align: center;
+    }
+  }
+}
+
+.likeUserList {
+    padding-left: 30 / @base_rem;
+    margin-bottom: 1.3rem;
+
+    .likeUser {
+        height: (30 * 2 + 75) / @base_rem;
+        display: -webkit-flex;
+    	display: flex;
+    	-webkit-flex-direction: row;
+    	flex-direction: row;
+        .avatar {
+            .round-image-block(75 / @base_rem);
+            margin-top: 30 / @base_rem;
+            margin-bottom: 30  / @base_rem;
+        }
+        .userExtra {
+            -webkit-flex: auto;
+	        flex: auto;
+            display: -webkit-flex;
+        	display: flex;
+            padding-right: 30 / @base_rem;
+            border-bottom: 1px solid #e2e2e2;
+        }
+        .info {
+            padding-left: 20 / @base_rem;
+            padding-top: 40  / @base_rem;
+            padding-bottom: 30 / @base_rem;
+
+            -webkit-flex: auto;
+	        flex: auto;
+        }
+        .nickname {
+            font-size: 24 / @base_rem;
+            font-weight: bold;
+            color: #333333;
+        }
+        .timeago {
+            margin-top: 10 / @base_rem;
+            font-size: 20 / @base_rem;
+            color: #999999;
+        }
+    }
+
+    .arrow {
+        padding-top: (75 + 30 * 2 - 20) / 2 / @base_rem;
+        padding-bottom: (75 + 30 * 2 - 20) / 2 / @base_rem;
+        float: right;
+        .image-block(20 / @base_rem, 35 / @base_rem)
+    }
+}
+
+.fishUser {
+    .header {
+        width: 100%;
+        height: 420 / @base_rem;
+        .avatar {
+            margin: 0 auto;
+            padding-top: 130 / @base_rem;
+            padding-left: auto;
+            padding-right: auto;
+            .round-image-block(120 / @base_rem);
+        }
+        .nickname {
+            text-align: center;
+            font-size: 36 / @base_rem;
+            font-weight: bolder;
+            color: #ffffff;
+            margin-top: 16 / @base_rem;
+        }
+        .bio {
+            text-align: center;
+            font-size: 24 / @base_rem;
+            color: #ffffff;
+            margin: (36 / @base_rem) (80 / @base_rem);
+        }
+    }
+    .score {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: row;
+    	flex-direction: row;
+        .block {
+            width: 50%;
+            text-align: center;
+            margin-top: 20 / @base_rem;
+            margin-bottom: 25 / @base_rem;
+
+            &:first-child {
+                border-right: 1px solid #e2e2e2;
+            }
+            .name {
+                font-size: 24 / @base_rem;
+                color: #999999;
+            }
+            .value {
+                margin-top: 11  / @base_rem;
+                font-size: 30 / @base_rem;
+                color: #333333;
+            }
+        }
+    }
+
+    .linkList {
+        .link {
+            height: 90 / @base_rem;
+            padding: 30 / @base_rem;
+            border-bottom: 1px solid #e2e2e2;
+
+            &:first-child{
+                border-top: 1px solid #e2e2e2;
+            }
+
+            .icon {
+                float: left;
+                .square-image-block(30 / @base_rem);
+                margin: 30 / @base_rem 0;
+            }
+            .name {
+                float: left;
+                margin-top: 30 / @base_rem;
+                margin-left: 12  / @base_rem;
+                font-size: 30 / @base_rem;
+                color: #333333;
+            }
+            .count {
+                float: right;
+                font-size: 30 / @base_rem;
+                color: #999999;
+                margin-top: 30 / @base_rem;
+            }
+            .arrow {
+                margin-top: 30 / @base_rem;
+                margin-left: 15 / @base_rem;
+                float: right;
+                .image-block(20 / @base_rem, 30 / @base_rem);
+            }
+        }
+    }
+}
+
+.rank {
+    background-color: #f9f9f9;
+    header {
+        background-color: #fff;
+        .headerBanner {
+            height: 510 / @base_rem;
+            width: 100%;
+            display: -webkit-flex;
+            display: flex;
+            justify-content: center;
+            .headerUserInfo {
+                display: -webkit-flex;
+                display: flex;
+                -webkit-flex-direction: row;
+                flex-direction: row;
+                padding-top: 20 / @base_rem;
+                .avatar {
+                    .round-image-block(65 / @base_rem);
+                }
+                p {
+                    margin-left: 10 / @base_rem;
+                    padding-top: 25 / @base_rem;
+                    font-size: 24 / @base_rem;
+                    color: #ffffff;
+                }
+            }
+        }
+        .headerUser {
+            display: -webkit-flex;
+            display: flex;
+            align-items: center;
+            padding: 32 / @base_rem 30 / @base_rem;
+            .avatar {
+                padding-left: 44 / @base_rem;
+                padding-right: 20 / @base_rem;
+                .round-image-block(75 / @base_rem);
+            }
+            .info {
+                -webkit-flex: auto;
+    	        flex: auto;
+                .name {
+                    color: #333333;
+                    font-size: 24 / @base_rem;
+                }
+                .score {
+                    margin-top: 15 / @base_rem;
+                    color: #999999;
+                    font-size: 20 / @base_rem;
+                }
+            }
+            .score {
+                font-size: 30 / @base_rem;
+                color: #ee4957;
+            }
+        }
+    }
+
+    .rankUserList {
+        margin-top: 10 / @base_rem;
+        background-color: #fff;
+        .rankUser {
+            display: -webkit-flex;
+            display: flex;
+            align-items: center;
+            padding: 0 30 / @base_rem;
+            .number {
+                font-size: 24 / @base_rem;
+                padding-right: 30 / @base_rem;
+            }
+            .avatar {
+                .round-image-block(75 / @base_rem);
+            }
+            .line {
+                flex: auto;
+                display: -webkit-flex;
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #e2e2e2;
+                padding: 50 / @base_rem 0;
+                margin-left: 30 / @base_rem;
+                .nickname {
+                    font-size: 24 / @base_rem;
+                    flex: auto;
+                }
+                .score {
+                    font-size: 30 / @base_rem;
+                    color: #167ee9;
+                }
+            }
+
+        }
+
+    }
+}
+
+.rankPage {
+    background-color: #f9f9f9;
+    .box {
+        padding-top: 60 / @base_rem;
+
+        .box-title {
+            padding-left: 30 / @base_rem;
+            font-size: 30 / @base_rem;
+            color: #666666;
+        }
+
+        .item-list {
+            margin-top: 20 / @base_rem;
+            background-color: #ffffff;
+            border-top: 1px solid #e2e2e2;
+            border-bottom: 1px solid #e2e2e2;
+            .item {
+
+                display: -webkit-flex;
+                display: flex;
+                padding: 30 / @base_rem;
+                .icon {
+                    .square-image-block(32 / @base_rem);
+                }
+
+                .name {
+                    padding-left: 20 / @base_rem;
+                    flex: auto;
+                    font-size: 30 / @base_rem;
+                    color: #333333;
+                    font-weight: bold;
+                }
+
+                .arrow {
+
+                    .image-block(20 / @base_rem, 30 / @base_rem);
+                }
+            }
+        }
+    }
+}
+
+.discovery {
+    .box-list {
+        display: -webkit-flex;
+        display: flex;
+        flex-wrap: wrap;
+
+        .box {
+            box-sizing: border-box;
+            width: 1 / 3 * 100%;
+            border: 1px solid #ffffff;
+
+            .content {
+                display: -webkit-flex;
+                display: flex;
+                justify-content: space-between;
+                padding: 20 / @base_rem 13 / @base_rem;
+                span {
+                    color: #999999;
+                }
+                .score {
+                    color: #666666;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
+
+.owner-box {
+    display: flex;
+    display: -webkit-flex;
+    padding-left: 30 / @base_rem;
+    padding-right: 30 / @base_rem;
+    padding-top: 20 / @base_rem;
+    align-items: center;
+    .avatar {
+        .round-image-block(77 / @base_rem);
+    }
+    .nickname {
+        padding-left: 20 / @base_rem;
+        flex: auto;
+        font-size: 24 / @base_rem;
+        color: #333333;
+        font-weight: bold;
+    }
+    .score {
+        color: #999999;
+        font-size: 20 / @base_rem;
+    }
+}
+
+.description-box {
+    // 6 is line heigth
+    padding: (15 - 6) / @base_rem 30 / @base_rem (20 - 6) / @base_rem 30 / @base_rem;
+    font: 24 / @base_rem;
+    color: #333333;
+    line-height: (6 + 24) / @base_rem;
+}
+
+.location-tag-box {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    padding: 0 30 / @base_rem 20 / @base_rem 30 / @base_rem;
+    font-size: 24 / @base_rem;
+    .icon {
+        .image-block(18 / @base_rem, 23 / @base_rem);
+    }
+    .location {
+        margin-left: 10 / @base_rem;
+        color: #999999;
+    }
+    .tag {
+        margin-left: 20 / @base_rem;
+        color: #167ee9;
+    }
+}
+
+.image-box {
+    width: 100%;
+    position: relative;
+
+    .icon {
+        position: absolute;
+        bottom: 20 / @base_rem;
+        right: 20 / @base_rem;
+        .square-image-block(40 / @base_rem);
+        background: url('/image/icon/40-xin.png') no-repeat;
+        background-size: 100%;
+    }
+    .active {
+        background: url('/image/icon/40-hongxin.png') no-repeat;
+        background-size: 100%;
+    }
+}
+
+.image-meta-box {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 38 / @base_rem 30 / @base_rem;
+    .score-info {
+        display: flex;
+        display: -webkit-flex;
+        align-items: center;
+        img {
+            width: 285 / @base_rem;
+        }
+        .score-count {
+            color: #666666;
+        }
+        .score-word {
+            color: #999999;
+        }
+    }
+    .rule {
+        color: #167ee9;
+    }
+}
+
+.space-box {
+    background-color: #fbfbfb;
+    border-top: 1px solid #e2e2e2;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.photo-detail {
+    .space-box {
+        height: 10 / @base_rem;
+    }
+}
+
+.btn {
+    background-color: #167ee9;
+    border: 1px solid #2f7bdb;
+    color: #ffffff;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-box {
+    position: relative;
+    .btn {
+        margin: 40 / @base_rem 80 / @base_rem;
+        border-radius: 5 / @base_rem;
+        height: 80 / @base_rem;
+    }
+}

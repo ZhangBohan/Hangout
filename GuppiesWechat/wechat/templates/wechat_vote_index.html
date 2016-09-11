@@ -1,3 +1,4 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,20 +6,32 @@
     <title>用户列表</title>
     <script src="/static/wechat/js/jquery-1.11.3.js"></script>
     <script src="/static/wechat/js/guppies.js"></script>
-    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <script src="/static/wechat/js/rem.js"></script>
+    <script src="/static/wechat/js/qiniu.js"></script>
+    <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <script>
-        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
-    </script>
 </head>
 <body>
-<div class="usersList">
-    {% for vote in votes %}
-    <div class="listInfo">
-        <div class="userImg"><img src="{{ vote.user.userinfo.avatar_url }}"/></div>
-        <span>{{ vote.user.userinfo.nickname }}</span>
+<div class="container likeUserRank">
+        <div class="likeUserList">
+            {% for vote in votes %}
+            <div class="likeUser">
+                <div class="avatar">
+                    <img src="{{ vote.user.userinfo.avatar_url }}" alt="" />
+                </div>
+                <div class="userExtra">
+                    <div class="info">
+                        <div class="nickname">{{ vote.user.userinfo.nickname }}</div>
+                        <div class="timeago"><span>{{ vote.created_at | naturaltime }}</span></div>
+                    </div>
+                    <div class="arrow">
+                        <img src="/static/wechat/image/rightArrow.png" alt="" />
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include "_footer_bar.html" %}
     </div>
-    {% endfor %}
-</div>
 </body>
 </html>

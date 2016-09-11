@@ -5,34 +5,66 @@
     <title>我的小鱼</title>
     <script src="/static/wechat/js/jquery-1.11.3.js"></script>
     <script src="/static/wechat/js/guppies.js"></script>
-    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <script src="/static/wechat/js/rem.js"></script>
+    <script src="/static/wechat/js/qiniu.js"></script>
+    <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <script>
-        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
-    </script>
 </head>
 <body>
-<div class="myGuppies">
-    <div class="myImg">
-        <div><img src="{{ user.userinfo.avatar_url }}"/></div>
-        <span>{{ user.userinfo.nickname }}</span>
+<div class="container user">
+    <div class="fishUser">
+        <div class="header" style="background-image: url('/static/wechat/image/fishImg.png');">
+            <div class="avatar">
+                <img src="{{ user.userinfo.avatar_url }}" alt="" />
+            </div>
+            <div class="nickname">
+                {{ user.userinfo.nickname }}
+            </div>
+            <div class="bio">
+                不要在意某个阶段的失败，因为人生是不断清零的过程。请联系QQ：3323323
+            </div>
+        </div>
+        <div class="score">
+            <div class="block">
+                <div class="name">
+                    总得分
+                </div>
+                <div class="value">
+                    {{ user.userinfo.n_total_mark }}
+                </div>
+            </div>
+            <div class="block">
+                <div class="name">
+                    总被赞
+                </div>
+                <div class="value">
+                    {{ user.userinfo.n_vote }}
+                </div>
+            </div>
+        </div>
+        <div class="linkList">
+            <div class="link">
+                <div class="icon">
+                    <img src="/static/wechat/image/icon/30-fatie.png" alt="" />
+                </div>
+                <div class="name">我的发贴</div>
+                <div class="arrow">
+                    <img src="/static/wechat/image/rightArrow.png" alt="" />
+                </div>
+                <div class="count">{{ user.userinfo.n_photo }}</div>
+            </div>
+            <div class="link">
+                <div class="icon">
+                    <img src="/static/wechat/image/icon/30-zan.png" alt="" />
+                </div>
+                <div class="name">我赞过的</div>
+                <div class="arrow">
+                    <img src="/static/wechat/image/rightArrow.png" alt="" />
+                </div>
+                <div class="count">{{ user.userinfo.n_favorite }}</div>
+            </div>
+        </div>
     </div>
-    <div class="myInfo">
-        <div>
-            <p class="first">已晒图</p>
-            <p class="last">{{ user.userinfo.n_photo }}</p>
-        </div>
-        <div>
-            <p class="first">总得分</p>
-            <p class="last">{{ user.userinfo.n_total_mark }}</p>
-        </div>
-        <div>
-            <p class="first">总被赞</p>
-            <p class="last">{{ user.userinfo.n_vote }}</p>
-        </div>
-    </div>
-    <div class="storeUp">收藏</div>
-    {% include "_footer_bar.html" %}
 </div>
 {% include "_upload_image_box.html" %}
 </body>

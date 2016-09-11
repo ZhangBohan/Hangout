@@ -6,37 +6,43 @@
     <title>首页</title>
     <script src="/static/wechat/js/jquery-1.11.3.js"></script>
     <script src="/static/wechat/js/guppies.js"></script>
+    <script src="/static/wechat/js/rem.js"></script>
     <script src="/static/wechat/js/qiniu.js"></script>
-    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <script>
-        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
-    </script>
 </head>
 <body>
-<div class="doc">
-    {% for photo in photos %}
-        <div class="user">
-            <a href="/wechat/photos/{{ photo.id }}">
-                <div class="borderColor"></div>
-                <div class="userInfo">
-                    <div class="userImg"><img src="{{ photo.user.userinfo.avatar_url }}"/></div>
-                    <span class="userName">{{ photo.user.userinfo.nickname }}</span>
-                    <span class="userTime">{{ photo.created_at | naturaltime }}</span>
-                    <div class="userText">{{ photo.description }}</div>
+
+<div class="container">
+    <div class="userWrap">
+        {% for photo in photos %}
+        <div class="user" onclick="location='/wechat/photos/{{ photo.id }}/'">
+            <div class="userMes">
+                <div class="userImg">
+                    <img src="{{ photo.user.userinfo.avatar_url }}"/>
                 </div>
-                <div class="guppiesImg">
-                    <img src="{{ photo.url }}?imageView2/5/w/1280/h/1280"/>
+                <div class="userName">{{ photo.user.userinfo.nickname }}</div>
+                <div class="userTime">{{ photo.created_at | naturaltime }}</div>
+            </div>
+            <div class="fishMes">
+                {{ photo.description }}
+            </div>
+            <div class="fishDetail">查看详情</div>
+            <div class="fishImg">
+                <img src="{{ photo.url }}?imageView2/5/w/1280/h/1280"/>
+            </div>
+            <div class="userExtraWrap">
+                <div class="userExtra">
+                    <div class="score">评分可见</div>
+                    <div class="check"><span>{{ photo.n_total_watched }}</span>查看</div>
+                    <div class="like"><span>{{ photo.n_account_vote }}</span>赞</div>
+                    <div class="store"><span>{{ photo.n_avg_mark }}</span>收藏</div>
                 </div>
-                <div class="score">
-                    <span>查看&nbsp;<em>{{ photo.n_total_watched }}</em></span>
-                    <span>点赞&nbsp;<em>{{ photo.n_account_vote }}</em></span>
-                    <span>评分&nbsp;<em class="fontColor">{{ photo.n_avg_mark }}</em></span>
-                </div>
-            </a>
+            </div>
         </div>
-    {% endfor %}
-    {% include "_footer_bar.html" %}
+        {% endfor %}
+    </div>
+    {% include "_footer_bar.html" with active="zuixin" only %}
 </div>
 {% include "_upload_image_box.html" %}
 </body>

@@ -1,10 +1,50 @@
-<div class="homePage-banner">
-    <a href="/wechat/"><span>最新晒图</span></a>
-    <a href="/wechat/ranks/users/"><span>排行</span></a>
-    <label>
-        <input type="file" id="imgInp"/>
-        <span>上传图片</span>
-    </label>
-    <a href="/wechat/ranks/scores/"><span>发现</span></a>
-    <a href="/wechat/mine/" class="last"><span>我的小鱼</span></a>
+<div class="banner">
+    <div class="bannerList">
+        <div class="bannerImg">
+            {% if active != 'zuixin' %}
+                <img src="/static/wechat/image/icon/normal/zuixin01.png"/>
+            {% else %}
+                <img src="/static/wechat/image/icon/active/zuixin03.png"/>
+            {% endif %}
+        </div>
+    </div>
+    <div class="bannerList">
+        <div class="bannerImg">
+            {% if active != 'paihang' %}
+                <img src="/static/wechat/image/icon/normal/paihang01.png"/>
+            {% else %}
+                <img src="/static/wechat/image/icon/active/paihang03.png"/>
+            {% endif %}
+        </div>
+    </div>
+    <div class="bannerList">
+        <div class="bannerImg">
+            <label>
+                {% if active != 'fatu' %}
+                    <img src="/static/wechat/image/icon/normal/fatu01.png"/>
+                {% else %}
+                    <img src="/static/wechat/image/icon/active/fatu03.png"/>
+                {% endif %}
+                <input type="file"/>
+            </label>
+        </div>
+    </div>
+    <div class="bannerList">
+        <div class="bannerImg">
+            {% if active != 'faxian' %}
+                <img src="/static/wechat/image/icon/normal/faxian01.png"/>
+            {% else %}
+                <img src="/static/wechat/image/icon/active/faxian03.png"/>
+            {% endif %}
+        </div>
+    </div>
+    <div class="bannerList">
+        <div class="bannerImg">
+            {% if active != 'geren' %}
+                <img src="/static/wechat/image/icon/normal/geren01.png"/>
+            {% else %}
+                <img src="/static/wechat/image/icon/active/geren03.png"/>
+            {% endif %}
+        </div>
+    </div>
 </div>
