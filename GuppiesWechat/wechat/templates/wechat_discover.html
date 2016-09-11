@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>小鱼</title>
+    <script src="/static/wechat/js/jquery-1.11.3.js"></script>
+    <script src="/static/wechat/js/guppies.js"></script>
+    <script src="/static/wechat/js/rem.js"></script>
+    <script src="/static/wechat/js/qiniu.js"></script>
+    <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+</head>
+<body>
+<div class="container discovery">
+    <div class="box-list">
+        {% for photo in photos %}
+        <div class="box">
+            <img src="{{ photo.url }}" alt="" />
+            <div class="content">
+                <span>{{ forloop.counter }}</span>
+                <span class="score">{{ photo.n_account_vote }}<span>分</span></span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include "_footer_bar.html" with active="faxian" only %}
+</div>
+</body>
+</html>

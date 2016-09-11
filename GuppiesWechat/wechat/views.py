@@ -70,9 +70,9 @@ def rank_index(request):
 
 
 @login_required
-def rank_scores(request):
+def discover(request):
     photos = Photo.objects.all()
-    return render(request, 'wechat_rank_scores.html', context={
+    return render(request, 'wechat_discover.html', context={
         "user": request.user,
         "photos": photos
     })
