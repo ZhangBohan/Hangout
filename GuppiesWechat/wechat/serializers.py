@@ -18,7 +18,7 @@ class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Photo
-        exclude = ('location', )
+        exclude = ('location', 'status', 'n_avg_mark',)
 
         read_only_fields = ('user',
                             'n_total_mark',
