@@ -101,6 +101,7 @@ class Photo(CommonModelMixin, models.Model):
 
     n_total_mark = models.BigIntegerField('总分数', default=0, help_text="总分数")
     n_account_mark = models.BigIntegerField('打分人数', default=0, help_text="打分人数")
+    n_avg_mark = models.BigIntegerField('平均分', default=0, help_text='平均分')
 
     n_account_comment = models.BigIntegerField('评论人数', default=0, help_text="评论人数")
     n_account_vote = models.BigIntegerField('赞人数', default=0, help_text="赞人数")
@@ -134,10 +135,6 @@ class Photo(CommonModelMixin, models.Model):
 
     def to_detail_dict(self, account):
         return self.to_dict(include_properties=('is_liked', 'is_voted',), account=account, is_with_permissions=True)
-
-    @property
-    def n_avg_mark(self):
-        return self.n_total_mark / self.n_account_mark if self.n_account_mark else 0
 
     @property
     def is_voted(self) -> bool:
@@ -189,7 +186,11 @@ class Mark(CommonModelMixin, models.Model):
 
     def save(self, *args, **kwargs):
         mark = super(Mark, self).save(*args, **kwargs)
-        self.photo.incr('n_total_mark', self.mark).incr('n_account_mark').save()
+
+        self.photo.incr('n_total_mark', self.mark).incr('n_account_mark')
+        self.photo.n_avg_mark = self.photo.n_total_mark / self.photo.n_account_mark
+        self.photo.save()
+
         self.photo.user.userinfo.incr('n_total_mark', self.mark).save()
         return mark
 
