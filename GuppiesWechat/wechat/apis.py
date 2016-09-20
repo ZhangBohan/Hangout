@@ -57,7 +57,7 @@ class VotesView(APIView):
 
     def get_object(self, pk):
         try:
-            return Photo.objects.get(pk=pk)
+            return Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
         except Photo.DoesNotExist:
             raise Http404
 
@@ -88,7 +88,7 @@ class FavoritesView(APIView):
 
     def get_object(self, pk):
         try:
-            return Photo.objects.get(pk=pk)
+            return Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
         except Photo.DoesNotExist:
             raise Http404
 
@@ -119,7 +119,7 @@ class MarksView(APIView):
 
     def get_object(self, pk):
         try:
-            return Photo.objects.get(pk=pk)
+            return Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
         except Photo.DoesNotExist:
             raise Http404
 
@@ -176,7 +176,7 @@ class MinePhotoView(generics.ListAPIView):
 
     def get_queryset(self):
         order = self.request.query_params.get('order', 'default')
-        query = Photo.objects.filter(user=self.request.user).all()
+        query = Photo.objects.filter(user=self.request.user, status=Photo.PUBLISH_STATUS).all()
         if order in ['n_account_vote', 'n_total_mark']:
             query = query.order_by('-' + order)
         return query
@@ -204,7 +204,7 @@ class MinePhotoView(generics.ListAPIView):
 class PhotoListView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    queryset = Photo.objects.all()
+    queryset = Photo.objects.filter(status=Photo.PUBLISH_STATUS).all()
     serializer_class = PhotoSerializer
 
     def get(self, request, *args, **kwargs):
@@ -235,7 +235,7 @@ class PhotoDetailView(APIView):
 
     def get_object(self, pk):
         try:
-            return Photo.objects.get(pk=pk)
+            return Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
         except Photo.DoesNotExist:
             raise Http404
 
@@ -288,7 +288,7 @@ class VoteUsersView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        photo = Photo.objects.get(pk=self.kwargs['photo_id'])
+        photo = Photo.objects.get(pk=self.kwargs['photo_id'], status=Photo.PUBLISH_STATUS)
         return Vote.objects.filter(photo=photo).all()
 
     def get(self, request, *args, **kwargs):

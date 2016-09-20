@@ -27,7 +27,7 @@ wechat_basic = WechatBasic(conf=conf)
 
 @login_required
 def photo_index(request):
-    photos = Photo.objects.all()
+    photos = Photo.objects.filter(status=Photo.PUBLISH_STATUS).all()
     return render(request, 'wechat_photo_index.html', context={
         "photos": photos
     })
@@ -35,7 +35,7 @@ def photo_index(request):
 
 @login_required
 def photo_detail(request, pk):
-    photo = Photo.objects.get(pk=pk)
+    photo = Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
     photo.incr('n_total_watched').save()
 
     comments = Comment.objects.filter(photo=photo)
@@ -71,7 +71,7 @@ def rank_index(request):
 
 @login_required
 def discover(request):
-    photos = Photo.objects.all()
+    photos = Photo.objects.filter(status=Photo.PUBLISH_STATUS).all()
     return render(request, 'wechat_discover.html', context={
         "user": request.user,
         "photos": photos

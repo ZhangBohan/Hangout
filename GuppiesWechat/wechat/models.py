@@ -90,6 +90,13 @@ class WechatAuth(CommonModelMixin, models.Model):
 
 
 class Photo(CommonModelMixin, models.Model):
+    PUBLISH_STATUS = 0
+    DELETE_STATUS = -1
+    STATUS_CHOICES = (
+        (PUBLISH_STATUS, 'publish'),
+        (DELETE_STATUS, 'delete'),
+    )
+
     url = models.URLField("URL", help_text="URL")
     description = models.TextField("描述", help_text="描述")
 
@@ -109,6 +116,10 @@ class Photo(CommonModelMixin, models.Model):
     n_total_watched = models.BigIntegerField('查看数', default=0, help_text="查看数")
 
     n_favorite = models.BigIntegerField('收藏数', default=0, help_text="收藏数")
+
+    status = models.SmallIntegerField('状态', default=PUBLISH_STATUS,
+                                      choices=STATUS_CHOICES,
+                                      help_text="状态")
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -130,7 +141,8 @@ class Photo(CommonModelMixin, models.Model):
         return photo
 
     def delete(self, using=None, keep_parents=False):
-        super(Photo, self).delete(using, keep_parents)
+        self.status = self.DELETE_STATUS
+        self.save()
         self.user.userinfo.incr('n_photo', -1).save()
 
     def to_detail_dict(self, account):

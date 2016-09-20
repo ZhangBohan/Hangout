@@ -3,10 +3,12 @@ from wechat.models import *
 
 
 class PhotoAdmin(admin.ModelAdmin):
-    fields = ['url', 'description', 'user']
-    list_display = ('url',
+    fields = ['url', 'description', 'user', 'status']
+    list_display = ('id',
+                    'url',
                     'description',
                     'user',
+                    'status',
                     'n_total_mark',
                     'n_account_mark',
                     'n_account_comment',
