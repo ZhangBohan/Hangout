@@ -15,7 +15,7 @@
     <div class="box-list">
         {% for photo in photos %}
         <div class="box">
-            <img src="{{ photo.url }}" alt="" />
+            <img src="{{ photo.url | first }}" alt="" />
             <div class="content">
                 <span>{{ forloop.counter }}</span>
                 <span class="score">{{ photo.n_account_vote }}<span>分</span></span>

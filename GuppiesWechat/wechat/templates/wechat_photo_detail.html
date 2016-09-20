@@ -29,7 +29,7 @@
             {{ photo.description }}
         </div>
         <div class="guppiesImg">
-            <img src="{{ photo.url }}?imageView2/5/w/1280/h/1280"/>
+            <img src="{{ photo.url | first }}?imageView2/5/w/1280/h/1280"/>
         </div>
         <div class="guppiesCheck">
             <span>查看&nbsp;<em>{{ photo.n_total_watched }}</em></span>

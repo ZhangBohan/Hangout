@@ -1,7 +1,9 @@
 import io
 
 import requests
+from rest_framework import fields
 from rest_framework import pagination
+from rest_framework import serializers
 from rest_framework.response import Response
 
 from qiniu import Auth, put_data
@@ -39,3 +41,28 @@ class CustomPagination(pagination.PageNumberPagination):
             'count': self.page.paginator.count,
             'results': data
         })
+
+
+class JsonPropertyField(serializers.Field):
+    output_func_name = 'output_func'
+
+    def __init__(self, **kwargs):
+        if self.output_func_name in kwargs:
+            setattr(self, self.output_func_name, kwargs.pop(self.output_func_name))
+        super(JsonPropertyField, self).__init__(**kwargs)
+
+    def get_attribute(self, instance):
+        """
+        Given the *outgoing* object instance, return the primitive value
+        that should be used for this field.
+        """
+        try:
+            return fields.get_attribute(instance, self.source_attrs)
+        except (KeyError, AttributeError) as exc:
+            return None if self.default == fields.empty else self.default
+
+    def to_representation(self, value):
+        return getattr(self, self.output_func_name)(value) if hasattr(self, self.output_func_name) else value
+
+    def to_internal_value(self, data):
+        return data

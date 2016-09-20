@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.postgres.fields import JSONField
 from django.db.models import QuerySet
 
 from django.contrib.gis.geos import Point
@@ -97,7 +98,7 @@ class Photo(CommonModelMixin, models.Model):
         (DELETE_STATUS, 'delete'),
     )
 
-    url = models.URLField("URL", help_text="URL")
+    url = JSONField("URL", help_text="urls json 列表")
     description = models.TextField("描述", help_text="描述")
 
     user = models.ForeignKey(User, help_text="所有者")
