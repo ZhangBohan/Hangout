@@ -2,11 +2,13 @@ import json
 from urllib.parse import quote_plus
 
 import time
+import datetime
 
 import requests
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.decorators import login_required
 from wechat.models import WechatAuth, UserInfo, Photo, Comment, Vote, UserLocation
@@ -65,25 +67,58 @@ def mine(request):
 @login_required
 def rank_index(request):
     return render(request, 'wechat_rank_index.html', context={
-        "user": request.user
+        "user": request.user,
     })
 
 
 @login_required
 def discover(request):
-    photos = Photo.objects.filter(status=Photo.PUBLISH_STATUS).all()
+    rank_type = request.GET.get('rank', 'score')
+
+    if rank_type == 'score':
+        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+        photos = Photo.objects.filter(created_at__gte=week_ago,
+                                      status=Photo.PUBLISH_STATUS).order_by('-n_avg_mark')
+    elif rank_type == 'before_score':
+        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+        photos = Photo.objects.filter(created_at__lte=week_ago,
+                                      status=Photo.PUBLISH_STATUS).order_by('-n_avg_mark')
+    elif rank_type == 'vote':
+        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+        photos = Photo.objects.filter(created_at__gte=week_ago,
+                                      status=Photo.PUBLISH_STATUS).order_by('-n_account_vote')
+    elif rank_type == 'before_vote':
+        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+        photos = Photo.objects.filter(created_at__lte=week_ago,
+                                      status=Photo.PUBLISH_STATUS).order_by('-n_account_vote')
+    else:
+        raise Http404()
+
     return render(request, 'wechat_discover.html', context={
         "user": request.user,
-        "photos": photos
+        "photos": photos,
+        "rank_type": rank_type,
     })
 
 
 @login_required
 def rank_users(request):
-    userinfos = UserInfo.objects.all()
+    rank_type = request.GET.get('rank', 'score')
+
+    if rank_type == 'score':
+        userinfos = UserInfo.objects.order_by('-n_total_mark').all()
+    else:
+        userinfos = UserInfo.objects.order_by('-n_vote').all()
+
+    for index, userinfo in enumerate(userinfos):
+        if request.user.userinfo.id == userinfo.id:
+            break
+
     return render(request, 'wechat_rank_users.html', context={
         "user": request.user,
-        "userinfos": userinfos
+        "userinfos": userinfos,
+        "first_userinfo": userinfos[0],
+        "user_rank": index + 1
     })
 
 

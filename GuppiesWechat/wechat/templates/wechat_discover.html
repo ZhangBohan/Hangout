@@ -18,7 +18,11 @@
             <img src="{{ photo.url | first }}" alt="" />
             <div class="content">
                 <span>{{ forloop.counter }}</span>
-                <span class="score">{{ photo.n_account_vote }}<span>分</span></span>
+                {% if "score" in rank_type %}
+                    <span class="score">{{ photo.n_avg_mark }}<span>分</span></span>
+                {% else %}
+                    <span class="score">{{ photo.n_account_vote }}<span>赞</span></span>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
