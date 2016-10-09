@@ -8,6 +8,7 @@
     <script src="/static/wechat/js/jquery-1.11.3.js"></script>
     <script src="/static/wechat/js/guppies.js"></script>
     <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/wechat/css/swiper.min.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <script>
         document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
@@ -187,6 +188,14 @@
         });
         $('.alertBox3').hide();
     });
+</script>
+<script src="/static/wechat/js/swiper.jquery.min.js"></script>
+<!-- Initialize Swiper -->
+<script>
+var swiper = new Swiper('.swiper-container', {
+    pagination: '.swiper-pagination',
+    spaceBetween: 30
+});
 </script>
 </body>
 </html>

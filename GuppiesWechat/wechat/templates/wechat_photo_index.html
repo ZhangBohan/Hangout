@@ -9,6 +9,7 @@
     <script src="/static/wechat/js/rem.js"></script>
     <script src="/static/wechat/js/qiniu.js"></script>
     <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/wechat/css/swiper.min.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 </head>
 <body>
@@ -28,9 +29,26 @@
                 {{ photo.description }}
             </div>
             <div class="fishDetail">查看详情</div>
-            <div class="fishImg">
-                <img src="{{ photo.url | first }}?imageView2/5/w/1280/h/1280"/>
+            <!-- Slider main container -->
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    {% for url in photo.url %}
+                        <div class="swiper-slide">
+                            <div class="fishImg">
+                                <img src="{{ url }}?imageView2/5/w/1280/h/1280"/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
             </div>
+
             <div class="userExtraWrap">
                 <div class="userExtra">
                     <div class="score">评分可见</div>
@@ -45,5 +63,14 @@
     {% include "_footer_bar.html" with active="zuixin" only %}
 </div>
 {% include "_upload_image_box.html" %}
+
+<script src="/static/wechat/js/swiper.jquery.min.js"></script>
+<!-- Initialize Swiper -->
+<script>
+var swiper = new Swiper('.swiper-container', {
+    pagination: '.swiper-pagination',
+    spaceBetween: 30
+});
+</script>
 </body>
 </html>
