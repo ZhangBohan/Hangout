@@ -9,6 +9,8 @@ from django.contrib.gis.measure import D
 from django.db import models
 from django.contrib.gis.db import models
 
+from .utils import gaode_location
+
 
 class CommonModelMixin(object):
 
@@ -45,11 +47,21 @@ class UserLocation(CommonModelMixin, models.Model):
 
     location = models.PointField(blank=True, null=True)
     city = models.CharField("城市", max_length=100, null=True)
-    country = models.CharField("国家", max_length=100, null=True)
+    district = models.CharField("区", max_length=100, null=True)
     province = models.CharField("省份", max_length=100, null=True)
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+
+        if self.location.x and self.location.y:
+            province, city, district = gaode_location(self.location.x, self.location.y)
+            self.province = province
+            self.city = city
+            self.district = district
+
+        photo = super(Photo, self).save(*args, **kwargs)
 
 
 class WechatAuth(CommonModelMixin, models.Model):
@@ -104,7 +116,7 @@ class Photo(CommonModelMixin, models.Model):
     user = models.ForeignKey(User, help_text="所有者")
     location = models.PointField(blank=True, null=True)
     city = models.CharField("城市", max_length=100, null=True)
-    country = models.CharField("国家", max_length=100, null=True)
+    district = models.CharField("区", max_length=100, null=True)
     province = models.CharField("省份", max_length=100, null=True)
 
     n_total_mark = models.BigIntegerField('总分数', default=0, help_text="总分数")
@@ -134,7 +146,7 @@ class Photo(CommonModelMixin, models.Model):
     def save(self, *args, **kwargs):
         self.province = self.user.userlocation.province
         self.city = self.user.userlocation.city
-        self.country = self.user.userlocation.country
+        self.district = self.user.userlocation.district
         self.location = self.user.userlocation.location
 
         photo = super(Photo, self).save(*args, **kwargs)

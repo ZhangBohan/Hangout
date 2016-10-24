@@ -16,6 +16,30 @@ bucket_name = 'guppies'
 base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 
 
+def gaode_location(latitude, longitude):
+    '''
+
+    '''
+    url = 'http://restapi.amap.com/v3/geocode/regeo'
+
+    params = {
+        'location': latitude + ',' + longitude,
+        'key': 'c55ecd2ce9d9e5c64c6f5ea13ccdbe43'
+    }
+
+    r = requests.get(url, params=params)
+    result = r.json()
+    if result.get('infocode') != '10000':
+        raise Exception()
+
+    addressComponent = result['regeocode']['addressComponent']
+    province = addressComponent['province']
+    city = addressComponent['city'] if addressComponent['city'] else province
+    district = addressComponent['district']
+    return province, city, district
+
+
+
 def upload_url_to_qiniu(key, url):
     r = requests.get(url)
 
