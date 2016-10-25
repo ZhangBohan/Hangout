@@ -7,188 +7,107 @@
     <title>首页详情</title>
     <script src="/static/wechat/js/jquery-1.11.3.js"></script>
     <script src="/static/wechat/js/guppies.js"></script>
-    <link href="/static/wechat/css/guppiesStyle.css" type="text/css" rel="stylesheet"/>
+    <script src="/static/wechat/js/rem.js"></script>
+    <script src="/static/wechat/js/qiniu.js"></script>
+    <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
     <link href="/static/wechat/css/swiper.min.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <script>
-        document.getElementsByTagName("html")[0].style.fontSize=window.screen.width/10+"px";
-    </script>
-    <style>
-        .active{ color: #31b0d5; }
-    </style>
 </head>
 <body>
-<div class="doc">
-    <div class="homePage-details">
-        <div class="borderColor"></div>
-        <div class="userInfo-details">
-            <div class="userImg-details"><img src="{{ photo.user.userinfo.avatar_url }}"/></div>
-            <span>{{ photo.user.userinfo.nickname }}</span>
-            <em>{{ photo.created_at | naturaltime }}</em>
+    <div class="container photo-detail">
+        <div class="owner-box">
+            <div class="avatar">
+                <img src="{{ photo.user.userinfo.avatar_url }}" />
+            </div>
+            <span class="nickname">{{ photo.user.userinfo.nickname }}</span>
+            <span class="score">{{ photo.created_at | naturaltime }}</span>
         </div>
-        <div class="guppiesInfo">
+        <div class="description-box">
             {{ photo.description }}
         </div>
-        <div class="guppiesImg">
-            <img src="{{ photo.url | first }}?imageView2/5/w/1280/h/1280"/>
+        <div class="location-tag-box">
+            <div class="icon">
+                <img src="/static/wechat/image/icon/weizhi.png" />
+            </div>
+            <span class="location">北京/朝阳</span>
+
+            <span class="tag">#我要上页面#</span>
+            <span class="tag">#孔雀鱼#</span>
+            <span class="tag">#买一赠一#</span>
         </div>
-        <div class="guppiesCheck">
-            <span>查看&nbsp;<em>{{ photo.n_total_watched }}</em></span>
-            <span>收藏&nbsp;<em>{{ photo.n_account_vote }}</em></span>
-            <span>{{ photo.n_account_mark }}人最终评分:&nbsp;<em>{{ photo.n_avg_mark }}</em></span>
-            <a href="javascript:;">详细规则</a>
+        <div class="image-box">
+            <!-- Slider main container -->
+            <div class="swiper-container">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    {% for url in photo.url %}
+                        <div class="swiper-slide">
+                            <div class="fishImg">
+                                <img src="{{ url }}?imageView2/5/w/1280/h/1280"/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
+            </div>
+            <div class="icon active"></div>
         </div>
-        <div class="userGood">
-            <p>点赞&nbsp;<em>{{ votes | length }}</em></p>
-            {% if votes %}
-                {% for vote in votes %}
-                    <span><img src="{{ vote.user.userinfo.avatar_url }}"></span>
-                {% endfor %}
-                <span><a href="/wechat/photos/{{ photo.id }}/votes">...</a></span>
-            {% endif %}
+        <div class="image-meta-box">
+            <div class="score-info">
+                <span class="score-count">8988</span>
+                <span class="score-word">人最终评分:</span>
+                <span class="score">89.5分</span>
+            </div>
+            <span class="rule">评分规则</span>
         </div>
-        <div class="comment">
-            <div class="commentNum">全部评论&nbsp;<span>{{ comments | length }}</span></div>
-            <div class="commentList">
+        {% if votes %}
+        <div class="like-box">
+            <div class="count">
+                <div class="icon">
+                    <img src="/static/wechat/image/icon/30-zan.png" />
+                </div>
+                <div class="number">8998</div>
+            </div>
+            {% for vote in votes %}
+            <div class="avatar">
+                <img src="{{ vote.user.userinfo.avatar_url }}" />
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="space-box"></div>
+        <div class="comments-box">
+            <div class="comments-count">
+                29条评论
+            </div>
+            <div class="comments">
                 {% for comment in comments %}
-                <div class="list">
-                    <div class="listTitle">
-                        <div class="listImg"><img src="{{ comment.user.userinfo.avatar_url }}"/></div>
-                        <span>{{ comment.user.userinfo.nickname }}</span>
-                        <em>{{ comment.created_at | naturaltime }}</em>
+                <div class="comment">
+                    <div class="comment-owner-box">
+                        <div class="avatar">
+                            <img src="{{ photo.user.userinfo.avatar_url }}" />
+                        </div>
+                        <div class="info">
+                            <span class="nickname">{{ comment.user.userinfo.nickname }}</span>
+                            <span class="score">{{ comment.created_at | naturaltime }}</span>
+                        </div>
+
                     </div>
-                    <div class="commentCon">
-                        {{ comment.description }}
-                    </div>
+                    <p>{{ comment.description }}</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        <div class="detailsBanner" data-photo-id="{{ photo.id }}">
-            <a class="getStore {% if photo.is_favorite %}active{% endif %}" href="javascript:;">{% if photo.is_favorite %}已{% endif %}收藏</a>
-            <a class="getGood {% if photo.is_voted %}active{% endif %}" href="javascript:;">{% if photo.is_voted %}已{% endif %}点赞</a>
-            <a class="getScore {% if photo.is_marked %}active{% endif %}" href="javascript:;">{% if photo.is_marked %}已{% endif %}评分</a>
-            <a class="getComment" href="javascript:;">评论</a>
+        <div class="comment-form-box">
+            <input type="text" name="name" placeholder="说点什么吧">
+            <button type="button" name="button">发布</button>
         </div>
     </div>
-</div>
-<div class="alertBox2" style="display: none;">
-    <div class="floats"></div>
-    <div class="alert">
-        <p class="scoreTips">请写下您心中神圣的分数</p>
-        <input type="text" class="scoreInput" placeholder="输入1-100的数字"/>
-        <input type="button" class="scoreButton" value="确定"/>
-    </div>
-</div>
-<div class="alertBox3" style="display: none;">
-    <div class="floats"></div>
-    <div class="alert">
-        <p>发表评论</p>
-        <textarea class="commentVal" placeholder="填写评论内容"></textarea>
-        <div>
-            <input type="button" value="取消" class="cancle"/>
-            <input type="button" value="确定" class="commentButton"/>
-        </div>
-    </div>
-</div>
-<script>
-    // ajax
-    $('.getGood').click(function(){
-        if($(this).hasClass('active')){
-            $.ajax({
-                method:'DELETE',
-                url:'/wechat/api/photos/' + $('.detailsBanner').data('photo-id') + '/votes',
-                success:function(data){
-                    console.log(data);
-                    $('.getGood').removeClass('active').text('点赞');
-                }
-            })
-        }else{
-            $.ajax({
-                method:'POST',
-                url:'/wechat/api/photos/' + $('.detailsBanner').data('photo-id') + '/votes',
-                success:function(data){
-                    console.log(data);
-                    $('.getGood').addClass('active').text('已点赞');
-                }
-            })
-        }
-    });
-    $('.getStore').click(function(){
-        if($(this).hasClass('active')){
-            $.ajax({
-                method:'DELETE',
-                url:'/wechat/api/photos/' + $('.detailsBanner').data('photo-id') + '/favorites',
-                success:function(data){
-                    console.log(data);
-                    $('.getStore').removeClass('active').text('收藏');
-                }
-            });
-        }else{
-            $.ajax({
-                method:'POST',
-                url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/favorites',
-                success:function(data){
-                    console.log(data);
-                    $('.getStore').addClass('active').text('已收藏');
-                }
-            });
-        }
-    });
-    $('.getScore').click(function(){
-        if(!$('.getScore').hasClass('active')){
-            $('.alertBox2').show();
-        }
-    });
-    $('.scoreButton').click(function(){
-        $.ajax({
-            method:'POST',
-            url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/marks',
-            data:{
-                mark:$('.scoreInput').val()
-            },
-            success:function(data){
-                console.log(data);
-            }
-        });
-        $('.alertBox2').hide();
-        $('.getScore').addClass('active').text('已评分');
-    });
-    $('.getComment').click(function(){
-        $('.alertBox3').show();
-    });
-    $('.cancle').click(function(){
-        $('.alertBox3').hide();
-    });
-    $('.commentButton').click(function(){
-        $.ajax({
-            method:'POST',
-            url:'/wechat/api/photos/'+ $('.detailsBanner').data('photo-id') +'/comments',
-            data:{
-                description:$('.commentVal').val()
-            },
-            success:function(data){
-                console.log(data);
-                //console.log(data.user.avatar_url);
-
-                var html = $(' <div class="list"> '+
-                        ' <div class="listTitle"> '+
-                        ' <div class="listImg"><img src="'+ data.user.avatar_url +'"/></div> '+
-                        ' <span>'+ data.user.nickname +'</span> '+
-                        ' <em>刚刚</em> '+
-                        ' </div> '+
-                        ' <div class="commentCon">'+ data.description +'</div> '+
-                        ' </div> ');
-
-                $('.commentList').prepend(html);
-
-                var num = parseInt($('.commentNum span').text()) + 1;
-                $('.commentNum span').text(num);
-            }
-        });
-        $('.alertBox3').hide();
-    });
-</script>
 <script src="/static/wechat/js/swiper.jquery.min.js"></script>
 <!-- Initialize Swiper -->
 <script>

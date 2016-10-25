@@ -155,6 +155,7 @@ img {
   color: #ee4957;
 }
 .banner {
+  z-index: 99;
   position: fixed;
   bottom: 0;
   height: 1.3rem;
@@ -575,12 +576,13 @@ img {
   position: relative;
 }
 .image-box .icon {
+  z-index: 98;
   position: absolute;
   bottom: 0.26666667rem;
   right: 0.26666667rem;
   width: 0.53333333rem;
   height: 0.53333333rem;
-  background: url('/image/icon/40-xin.png') no-repeat;
+  background: url('/static/wechat/image/icon/40-xin.png') no-repeat;
   background-size: 100%;
 }
 .image-box .icon img {
@@ -588,7 +590,7 @@ img {
   height: 100%;
 }
 .image-box .active {
-  background: url('/image/icon/40-hongxin.png') no-repeat;
+  background: url('/static/wechat/image/icon/40-hongxin.png') no-repeat;
   background-size: 100%;
 }
 .image-meta-box {
@@ -612,6 +614,11 @@ img {
 .image-meta-box .score-info .score-word {
   color: #999999;
 }
+.image-meta-box .score-info .score {
+  color: #ee4957;
+  margin-left: 0.13333333rem;
+  font-weight: bold;
+}
 .image-meta-box .rule {
   color: #167ee9;
 }
@@ -619,6 +626,9 @@ img {
   background-color: #fbfbfb;
   border-top: 1px solid #e2e2e2;
   border-bottom: 1px solid #e2e2e2;
+}
+.photo-detail {
+  margin-bottom: 0;
 }
 .photo-detail .space-box {
   height: 0.13333333rem;
@@ -633,10 +643,155 @@ img {
   justify-content: center;
 }
 .score-box {
-  position: relative;
+  padding-top: 0.4rem;
+  text-align: center;
+  margin-left: 1.06666667rem;
+  margin-right: 1.06666667rem;
+}
+.score-box .description {
+  font-size: 0.32rem;
+  color: #666666;
+}
+.score-box .score-select {
+  padding-top: 0.26666667rem;
+}
+.score-box .score-select select {
+  background-color: #999999;
+  width: 100%;
+  font-size: 0.4rem;
 }
 .score-box .btn {
-  margin: 0.53333333rem 1.06666667rem;
+  margin: 0.53333333rem 0;
   border-radius: 0.06666667rem;
   height: 1.06666667rem;
+}
+.comments-box {
+  margin: 0.4rem 0.53333333rem;
+}
+.comments-box .count {
+  color: #999999;
+  font-size: 0.32rem;
+}
+.comments-box .comments {
+  margin-top: 0.13333333rem;
+}
+.comments-box .comment {
+  margin-top: 0.4rem;
+  border-bottom: 1px solid #e2e2e2;
+}
+.comments-box .comment p {
+  margin-top: 0.33333333rem;
+  margin-bottom: 0.4rem;
+  color: #333333;
+  font-size: 0.32rem;
+}
+.comments-box .comment:last-child {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+.comment-owner-box {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+}
+.comment-owner-box .avatar {
+  width: 1.02666667rem;
+  height: 1.02666667rem;
+}
+.comment-owner-box .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.comment-owner-box .info {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.comment-owner-box .nickname {
+  padding-left: 0.13333333rem;
+  font-size: 0.32rem;
+  color: #666666;
+  font-weight: bold;
+}
+.comment-owner-box .score {
+  color: #999999;
+  padding-left: 0.13333333rem;
+  font-size: 0.26666667rem;
+}
+.comment-form-box {
+  background-color: #f9f9f9;
+  padding: 0.4rem;
+  display: flex;
+  display: -webkit-flex;
+}
+.comment-form-box input {
+  flex: auto;
+  height: 0.85333333rem;
+}
+.comment-form-box button {
+  padding-left: 0.4rem;
+  font-size: 0.4rem;
+  font-weight: bolder;
+}
+.like-box {
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.like-box .count {
+  display: flex;
+  display: -webkit-flex;
+  margin: 0.6rem 0.6rem 0.6rem 0;
+}
+.like-box .count .icon {
+  margin-right: 0.13333333rem;
+  width: 0.32rem;
+  height: 0.32rem;
+}
+.like-box .count .icon img {
+  width: 100%;
+  height: 100%;
+}
+.like-box .count .number {
+  color: #999999;
+  font-size: 0.32rem;
+}
+.like-box .avatar {
+  margin-left: 0.13333333rem;
+  width: 0.86666667rem;
+  height: 0.86666667rem;
+}
+.like-box .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.modal {
+  position: relative;
+  text-align: center;
+}
+.modal .button {
+  margin-top: 0.66666667rem;
+  margin-bottom: 0.66666667rem;
+  padding: 0.26666667rem 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+.uploadModal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #999999;
+  top: 0;
+}
+.uploadModal .selectArea {
+  width: 10rem;
+  height: 10rem;
 }
