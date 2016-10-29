@@ -85,3 +85,33 @@ class MarkSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+
+class PositionSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True, help_text="所有者")
+    latitude = serializers.FloatField(write_only=True, allow_null=True)
+    longitude = serializers.FloatField(write_only=True, allow_null=True)
+
+    class Meta:
+        model = UserLocation
+
+        read_only_fields = ('province',
+                            'district',
+                            'city',
+                            'created_at')
+
+    def create(self, validated_data):
+        latitude = validated_data.pop('latitude')
+        longitude = validated_data.pop('longitude')
+        location = None
+        if latitude is not None and longitude is not None:
+            location = Point(latitude, longitude)
+        validated_data['location'] = location
+        user_location, created = UserLocation.objects.get_or_create(user=validated_data['user'], defaults={
+            'location': location
+        })
+
+        if not created:
+            user_location.location = location
+            user_location.save()
+        return user_location

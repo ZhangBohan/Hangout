@@ -1,4 +1,5 @@
 import io
+import logging
 
 import requests
 from rest_framework import fields
@@ -23,13 +24,14 @@ def gaode_location(latitude, longitude):
     url = 'http://restapi.amap.com/v3/geocode/regeo'
 
     params = {
-        'location': latitude + ',' + longitude,
+        'location': '%s,%s' % (latitude, longitude),
         'key': 'c55ecd2ce9d9e5c64c6f5ea13ccdbe43'
     }
 
     r = requests.get(url, params=params)
     result = r.json()
     if result.get('infocode') != '10000':
+        logging.error(r.content)
         raise Exception()
 
     addressComponent = result['regeocode']['addressComponent']

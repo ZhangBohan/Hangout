@@ -335,3 +335,20 @@ class LoginUserView(APIView):
             return Response(data, status=status.HTTP_401_UNAUTHORIZED)
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+
+class PositionView(APIView):
+    serializer_class = PositionSerializer
+
+    def post(self, request):
+        """
+        上传位置
+        ---
+        serializer: PositionSerializer
+
+        """
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user_location = serializer.save(user=request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

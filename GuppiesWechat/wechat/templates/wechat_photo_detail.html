@@ -55,7 +55,7 @@
                 <!-- If we need scrollbar -->
                 <div class="swiper-scrollbar"></div>
             </div>
-            <div class="icon active"></div>
+            <div class="icon{% if photo.is_voted %} active{% endif %}"></div>
         </div>
         <div class="image-meta-box">
             <div class="score-info">

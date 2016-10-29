@@ -61,7 +61,8 @@ class UserLocation(CommonModelMixin, models.Model):
             self.city = city
             self.district = district
 
-        photo = super(Photo, self).save(*args, **kwargs)
+        user_location = super(UserLocation, self).save(*args, **kwargs)
+        return user_location
 
 
 class WechatAuth(CommonModelMixin, models.Model):

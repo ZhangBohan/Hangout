@@ -17,6 +17,7 @@ urlpatterns = [url(r'^$', views.photo_index, name='index'),
 
 urlpatterns += [url(r'^api/my_photos$', apis.MinePhotoView.as_view()),
                         url(r'^api/me$', apis.LoginUserView.as_view()),
+                        url(r'^api/position$', apis.PositionView.as_view()),
                         url(r'^api/photos$', apis.PhotoListView.as_view()),
                         url(r'^api/photos/(?P<pk>\d+)$', apis.PhotoDetailView.as_view()),
                         url(r'^api/uploader$', apis.QiniuTokenView.as_view()),
