@@ -18,13 +18,10 @@ base_url = 'http://oa3rslghz.bkt.clouddn.com/'
 
 
 def gaode_location(latitude, longitude):
-    '''
-
-    '''
     url = 'http://restapi.amap.com/v3/geocode/regeo'
 
     params = {
-        'location': '%s,%s' % (latitude, longitude),
+        'location': '%s,%s' % (longitude, latitude),
         'key': 'c55ecd2ce9d9e5c64c6f5ea13ccdbe43'
     }
 
@@ -32,8 +29,10 @@ def gaode_location(latitude, longitude):
     result = r.json()
     if result.get('infocode') != '10000':
         logging.error(r.content)
+        print(r.content)
         raise Exception()
 
+    print('location', latitude, longitude, result)
     addressComponent = result['regeocode']['addressComponent']
     province = addressComponent['province']
     city = addressComponent['city'] if addressComponent['city'] else province

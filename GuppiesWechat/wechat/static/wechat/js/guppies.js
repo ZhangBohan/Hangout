@@ -35,6 +35,32 @@ $(function(){
 
     });
 
+    var is_positioned = sessionStorage.getItem('is_positioned');
+    console.log('is_positioned:', is_positioned);
+    if(!is_positioned) {
+        console.log('start to get position');
+        navigator.geolocation.getCurrentPosition(function(position) {
+            console.log('location:', position);
+            var data = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            };
+            $.ajax({
+                method: 'post',
+                url: '/wechat/api/position',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    sessionStorage.setItem('is_positioned', true);
+                    console.log('position success:', data);
+                }
+            });
+        }, function (err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+        });
+    }
+
+
     //// 获取头像
     //$.ajax({
     //    method:'get',
