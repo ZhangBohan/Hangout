@@ -35,6 +35,9 @@ def gaode_location(latitude, longitude):
     print('location', latitude, longitude, result)
     addressComponent = result['regeocode']['addressComponent']
     province = addressComponent['province']
+    if not province:
+        return None, None, None
+
     city = addressComponent['city'] if addressComponent['city'] else province
     district = addressComponent['district']
     return province, city, district

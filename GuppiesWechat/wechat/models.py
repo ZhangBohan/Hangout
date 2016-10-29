@@ -57,9 +57,10 @@ class UserLocation(CommonModelMixin, models.Model):
 
         if self.location.x and self.location.y:
             province, city, district = gaode_location(self.location.x, self.location.y)
-            self.province = province
-            self.city = city
-            self.district = district
+            if province:
+                self.province = province
+                self.city = city
+                self.district = district
 
         user_location = super(UserLocation, self).save(*args, **kwargs)
         return user_location
