@@ -23,6 +23,7 @@ class PhotoSerializer(serializers.ModelSerializer):
                             'n_account_mark',
                             'n_account_comment',
                             'n_account_vote',
+                            'n_avg_mark',
                             'n_total_watched',
                             'n_favorite',
                             'city',
