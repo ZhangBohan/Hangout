@@ -29,7 +29,7 @@
             <div class="icon">
                 <img src="/static/wechat/image/icon/weizhi.png" />
             </div>
-            <span class="location">{{ photo.city }}/{{ photo.district }}</span>
+            <span class="location">{{ photo.city }}{% if photo.district %}/{{ photo.district }}{% endif %}</span>
 
 {#            <span class="tag">#我要上页面#</span>#}
 {#            <span class="tag">#孔雀鱼#</span>#}
