@@ -219,7 +219,6 @@ def auth(request):
         UserLocation.objects.get(user=user)
     except UserLocation.DoesNotExist:
         UserLocation.objects.create(user=user,
-                                    country=wechat_auth.country,
                                     province=wechat_auth.province,
                                     city=wechat_auth.city,
                                     ).save()

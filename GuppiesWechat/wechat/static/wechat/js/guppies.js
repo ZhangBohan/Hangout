@@ -176,6 +176,8 @@ $(function(){
             data: JSON.stringify(data),
             success: function (data) {
                 console.log('success', data);
+                $(".modal").hide();
+                $(".container").show();
             },
             error: function (data) {
                 alert('提交失败' + data);
