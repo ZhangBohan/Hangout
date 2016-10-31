@@ -55,7 +55,7 @@ class UserLocation(CommonModelMixin, models.Model):
 
     def save(self, *args, **kwargs):
 
-        if self.location.x and self.location.y:
+        if self.location and self.location.x and self.location.y:
             province, city, district = gaode_location(self.location.x, self.location.y)
             if province:
                 self.province = province
