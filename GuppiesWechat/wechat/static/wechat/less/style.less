@@ -752,3 +752,49 @@ img {
         height: 750 / @base_rem;
     }
 }
+
+.imgSure{
+  .imgBackground{
+    width: 100%;
+    height: 100%;
+    background: #999999;
+    position: absolute;
+    top: 0;
+    .button{
+      margin-top: 50 / @base_rem;
+      margin-bottom: 50 / @base_rem;
+      padding: 20 / @base_rem 0;
+      width: 100%;
+      background-color: #ffffff;
+      border-top: 1px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+      text-align: center;
+    }
+    .fourImg{
+      height: 100/@base_rem;
+      border-bottom: 1px solid #3d4145;
+      div{
+        width: 100/@base_rem;
+        height: 100/@base_rem;
+        float: left;
+        margin-right: 20/@base_rem;
+        margin-top: -24/@base_rem;
+        position: relative;
+        input{
+          position: absolute;
+          left: 10/@base_rem;
+          top: 10/@base_rem;
+        }
+      }
+      div:nth-of-type(1){
+        margin-left: 20/@base_rem;
+      }
+    }
+    .imgText{
+      height: 300/@base_rem;
+      width: 750/@base_rem;
+      padding: 20/@base_rem;
+      font-size: 26/@base_rem;
+    }
+  }
+}

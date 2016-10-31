@@ -13,8 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PhotoSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True, help_text="所有者")
-    latitude = serializers.FloatField(write_only=True, allow_null=True)
-    longitude = serializers.FloatField(write_only=True, allow_null=True)
 
     class Meta:
         model = Photo
@@ -34,12 +32,6 @@ class PhotoSerializer(serializers.ModelSerializer):
                             'created_at',)
 
     def create(self, validated_data):
-        latitude = validated_data.pop('latitude')
-        longitude = validated_data.pop('longitude')
-        location = None
-        if latitude is not None and longitude is not None:
-            location = Point(latitude, longitude)
-        validated_data['location'] = location
         photo = super(PhotoSerializer, self).create(validated_data)
         return photo
 

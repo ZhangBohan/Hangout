@@ -29,11 +29,11 @@
             <div class="icon">
                 <img src="/static/wechat/image/icon/weizhi.png" />
             </div>
-            <span class="location">北京/朝阳</span>
+            <span class="location">{{ photo.city }}/{{ photo.district }}</span>
 
-            <span class="tag">#我要上页面#</span>
-            <span class="tag">#孔雀鱼#</span>
-            <span class="tag">#买一赠一#</span>
+{#            <span class="tag">#我要上页面#</span>#}
+{#            <span class="tag">#孔雀鱼#</span>#}
+{#            <span class="tag">#买一赠一#</span>#}
         </div>
         <div class="image-box">
             <!-- Slider main container -->
@@ -44,7 +44,7 @@
                     {% for url in photo.url %}
                         <div class="swiper-slide">
                             <div class="fishImg">
-                                <img src="{{ url }}?imageView2/5/w/1280/h/1280"/>
+                                <img src="{{ url }}"/>
                             </div>
                         </div>
                     {% endfor %}
@@ -59,9 +59,9 @@
         </div>
         <div class="image-meta-box">
             <div class="score-info">
-                <span class="score-count">8988</span>
+                <span class="score-count">{{ photo.n_account_mark }}</span>
                 <span class="score-word">人最终评分:</span>
-                <span class="score">89.5分</span>
+                <span class="score">{{ photo.n_avg_mark }}</span>
             </div>
             <span class="rule">评分规则</span>
         </div>
@@ -71,7 +71,7 @@
                 <div class="icon">
                     <img src="/static/wechat/image/icon/30-zan.png" />
                 </div>
-                <div class="number">8998</div>
+                <div class="number">{{ photo.n_account_vote }}</div>
             </div>
             {% for vote in votes %}
             <div class="avatar">
@@ -83,7 +83,7 @@
         <div class="space-box"></div>
         <div class="comments-box">
             <div class="comments-count">
-                29条评论
+                {{ photo.n_account_comment }}条评论
             </div>
             <div class="comments">
                 {% for comment in comments %}
@@ -111,10 +111,32 @@
 <script src="/static/wechat/js/swiper.jquery.min.js"></script>
 <!-- Initialize Swiper -->
 <script>
-var swiper = new Swiper('.swiper-container', {
-    pagination: '.swiper-pagination',
-    spaceBetween: 30
-});
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        spaceBetween: 30
+    });
+
+    $(".image-box").click(function () {
+        var icon = $('.image-box .icon');
+        var is_voted = icon.hasClass('active');
+        var data = {};
+        $.ajax({
+            method: is_voted ? 'DELETE' : 'POST',
+            contentType: 'application/json',
+            url: '/wechat/api/photos/{{ photo.id }}/votes',
+            data: JSON.stringify(data),
+            success: function (data) {
+                if(is_voted) {
+                    icon.removeClass('active');
+                } else {
+                    icon.addClass('active');
+                }
+            },
+            error: function (data) {
+                alert('提交失败' + data);
+            }
+        });
+    });
 </script>
 </body>
 </html>

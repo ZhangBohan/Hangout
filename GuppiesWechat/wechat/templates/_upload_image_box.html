@@ -1,15 +1,29 @@
-<div class="alertBox1" style="display: none;">
-    <div class="floats"></div>
-    <div class="imgCut" id="imgCut1">确认截图&nbsp;></div>
-    <div class="alert">
-        <img id="blah" src=""/>
+<div class="modal" style="display: none;">
+    <div class="uploadModal">
+        <div class="button">
+            确认截图 >
+        </div>
+        <div class="selectArea">
+            <img id="currentUploadImage" class="img" src="/static/wechat/image/fishImg.png"/>
+        </div>
+        <div class="description">
+            截取照片中最想展现的部分
+        </div>
     </div>
-    <div class="imgInfo">截取照片中最想展现的部分</div>
 </div>
-<div class="alertBox2" style="display: none;">
-    <div class="floats"></div>
-    <div class="imgCut" id="imgCut2">确认开晒！&nbsp;></div>
-    <div class="alert">
-        <textarea placeholder="输入您想说的话...必须10个字以上呦..."></textarea>
+<div class="imgSure" style="display: none;">
+    <div class="imgBackground">
+        <div class="button" id="imgSureButton">
+            确认开晒 >
+        </div>
+        <div class="fourImg">
+            <div id="lastDiv">
+                <label>
+                    <img src="/static/wechat/image/upload.png"/>
+                    <input class="classInput" type="file" style="display: none"/>
+                </label>
+            </div>
+        </div>
+        <textarea id="imgSureText" class="imgText" placeholder="输入您想说的话......"></textarea>
     </div>
 </div>
