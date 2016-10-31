@@ -137,5 +137,3 @@ REST_FRAMEWORK = {
 STATIC_ROOT = BASE_DIR + '/static/'
 
 LOGIN_URL = '/wechat/auth'
-
-GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
