@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'GuppiesWechat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'guppies_wechat',
-        'USER': 'bohanzhang',
+        'NAME': 'postgres',
+        'USER': 'postgres',
         'PASSWORD': '',
         # 'HOST': '128.199.202.189',
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
