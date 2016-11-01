@@ -17,7 +17,6 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,5 +25,3 @@ urlpatterns = [
                                namespace='rest_framework')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-urlpatterns += staticfiles_urlpatterns()

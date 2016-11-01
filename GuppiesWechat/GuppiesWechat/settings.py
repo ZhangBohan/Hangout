@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'rest_framework',
     'rest_framework_swagger',
-    "wechat.apps.WechatConfig"
+    "wechat.apps.WechatConfig",
+    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE_CLASSES = [
