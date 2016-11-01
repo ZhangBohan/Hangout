@@ -63,7 +63,7 @@
             {% endif %}
             <div class="icon{% if is_voted %} active{% endif %}"></div>
         </div>
-        {% if is_marked %}
+        {% if photo_owner or is_marked %}
         <div class="commented-detail-box">
             <div class="image-meta-box">
                 <div class="score-info">
@@ -118,7 +118,7 @@
         </div>
         {% endif %}
 
-        {% if not is_marked %}
+        {% if not photo_owner and not is_marked %}
         <div class="uncomment-detail-box">
             <div class="image-meta-box">
                 <div class="score-info">

@@ -42,6 +42,7 @@ def photo_detail(request, pk):
     user_id = request.user.id
     is_voted = photo.is_user_voted(user_id)
     is_marked = photo.is_user_marked(user_id)
+    photo_owner = photo.user_id == user_id
 
     photo.incr('n_total_watched').save()
 
@@ -51,6 +52,7 @@ def photo_detail(request, pk):
         "photo": photo,
         "is_voted": is_voted,
         "is_marked": is_marked,
+        "photo_owner": photo_owner,
         "comments": comments,
         "votes": votes,
     })
