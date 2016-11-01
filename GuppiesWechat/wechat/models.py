@@ -186,6 +186,19 @@ class Photo(CommonModelMixin, models.Model):
     def nearby_photo_query(cls, point: Point, radius: int = 5000) -> QuerySet:
         return cls.objects.filter(point__distance_lte=(point, D(m=radius))).order_by('-distance')
 
+    @staticmethod
+    def mark_choices():
+        return [i for i in range(100)]
+
+    def is_user_voted(self, user_id):
+        return Vote.objects.filter(user_id=user_id, photo=self).first() is not None
+
+    def is_user_marked(self, user_id):
+        return Mark.objects.filter(user_id=user_id, photo=self).first() is not None
+
+    def is_user_commented(self, user_id):
+        return Comment.objects.filter(user_id=user_id, photo=self).first() is not None
+
 
 class Mark(CommonModelMixin, models.Model):
     user = models.ForeignKey(User)

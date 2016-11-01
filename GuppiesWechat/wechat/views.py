@@ -39,7 +39,9 @@ def photo_index(request):
 def photo_detail(request, pk):
     photo = Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
 
-    is_voted = Vote.objects.filter(user_id=request.user.id, photo=photo).first() is not None
+    user_id = request.user.id
+    is_voted = photo.is_user_voted(user_id)
+    is_marked = photo.is_user_marked(user_id)
 
     photo.incr('n_total_watched').save()
 
@@ -48,6 +50,7 @@ def photo_detail(request, pk):
     return render(request, 'wechat_photo_detail.html', context={
         "photo": photo,
         "is_voted": is_voted,
+        "is_marked": is_marked,
         "comments": comments,
         "votes": votes,
     })

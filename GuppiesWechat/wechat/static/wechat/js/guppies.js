@@ -1,66 +1,5 @@
 $(function(){
 
-    window.currentPage = 1;
-
-    $(window).scroll(function() {
-        if($(window).scrollTop() == $(document).height() - $(window).height()) {
-            // ajax call get data from server and append to the div
-            // 获取头像
-            $.ajax({
-               method:'get',
-               url:'/wechat/api/photos?page=' + (currentPage + 1),
-               success:function(data){
-                   window.currentPage += 1;
-                   console.log(data);
-                   for(var i = 0; i < data.results.length; i++) {
-                       var photo = data.results[i];
-                       var fishImg = photo.url;
-
-                       var swiper_html = '';
-                       for(var y = 0; y < photo.url.length; y++) {
-                           swiper_html += '                <div class="swiper-slide">' +
-                        '                    <div class="fishImg">' +
-                        '                        <img src="' + photo.url[y] + '"/>' +
-                        '                    </div>' +
-                        '                </div>'
-                       }
-
-                       var html = $('<div class="user" onclick="location=\'/wechat/photos/' + photo.id + '\'/\'">' +
-                        '    <div class="userMes">' +
-                        '        <div class="userImg">' +
-                        '            <img src="' + photo.user.avatar_url +'"/>' +
-                        '        </div>' +
-                        '        <div class="userName">' + photo.user.nickname + '</div>' +
-                        '        <div class="userTime">1分钟前</div>' +
-                        '    </div>' +
-                        '    <div class="fishMes">' + photo.description + '</div>' +
-                        '    <div class="fishDetail">查看详情</div>' +
-                        '    <div class="swiper-container">' + swiper_html + '        <!-- If we need pagination -->' +
-                        '        <div class="swiper-pagination"></div>' +
-                        '' +
-                        '        <!-- If we need scrollbar -->' +
-                        '        <div class="swiper-scrollbar"></div>' +
-                        '    </div>' +
-                        '' +
-                        '    <div class="userExtraWrap">' +
-                        '        <div class="userExtra">' +
-                        '            <div class="score">评分可见</div>' +
-                        '            <div class="check"><span>' + photo.n_total_watched + '</span>查看</div>' +
-                        '            <div class="like"><span>' + photo.n_account_vote + '</span>赞</div>' +
-                        '            <div class="store"><span>' + photo.n_avg_mark + '</span>收藏</div>' +
-                        '        </div>' +
-                        '    </div>' +
-                        '</div>');
-
-                       $('.userWrap').append(html);
-                   }
-
-               }
-
-            });
-        }
-    });
-
     // 图片预览
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -177,10 +116,11 @@ $(function(){
             success: function (data) {
                 console.log('success', data);
                 $(".modal").hide();
+                $(".imgSure").hide();
                 $(".container").show();
             },
             error: function (data) {
-                alert('提交失败' + data);
+                alert('提交失败' +  + JSON.stringify(data));
             }
         });
     });

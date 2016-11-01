@@ -63,55 +63,91 @@
             {% endif %}
             <div class="icon{% if is_voted %} active{% endif %}"></div>
         </div>
-        <div class="image-meta-box">
-            <div class="score-info">
-                <span class="score-count">{{ photo.n_account_mark }}</span>
-                <span class="score-word">人最终评分:</span>
-                <span class="score">{{ photo.n_avg_mark }}</span>
-            </div>
-            <span class="rule">评分规则</span>
-        </div>
-        {% if votes %}
-        <div class="like-box">
-            <div class="count">
-                <div class="icon">
-                    <img src="/static/wechat/image/icon/30-zan.png" />
+        <div class="commented-detail-box{% if not is_marked %} hide{% endif %}">
+            <div class="image-meta-box">
+                <div class="score-info">
+                    <span class="score-count">{{ photo.n_account_mark }}</span>
+                    <span class="score-word">人最终评分:</span>
+                    <span class="score">{{ photo.n_avg_mark }}</span>
                 </div>
-                <div class="number">{{ photo.n_account_vote }}</div>
+                <span class="rule">评分规则</span>
             </div>
-            {% for vote in votes %}
-            <div class="avatar">
-                <img src="{{ vote.user.userinfo.avatar_url }}" />
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        <div class="space-box"></div>
-        <div class="comments-box">
-            <div class="comments-count">
-                {{ photo.n_account_comment }}条评论
-            </div>
-            <div class="comments">
-                {% for comment in comments %}
-                <div class="comment">
-                    <div class="comment-owner-box">
-                        <div class="avatar">
-                            <img src="{{ photo.user.userinfo.avatar_url }}" />
-                        </div>
-                        <div class="info">
-                            <span class="nickname">{{ comment.user.userinfo.nickname }}</span>
-                            <span class="score">{{ comment.created_at | naturaltime }}</span>
-                        </div>
-
+            {% if votes %}
+            <div class="like-box">
+                <div class="count">
+                    <div class="icon">
+                        <img src="/static/wechat/image/icon/30-zan.png" />
                     </div>
-                    <p>{{ comment.description }}</p>
+                    <div class="number">{{ photo.n_account_vote }}</div>
+                </div>
+                {% for vote in votes %}
+                <div class="avatar">
+                    <img src="{{ vote.user.userinfo.avatar_url }}" />
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
+            <div class="space-box"></div>
+            <div class="comments-box">
+                <div class="comments-count">
+                    {{ photo.n_account_comment }}条评论
+                </div>
+                <div class="comments">
+                    {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-owner-box">
+                            <div class="avatar">
+                                <img src="{{ photo.user.userinfo.avatar_url }}" />
+                            </div>
+                            <div class="info">
+                                <span class="nickname">{{ comment.user.userinfo.nickname }}</span>
+                                <span class="score">{{ comment.created_at | naturaltime }}</span>
+                            </div>
+
+                        </div>
+                        <p>{{ comment.description }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="comment-form-box">
+                <input type="text" name="name" placeholder="说点什么吧">
+                <button type="button" name="button">发布</button>
+            </div>
         </div>
-        <div class="comment-form-box">
-            <input type="text" name="name" placeholder="说点什么吧">
-            <button type="button" name="button">发布</button>
+
+        <div class="uncomment-detail-box{% if is_marked %} hide{% endif %}">
+            <div class="image-meta-box">
+                <div class="score-info">
+                    <span class="score-count">{{ photo.n_account_mark }}</span>
+                    <span class="score-word">人最终评分</span>
+                    <img src="/static/wechat/image/comment_to_see.png" />
+                </div>
+                <span class="rule">评分规则</span>
+            </div>
+            <div class="space-box"></div>
+            <div class="score-box">
+                <div class="description">
+                    评分后才能看到相关评论
+                </div>
+                <div class="description">
+                    (这么做是为了防止别人影响您的观点)
+                </div>
+                <div class="score-select">
+                    <select id="photo-mark">
+                        {% for mark in photo.mark_choices %}
+                            {% if mark == 60 %}
+                                <option value="{{ mark }}" selected>{{ mark }}</option>
+                            {% else %}
+                                <option value="{{ mark }}">{{ mark }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="btn" id="mark-submit-btn">
+                    <span>完成</span>
+                </div>
+            </div>
         </div>
     </div>
 <script src="/static/wechat/js/swiper.jquery.min.js"></script>
@@ -139,7 +175,25 @@
                 }
             },
             error: function (data) {
-                alert('提交失败' + data);
+                alert('提交失败' + JSON.stringify(data));
+            }
+        });
+    });
+
+    $("#mark-submit-btn").click(function () {
+        var mark = $("#photo-mark").val();
+        console.log('start to mark:', mark);
+        var data = {mark: mark};
+        $.ajax({
+            method: 'POST',
+            contentType: 'application/json',
+            url: '/wechat/api/photos/{{ photo.id }}/marks',
+            data: JSON.stringify(data),
+            success: function (data) {
+                document.location.reload()
+            },
+            error: function (data) {
+                alert('提交失败' + JSON.stringify(data));
             }
         });
     });
