@@ -213,7 +213,11 @@ def auth(request):
     try:
         UserInfo.objects.get(user=user)
     except UserInfo.DoesNotExist:
-        url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
+        if wechat_auth.headimgurl:
+            url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
+        else:
+            # FIXME default avatar
+            url = 'http://bohan.qiniudn.com/2016-07-20_github.png'
         UserInfo.objects.create(user=user,
                                 nickname=wechat_auth.nickname,
                                 avatar_url=url
