@@ -63,7 +63,8 @@
             {% endif %}
             <div class="icon{% if is_voted %} active{% endif %}"></div>
         </div>
-        <div class="commented-detail-box{% if not is_marked %} hide{% endif %}">
+        {% if is_marked %}
+        <div class="commented-detail-box">
             <div class="image-meta-box">
                 <div class="score-info">
                     <span class="score-count">{{ photo.n_account_mark }}</span>
@@ -97,7 +98,7 @@
                     <div class="comment">
                         <div class="comment-owner-box">
                             <div class="avatar">
-                                <img src="{{ photo.user.userinfo.avatar_url }}" />
+                                <img src="{{ comment.user.userinfo.avatar_url }}" />
                             </div>
                             <div class="info">
                                 <span class="nickname">{{ comment.user.userinfo.nickname }}</span>
@@ -115,8 +116,10 @@
                 <button type="button" id="comment-submit-btn">发布</button>
             </div>
         </div>
+        {% endif %}
 
-        <div class="uncomment-detail-box{% if is_marked %} hide{% endif %}">
+        {% if not is_marked %}
+        <div class="uncomment-detail-box">
             <div class="image-meta-box">
                 <div class="score-info">
                     <span class="score-count">{{ photo.n_account_mark }}</span>
@@ -149,6 +152,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 <script src="/static/wechat/js/swiper.jquery.min.js"></script>
 <!-- Initialize Swiper -->
@@ -190,7 +194,7 @@
             url: '/wechat/api/photos/{{ photo.id }}/marks',
             data: JSON.stringify(data),
             success: function (data) {
-                document.location.reload()
+                document.location.reload();
             },
             error: function (data) {
                 alert('提交失败' + JSON.stringify(data));
@@ -208,7 +212,7 @@
             url: '/wechat/api/photos/{{ photo.id }}/comments',
             data: JSON.stringify(data),
             success: function (data) {
-                document.location.reload()
+                document.location.reload();
             },
             error: function (data) {
                 alert('提交失败' + JSON.stringify(data));
