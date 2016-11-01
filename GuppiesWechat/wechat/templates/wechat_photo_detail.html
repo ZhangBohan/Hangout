@@ -9,7 +9,7 @@
     <script src="/static/wechat/js/guppies.js"></script>
     <script src="/static/wechat/js/rem.js"></script>
     <script src="/static/wechat/js/qiniu.js"></script>
-    <link href="/static/wechat/css/style.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/wechat/css/style.css?v=2" type="text/css" rel="stylesheet"/>
     <link href="/static/wechat/css/swiper.min.css" type="text/css" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 </head>
@@ -111,8 +111,8 @@
                 </div>
             </div>
             <div class="comment-form-box">
-                <input type="text" name="name" placeholder="说点什么吧">
-                <button type="button" name="button">发布</button>
+                <input id="comment-text" type="text" name="name" placeholder="说点什么吧">
+                <button type="button" id="comment-submit-btn">发布</button>
             </div>
         </div>
 
@@ -197,6 +197,24 @@
             }
         });
     });
+
+    $("#comment-submit-btn").click(function () {
+        var text = $("#comment-text").val();
+        console.log('start to comment:', text);
+        var data = {description: text};
+        $.ajax({
+            method: 'POST',
+            contentType: 'application/json',
+            url: '/wechat/api/photos/{{ photo.id }}/comments',
+            data: JSON.stringify(data),
+            success: function (data) {
+                document.location.reload()
+            },
+            error: function (data) {
+                alert('提交失败' + JSON.stringify(data));
+            }
+        });
+    })
 </script>
 </body>
 </html>
