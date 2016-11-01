@@ -36,26 +36,32 @@
 {#            <span class="tag">#买一赠一#</span>#}
         </div>
         <div class="image-box">
-            <!-- Slider main container -->
-            <div class="swiper-container">
-                <!-- Additional required wrapper -->
-                <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    {% for url in photo.url %}
-                        <div class="swiper-slide">
-                            <div class="fishImg">
-                                <img src="{{ url }}"/>
-                            </div>
-                        </div>
-                    {% endfor %}
+            {% if photo.is_one_url %}
+                <div class="fishImg">
+                    <img src="{{ photo.url | first }}"/>
                 </div>
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
+            {% else %}
+                <!-- Slider main container -->
+                <div class="swiper-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Slides -->
+                        {% for url in photo.url %}
+                            <div class="swiper-slide">
+                                <div class="fishImg">
+                                    <img src="{{ url }}"/>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- If we need pagination -->
+                    <div class="swiper-pagination"></div>
 
-                <!-- If we need scrollbar -->
-                <div class="swiper-scrollbar"></div>
-            </div>
-            <div class="icon{% if photo.is_voted %} active{% endif %}"></div>
+                    <!-- If we need scrollbar -->
+                    <div class="swiper-scrollbar"></div>
+                </div>
+            {% endif %}
+            <div class="icon{% if is_voted %} active{% endif %}"></div>
         </div>
         <div class="image-meta-box">
             <div class="score-info">

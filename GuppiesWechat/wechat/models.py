@@ -164,24 +164,8 @@ class Photo(CommonModelMixin, models.Model):
         return self.to_dict(include_properties=('is_liked', 'is_voted',), account=account, is_with_permissions=True)
 
     @property
-    def is_voted(self) -> bool:
-        return Vote.objects.filter(user_id=self.user_id, photo=self).first() is not None
-
-    @property
-    def is_marked(self) -> bool:
-        return Mark.objects.filter(user_id=self.user_id, photo=self).first() is not None
-
-    @property
-    def is_favorited(self) -> bool:
-        return Favorite.objects.filter(user_id=self.user_id, photo=self).first() is not None
-
-    @property
-    def is_favorite(self) -> bool:
-        return Favorite.objects.filter(user_id=self.user_id, photo=self).first() is not None
-
-    @property
-    def is_commented(self) -> bool:
-        return Comment.objects.filter(user_id=self.user_id, photo=self).first() is not None
+    def is_one_url(self):
+        return len(self.url) == 1
 
     @classmethod
     def last_week_best_photo_query(cls) -> QuerySet:

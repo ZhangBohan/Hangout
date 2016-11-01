@@ -29,25 +29,31 @@
                 {{ photo.description }}
             </div>
             <div class="fishDetail">查看详情</div>
-            <!-- Slider main container -->
-            <div class="swiper-container">
-                <!-- Additional required wrapper -->
-                <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    {% for url in photo.url %}
-                        <div class="swiper-slide">
-                            <div class="fishImg">
-                                <img src="{{ url }}"/>
-                            </div>
-                        </div>
-                    {% endfor %}
+            {% if photo.is_one_url %}
+                <div class="fishImg">
+                    <img src="{{ photo.url | first }}"/>
                 </div>
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
+            {% else %}
+                <!-- Slider main container -->
+                <div class="swiper-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Slides -->
+                        {% for url in photo.url %}
+                            <div class="swiper-slide">
+                                <div class="fishImg">
+                                    <img src="{{ url }}"/>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- If we need pagination -->
+                    <div class="swiper-pagination"></div>
 
-                <!-- If we need scrollbar -->
-                <div class="swiper-scrollbar"></div>
-            </div>
+                    <!-- If we need scrollbar -->
+                    <div class="swiper-scrollbar"></div>
+                </div>
+            {% endif %}
 
             <div class="userExtraWrap">
                 <div class="userExtra">
