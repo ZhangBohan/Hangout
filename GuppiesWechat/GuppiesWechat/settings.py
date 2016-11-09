@@ -14,6 +14,9 @@ import os
 import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from wechat_sdk import WechatBasic
+from wechat_sdk import WechatConf
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -147,3 +150,16 @@ RAVEN_CONFIG = {
     # release based on the git info.
     'release': raven.fetch_git_sha(os.path.dirname(BASE_DIR)),
 }
+
+
+WECHAT_CONF = WechatConf(
+    token='guppiestoken',
+    appid='wxbbb6b25e8943502f',
+    appsecret='8140ce54ce5c261fcf1a56fa3e3cc9ca',
+    encrypt_mode='normal',  # 可选项：normal/compatible/safe，分别对应于 明文/兼容/安全 模式
+    # encoding_aes_key='your_encoding_aes_key'  # 如果传入此值则必须保证同时传入 token, appid
+)
+
+WECHAT_BASIC = WechatBasic(conf=WECHAT_CONF)
+
+WECHAT_NOTIFY_TEMPLATE_ID = 'L3lXXopUqFOMUeXj3K8IuOO5xbuWXv0Xpq6LzcyZDWM'

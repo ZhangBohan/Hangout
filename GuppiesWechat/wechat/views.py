@@ -8,127 +8,12 @@ import requests
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import Http404
 from django.shortcuts import render, HttpResponse, redirect
-from django.contrib.auth.decorators import login_required
+
+from django.conf import settings
 from wechat.models import WechatAuth, UserInfo, Photo, Comment, Vote, UserLocation
 from wechat.utils import upload_url_to_qiniu
-from wechat_sdk import WechatConf, WechatBasic
 import logging
-
-conf = WechatConf(
-    token='guppiestoken',
-    appid='wxbbb6b25e8943502f',
-    appsecret='8140ce54ce5c261fcf1a56fa3e3cc9ca',
-    encrypt_mode='normal',  # 可选项：normal/compatible/safe，分别对应于 明文/兼容/安全 模式
-    # encoding_aes_key='your_encoding_aes_key'  # 如果传入此值则必须保证同时传入 token, appid
-)
-
-wechat_basic = WechatBasic(conf=conf)
-
-
-@login_required
-def photo_index(request):
-    photos = Photo.objects.filter(status=Photo.PUBLISH_STATUS).all()
-    return render(request, 'wechat_photo_index.html', context={
-        "photos": photos
-    })
-
-
-@login_required
-def photo_detail(request, pk):
-    photo = Photo.objects.get(pk=pk, status=Photo.PUBLISH_STATUS)
-
-    user_id = request.user.id
-    is_voted = photo.is_user_voted(user_id)
-    is_marked = photo.is_user_marked(user_id)
-    photo_owner = photo.user_id == user_id
-
-    photo.incr('n_total_watched').save()
-
-    comments = Comment.objects.filter(photo=photo)
-    votes = Vote.objects.filter(photo=photo)[:5]
-    return render(request, 'wechat_photo_detail.html', context={
-        "photo": photo,
-        "is_voted": is_voted,
-        "is_marked": is_marked,
-        "photo_owner": photo_owner,
-        "comments": comments,
-        "votes": votes,
-    })
-
-
-@login_required
-def vote_index(request, photo_id):
-    votes = Vote.objects.filter(photo_id=photo_id)
-    return render(request, 'wechat_vote_index.html', context={
-        "votes": votes
-    })
-
-
-@login_required
-def mine(request):
-    return render(request, 'wechat_mine.html', context={
-        "user": request.user
-    })
-
-
-@login_required
-def rank_index(request):
-    return render(request, 'wechat_rank_index.html', context={
-        "user": request.user,
-    })
-
-
-@login_required
-def discover(request):
-    rank_type = request.GET.get('rank', 'score')
-
-    if rank_type == 'score':
-        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-        photos = Photo.objects.filter(created_at__gte=week_ago,
-                                      status=Photo.PUBLISH_STATUS).order_by('-n_avg_mark')
-    elif rank_type == 'before_score':
-        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-        photos = Photo.objects.filter(created_at__lte=week_ago,
-                                      status=Photo.PUBLISH_STATUS).order_by('-n_avg_mark')
-    elif rank_type == 'vote':
-        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-        photos = Photo.objects.filter(created_at__gte=week_ago,
-                                      status=Photo.PUBLISH_STATUS).order_by('-n_account_vote')
-    elif rank_type == 'before_vote':
-        week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-        photos = Photo.objects.filter(created_at__lte=week_ago,
-                                      status=Photo.PUBLISH_STATUS).order_by('-n_account_vote')
-    else:
-        raise Http404()
-
-    return render(request, 'wechat_discover.html', context={
-        "user": request.user,
-        "photos": photos,
-        "rank_type": rank_type,
-    })
-
-
-@login_required
-def rank_users(request):
-    rank_type = request.GET.get('rank', 'score')
-
-    if rank_type == 'score':
-        userinfos = UserInfo.objects.order_by('-n_total_mark').all()
-    else:
-        userinfos = UserInfo.objects.order_by('-n_vote').all()
-
-    for index, userinfo in enumerate(userinfos):
-        if request.user.userinfo.id == userinfo.id:
-            break
-
-    return render(request, 'wechat_rank_users.html', context={
-        "user": request.user,
-        "userinfos": userinfos,
-        "first_userinfo": userinfos[0],
-        "user_rank": index + 1
-    })
 
 
 def callback(request):
@@ -137,15 +22,14 @@ def callback(request):
     nonce = request.GET.get('nonce')
     echostr = request.GET.get('echostr')
 
-    print(request.GET, conf.appid, signature, timestamp, nonce, echostr)
+    print(request.GET, settings.WECHAT_CONF.appid, signature, timestamp, nonce, echostr)
 
-    if wechat_basic.check_signature(request.GET.get('signature'),
-                                    request.GET.get('timestamp'),
-                                    request.GET.get('nonce')):
+    if settings.WECHAT_BASIC.check_signature(request.GET.get('signature'),
+                                request.GET.get('timestamp'),
+                                request.GET.get('nonce')):
         return HttpResponse(echostr)
     else:
-
-        return HttpResponse(wechat_basic.response_text('工程师正在努力开发中'))
+        return HttpResponse(settings.WECHAT_BASIC.response_text('工程师正在努力开发中'))
 
 
 def auth(request):
@@ -157,12 +41,12 @@ def auth(request):
         encoded_url = quote_plus(request.build_absolute_uri(reverse('auth')))
         url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&' \
               'scope=%s&state=%s#wechat_redirect' % (
-                  conf.appid, encoded_url, 'snsapi_userinfo', None)
+                  settings.WECHAT_CONF.appid, encoded_url, 'snsapi_userinfo', None)
         return redirect(url)
 
     params = {
-        "appid": conf.appid,
-        "secret": conf.appsecret,
+        "appid": settings.WECHAT_CONF.appid,
+        "secret": settings.WECHAT_CONF.appsecret,
         "code": code,
         "grant_type": 'authorization_code'
     }
