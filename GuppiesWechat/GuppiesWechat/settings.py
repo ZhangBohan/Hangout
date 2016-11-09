@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     "wechat.apps.WechatConfig",
+    "hangout.apps.HangoutConfig",
     'raven.contrib.django.raven_compat',
 ]
 
