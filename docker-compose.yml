@@ -4,7 +4,7 @@
      image: mdillon/postgis
    web:
      build: .
-     command: gunicorn --workers=4 -b 0.0.0.0:8000 GuppiesWechat.wsgi
+     command: python manage.py runserver 0.0.0.0:8000
      volumes:
        - .:/code
      ports:

@@ -19,6 +19,7 @@ class Template(models.Model):
     used_count = models.IntegerField("模板使用次数", default=1, help_text="模板使用次数")
 
 
+
 class Schedule(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)

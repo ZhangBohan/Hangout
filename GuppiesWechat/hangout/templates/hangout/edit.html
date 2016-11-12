@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>WeUI</title>
+    <link rel="stylesheet" href="/static/wechat/css/weui.css"/>
+    <link rel="stylesheet" href="/static/wechat/css/hangout.css"/>
+    <link rel="stylesheet" href="/static/wechat/example/example.css"/>
+</head>
+<body ontouchstart>
+<div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
+
+<div class="container" id="container">
+    <div class="page js_show">
+        <form method="post">
+            <div class="weui-cells__title">标题</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input name="title" class="weui-input" type="text" placeholder="请输入文本"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-cells__title">描述</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea name="content" class="weui-textarea" placeholder="请输入文本" rows="3"></textarea>
+                        <div class="weui-textarea-counter"><span>0</span>/200</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-cells__title">日程时间</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="" class="weui-label">开始时间</label></div>
+                    <div class="weui-cell__bd">
+                        <input name="started_at" class="weui-input" type="datetime-local" value="" placeholder=""/>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label for="" class="weui-label">结束时间</label></div>
+                    <div class="weui-cell__bd">
+                        <input name="ended_at" class="weui-input" type="datetime-local" value="" placeholder=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">提醒</div>
+            <div class="weui-cells">
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">提醒对方</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="notify_other">
+                            <option value="60">60分钟前</option>
+                            <option value="30">30分钟前</option>
+                            <option value="0">发生时</option>
+                            <option value="">不提醒</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label for="" class="weui-label">提醒我</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="notify_me">
+                            <option value="60">60分钟前</option>
+                            <option value="30">30分钟前</option>
+                            <option value="0">发生时</option>
+                            <option value="">不提醒</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="page__hd">
+                <button class="weui-btn weui-btn_primary">生成日程</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
