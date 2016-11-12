@@ -19,7 +19,6 @@ class Template(models.Model):
     used_count = models.IntegerField("模板使用次数", default=1, help_text="模板使用次数")
 
 
-
 class Schedule(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -64,7 +63,6 @@ class ScheduleUser(models.Model):
     is_accepted = models.BooleanField("是否接受", help_text="是否接受", default=True)
 
     def save(self, *args, **kwargs):
-
         item = super(ScheduleUser, self).save(*args, **kwargs)
         self.schedule.accepted_count += 1
         return item
