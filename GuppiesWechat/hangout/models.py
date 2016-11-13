@@ -36,9 +36,8 @@ class Schedule(models.Model):
     is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
     accepted_count = models.IntegerField("模板使用次数", default=1, help_text="模板使用次数")
 
-    def after_notify(self):
-        self.is_notified = True
-        template, created = Template.get_or_create(title=self.title, user=self.user, defaults={
+    def save(self, *args, **kwargs):
+        template, created = Template.objects.get_or_create(title=self.title, user=self.user, defaults={
             "address": self.address,
             "address_location": self.address_location,
             "started_date": self.started_date,
@@ -50,8 +49,7 @@ class Schedule(models.Model):
         if not created:
             template += 1
             template.save()
-
-        self.save()
+        return super(Schedule, self).save(*args, **kwargs)
 
 
 class ScheduleUser(models.Model):

@@ -13,3 +13,12 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
+
+.center {
+    text-align: center;
+}
+
+.qr_image {
+    width: 50%;
+    height: 50%;
+}

@@ -20,4 +20,5 @@ class Command(BaseCommand):
                                                             'address': schedule.address,
                                                             'started_date': schedule.started_date,
                                                         })
-            schedule.after_notify()
+            schedule.is_notified = True
+            schedule.save()

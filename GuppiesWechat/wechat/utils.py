@@ -43,7 +43,6 @@ def gaode_location(latitude, longitude):
     return province, city, district
 
 
-
 def upload_url_to_qiniu(key, url):
     r = requests.get(url)
 
