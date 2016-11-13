@@ -1,0 +1,72 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>WeUI</title>
+    <link rel="stylesheet" href="/static/wechat/css/weui.css"/>
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/wechat/css/hangout.css"/>
+    <link rel="stylesheet" href="/static/wechat/example/example.css"/>
+</head>
+<body ontouchstart>
+<div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
+
+<div class="container" id="container">
+    <div class="page js_show">
+        {% if recent_schedules %}
+        <div class="weui-panel">
+            <div class="weui-panel__hd">最近日程</div>
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_small-appmsg">
+                    <div class="weui-cells">
+                        {% for schedule in recent_schedules %}
+                            <a class="weui-cell weui-cell_access" href="javascript:;">
+                                <div class="weui-cell__hd">
+                                    <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
+                                         style="width:20px;margin-right:5px;display:block">
+                                </div>
+                                <div class="weui-cell__bd weui-cell_primary">
+                                    <p>{{ schedule.title }}</p>
+                                </div>
+                                <span class="weui-cell__ft">
+                                    {{ schedule.started_date | naturaltime }}
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if notified_schedules %}
+        <div class="weui-panel">
+            <div class="weui-panel__hd">已约日程</div>
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_small-appmsg">
+                    <div class="weui-cells">
+                        {% for schedule in notified_schedules %}
+                            <a class="weui-cell weui-cell_access" href="javascript:;">
+                                <div class="weui-cell__hd">
+                                    <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
+                                         style="width:20px;margin-right:5px;display:block">
+                                </div>
+                                <div class="weui-cell__bd weui-cell_primary">
+                                    <p>{{ schedule.title }}</p>
+                                </div>
+                                <span class="weui-cell__ft">
+                                    {{ schedule.started_date | naturaltime }}
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% include 'hangout/_tabbar.html' with current_tab="index" %}
+</div>
+</body>
+</html>

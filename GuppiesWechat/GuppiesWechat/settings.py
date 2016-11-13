@@ -119,11 +119,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'zh_CN'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
-USE_I18N = True
+# FIXME
+USE_I18N = False
 
 USE_L10N = True
 
@@ -163,3 +164,6 @@ WECHAT_CONF = WechatConf(
 WECHAT_BASIC = WechatBasic(conf=WECHAT_CONF)
 
 WECHAT_NOTIFY_TEMPLATE_ID = 'L3lXXopUqFOMUeXj3K8IuOO5xbuWXv0Xpq6LzcyZDWM'
+
+DATE_FORMAT = 'y年m月d日'
+DATETIME_FORMAT = 'y年m月d日 H时i分s秒'
