@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>WeUI</title>
+    <link rel="stylesheet" href="/static/wechat/css/weui.css"/>
+    <link rel="stylesheet" href="/static/wechat/css/hangout.css"/>
+    <link rel="stylesheet" href="/static/wechat/example/example.css"/>
+</head>
+<body ontouchstart>
+<div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
+
+<div class="container" id="container">
+    <div class="page js_show">
+        <div class="page__bd me-avatar">
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <img class="avatar-big" src="{{ user.userinfo.avatar_url }}">
+                </div>
+            </div>
+            <div>
+                <div class="weui-flex__item">
+                    {{ user.userinfo.nickname }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'hangout/_tabbar.html' with current_tab="me" %}
+</div>
+</body>
+</html>

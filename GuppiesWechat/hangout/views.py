@@ -8,7 +8,22 @@ from hangout.models import Schedule, Template
 @login_required
 def index(request):
 
-    templates = Template.objects.filter(user=request.user).order_by('-updated_at').all()[:5]
+    templates = Template.objects.filter(user=request.user).order_by('-updated_at').all()[:10]
+    return render(request, 'hangout/index.html', context={
+        "templates": templates
+    })
+
+
+@login_required
+def me(request):
+    return render(request, 'hangout/me.html', context={
+        "user": request.user
+    })
+
+
+@login_required
+def hangout(request):
+    templates = Schedule.objects.filter(user=request.user).order_by('-updated_at').all()[:5]
     return render(request, 'hangout/index.html', context={
         "templates": templates
     })
