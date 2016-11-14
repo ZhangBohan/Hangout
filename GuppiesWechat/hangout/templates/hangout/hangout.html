@@ -22,7 +22,8 @@
                 <div class="weui-media-box weui-media-box_small-appmsg">
                     <div class="weui-cells">
                         {% for schedule in recent_schedules %}
-                            <a class="weui-cell weui-cell_access" href="javascript:;">
+                            <a class="weui-cell weui-cell_access"
+                               href="{% url 'hangout.share' %}?schedule_id={{ schedule.id }}">
                                 <div class="weui-cell__hd">
                                     <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
                                          style="width:20px;margin-right:5px;display:block">

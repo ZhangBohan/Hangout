@@ -12,7 +12,7 @@ class ScheduleForm(forms.Form):
     INPUT_DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M'
 
     title = forms.CharField(help_text='标题', max_length=20)
-    content = forms.CharField(help_text='描述', max_length=50)
+    content = forms.CharField(help_text='描述', max_length=300)
 
     started_date = forms.DateTimeField(help_text='开始时间', input_formats=[INPUT_DATE_TIME_FORMAT])
     ended_date = forms.DateTimeField(help_text='结束时间', input_formats=[INPUT_DATE_TIME_FORMAT])

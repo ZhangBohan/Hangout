@@ -47,7 +47,7 @@ class Schedule(models.Model):
         })
 
         if not created:
-            template += 1
+            template.used_count += 1
             template.save()
         return super(Schedule, self).save(*args, **kwargs)
 

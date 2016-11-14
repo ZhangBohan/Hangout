@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect, resolve_url
 
 from hangout.forms import ScheduleForm
 from hangout.models import Schedule, Template
@@ -43,7 +43,9 @@ def create(request):
             schedule = Schedule(**form.cleaned_data)
             schedule.user = request.user
             schedule.save()
+            return redirect(resolve_url('hangout.share') + '?schedule_id=%s' % schedule.id)
         print(form.errors.as_json())
+        raise Exception(form.errors.as_json())
 
     return render(request, 'hangout/edit.html')
 
