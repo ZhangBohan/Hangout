@@ -4,15 +4,21 @@
     </div>
     <div class="weui-tabbar">
         <a href="{% url 'hangout.hangout' %}" class="weui-tabbar__item{% if current_tab == 'hangout' %} weui-bar__item_on{% endif %}">
-            <img src="/static/wechat/example/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+            <div class="weui-tabbar__icon">
+               <i class="fa fa-calendar" aria-hidden="true"></i>
+            </div>
             <p class="weui-tabbar__label">已约</p>
         </a>
         <a href="{% url 'hangout.index' %}" class="weui-tabbar__item{% if current_tab == 'index' %} weui-bar__item_on{% endif %}">
-            <img src="/static/wechat/example/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+            <div class="weui-tabbar__icon">
+               <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+            </div>
             <p class="weui-tabbar__label">约起</p>
         </a>
         <a href="{% url 'hangout.me' %}" class="weui-tabbar__item{% if current_tab == 'me' %} weui-bar__item_on{% endif %}">
-            <img src="/static/wechat/example/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+            <div class="weui-tabbar__icon">
+               <i class="fa fa-user" aria-hidden="true"></i>
+            </div>
             <p class="weui-tabbar__label">我</p>
         </a>
     </div>
