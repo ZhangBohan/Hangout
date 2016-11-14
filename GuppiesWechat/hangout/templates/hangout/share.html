@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>WeUI</title>
+    <link rel="stylesheet" href="/static/wechat/css/weui.css"/>
+    <link rel="stylesheet" href="/static/wechat/css/hangout.css"/>
+    <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/wechat/example/example.css"/>
+</head>
+<body ontouchstart>
+<div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
+
+<div class="container" id="container">
+    <div class="page js_show center">
+        <div class="page__hd">
+            <h1 class="page__title">{{ schedule.title }}</h1>
+            <p class="page__desc">{{ schedule.content }}</p>
+        </div>
+        <div class="page__bd">
+            <img class="qr_image" src="/static/wechat/example/images/qr_example.jpg">
+        </div>
+    </div>
+</div>
+</body>
+</html>

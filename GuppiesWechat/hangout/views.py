@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render
 
 from hangout.forms import ScheduleForm
@@ -47,5 +48,16 @@ def create(request):
     return render(request, 'hangout/edit.html')
 
 
-def share(request, schedule_id):
-    return render(request, 'hangout/share.html')
+def share(request):
+    schedule_id = request.GET.get('schedule_id')
+    if not schedule_id:
+        raise Http404()
+
+    try:
+        schedule = Schedule.objects.get(pk=schedule_id)
+    except Schedule.DoesNotExist:
+        raise Http404()
+
+    return render(request, 'hangout/share.html', context={
+        "schedule": schedule
+    })
