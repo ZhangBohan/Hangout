@@ -7,18 +7,20 @@
     <link rel="stylesheet" href="/static/wechat/css/weui.css"/>
     <link rel="stylesheet" href="/static/wechat/css/hangout.css"/>
     <link rel="stylesheet" href="/static/wechat/example/example.css"/>
+    <script type="text/javascript" src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.staticfile.org/jquery-validate/1.15.0/jquery.validate.min.js"></script>
 </head>
 <body ontouchstart>
 <div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
 
 <div class="container" id="container">
     <div class="page js_show">
-        <form method="post">
+        <form id="edit" method="post">
             <div class="weui-cells__title">标题</div>
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <input name="title" class="weui-input" type="text" placeholder="请输入文本"/>
+                        <input name="title" class="weui-input" type="text" placeholder="请输入文本" required="true" maxlength="20"/>
                     </div>
                 </div>
             </div>
@@ -27,7 +29,7 @@
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <textarea name="content" class="weui-textarea" placeholder="请输入文本" rows="3"></textarea>
+                        <textarea name="content" class="weui-textarea" placeholder="请输入文本" required="true" maxlength="200" rows="3"></textarea>
                         <div class="weui-textarea-counter"><span>0</span>/200</div>
                     </div>
                 </div>
@@ -38,13 +40,13 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">开始时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="started_date" class="weui-input" type="datetime-local" value="" placeholder=""/>
+                        <input name="started_date" class="weui-input" type="datetime-local" value="" required="true" placeholder=""/>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">结束时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="ended_date" class="weui-input" type="datetime-local" value="" placeholder=""/>
+                        <input name="ended_date" class="weui-input" type="datetime-local" value="" required="true" placeholder=""/>
                     </div>
                 </div>
             </div>
@@ -84,4 +86,46 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var local = new Date();
+        local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+        var tomorrow = new Date(local);
+        tomorrow.setMinutes(tomorrow.getMinutes() + 24*60);
+
+        $("input[name='started_date']").val(tomorrow.toJSON().slice(0,16));
+        $("input[name='started_date']").attr("min", local.toJSON().slice(0,16));
+
+        $("textarea[name='content']").bind('input propertychange', function (event) {
+            var target = $(event.target);
+            var value = target.val();
+            var count = value.length;
+            $(this).parent().children(".weui-textarea-counter").children("span").text(count);
+        });
+
+        $("#edit").validate({
+            onfocusout: function(element) {
+                this.element(element);
+            },
+            highlight: function(element) {
+                var cell = $(element).parent("div").parent("div");
+                if (!cell.hasClass("weui-cell_warn")) {
+                    cell.addClass("weui-cell_warn");
+                    if ($(element).attr("type") != "datetime-local") {
+                        cell.append("<div class=\"weui-cell__ft\"> <i class=\"weui-icon-warn\"></i></div>");
+                    }
+                }
+            },
+            unhighlight: function(element) {
+                var cell = $(element).parent("div").parent("div");
+                cell.removeClass("weui-cell_warn");
+                cell.children(".weui-cell__ft").remove();
+            },
+            errorPlacement: function(error, element) {
+                //内置错误信息不显示
+            }
+        });
+    });
+</script>
 </html>
