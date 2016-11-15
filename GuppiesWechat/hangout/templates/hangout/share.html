@@ -14,11 +14,12 @@
 <div class="container" id="container">
     <div class="page js_show center">
         <div class="page__hd">
-            <h1 class="share__title">{{ schedule.title }}</h1>
-            <p class="share__desc">{{ schedule.content }}</p>
+            <h1 class="share__title">{{ ss.schedule.title }}</h1>
+            <p class="share__desc">{{ ss.schedule.content }}</p>
         </div>
         <div class="page__bd">
-            <img class="qr_image" src="/static/wechat/example/images/qr_example.jpg">
+            <img class="qr_image" src="{{ ss.qr_url }}">
+            <p>扫码接受日程</p>
         </div>
     </div>
 </div>

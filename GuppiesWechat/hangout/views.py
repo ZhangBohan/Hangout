@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect, resolve_url
 
 from hangout.forms import ScheduleForm
-from hangout.models import Schedule, Template
+from hangout.models import Schedule, Template, ScheduleShare
 
 
 @login_required
@@ -52,6 +53,7 @@ def create(request):
 
 def share(request):
     schedule_id = request.GET.get('schedule_id')
+    user_id = request.GET.get('user_id')
     if not schedule_id:
         raise Http404()
 
@@ -60,6 +62,9 @@ def share(request):
     except Schedule.DoesNotExist:
         raise Http404()
 
+    ss = ScheduleShare.get_schedule_share(schedule=schedule)
+
     return render(request, 'hangout/share.html', context={
-        "schedule": schedule
+        "ss": ss,
+        "user": ss.user
     })

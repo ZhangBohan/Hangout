@@ -1,5 +1,10 @@
+from datetime import timedelta
+
+from django.db import transaction
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
+
+from django.utils import timezone
 
 
 class Template(models.Model):
@@ -64,3 +69,47 @@ class ScheduleUser(models.Model):
         item = super(ScheduleUser, self).save(*args, **kwargs)
         self.schedule.accepted_count += 1
         return item
+
+
+QR_MAX_EXPIRE_SECONDS = 2592000  # 30天
+
+
+class ScheduleShare(models.Model):
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    user = models.ForeignKey(User, help_text="所有者")
+    schedule = models.ForeignKey(Schedule, help_text="事件")
+    ticket = models.CharField(max_length=255, help_text="获取的二维码ticket，凭借此ticket可以在有效时间内换取二维码。")
+    url = models.CharField(max_length=255, help_text="二维码图片解析后的地址，开发者可根据该地址自行生成需要的二维码图片")
+    expire_at = models.DateTimeField(help_text="过期时间, 默认当前时间+30天", null=True)
+
+    @property
+    def qr_url(self):
+        return 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + self.ticket
+
+    @classmethod
+    @transaction.atomic
+    def get_schedule_share(cls, schedule) -> "ScheduleShare":
+        ss, created = cls.objects.get_or_create(user=schedule.user, schedule=schedule)
+        if created or (ss.expire_at > timezone.now()):
+            ss = ss.create_qr()
+
+        return ss
+
+    def create_qr(self):
+
+        from django.conf import settings
+        result = settings.WECHAT_BASIC.create_qrcode({
+            "expire_seconds": QR_MAX_EXPIRE_SECONDS,
+            "action_name": "QR_SCENE",
+            "action_info": {
+                "scene": {"scene_id": self.id}
+            }
+        })
+        self.url = result.get("url")
+        self.ticket = result.get("ticket")
+        self.expire_at = self.created_at + timedelta(days=30)
+        self.save()
+        return self
