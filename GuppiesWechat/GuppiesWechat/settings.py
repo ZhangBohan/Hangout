@@ -124,7 +124,6 @@ LANGUAGE_CODE = 'zh_CN'
 
 TIME_ZONE = 'Asia/Shanghai'
 
-# FIXME
 USE_I18N = False
 
 USE_L10N = True

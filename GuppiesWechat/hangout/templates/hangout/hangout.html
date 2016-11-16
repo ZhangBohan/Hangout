@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load hangout_tool %}
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
 <head>
@@ -32,7 +32,7 @@
                                     <p>{{ schedule.title }}</p>
                                 </div>
                                 <span class="weui-cell__ft">
-                                    {{ schedule.started_date | naturaltime }}
+                                    {{ schedule.started_date | natural_time }}
                                 </span>
                             </a>
                         {% endfor %}
@@ -57,7 +57,7 @@
                                     <p>{{ schedule.title }}</p>
                                 </div>
                                 <span class="weui-cell__ft">
-                                    {{ schedule.started_date | naturaltime }}
+                                    {{ schedule.started_date | natural_time }}
                                 </span>
                             </a>
                         {% endfor %}

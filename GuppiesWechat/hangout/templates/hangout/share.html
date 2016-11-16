@@ -1,3 +1,4 @@
+{% load hangout_tool %}
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
 <head>
@@ -12,14 +13,42 @@
 <div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
 
 <div class="container" id="container">
-    <div class="page js_show center">
-        <div class="page__hd">
+    <div class="page js_show">
+        <div class="page__hd center">
             <h1 class="share__title">{{ ss.schedule.title }}</h1>
             <p class="share__desc">{{ ss.schedule.content }}</p>
         </div>
-        <div class="page__bd">
+        <div class="page__bd center">
             <img class="qr_image" src="{{ ss.qr_url }}">
             <p>扫码接受日程</p>
+        </div>
+
+        <div class="page__bd">
+            <div class="weui-cells__title">时间线</div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <img src="{{ ss.schedule.user.userinfo.avatar_url }}"
+                                style="width:20px;margin-right:5px;display:block">
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p>{{ ss.schedule.user.userinfo.nickname }}</p>
+                    </div>
+                    <div class="weui-cell__ft">{{ ss.schedule.created_at | natural_time }} 创建了该日程</div>
+                </div>
+                {% for schedule_user in schedule_users %}
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <img src="{{ schedule_user.user.userinfo.avatar_url }}"
+                                    style="width:20px;margin-right:5px;display:block">
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p>{{ schedule_user.user.userinfo.nickname }}</p>
+                        </div>
+                        <div class="weui-cell__ft">{{ schedule_user.created_at | natural_time }} 加入了该日程</div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

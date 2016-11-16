@@ -4,7 +4,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect, resolve_url
 
 from hangout.forms import ScheduleForm
-from hangout.models import Schedule, Template, ScheduleShare
+from hangout.models import Schedule, Template, ScheduleShare, ScheduleUser
 
 
 @login_required
@@ -64,7 +64,10 @@ def share(request):
 
     ss = ScheduleShare.get_schedule_share(schedule=schedule)
 
+    schedule_users = ScheduleUser.objects.filter(schedule=schedule).all()
+
     return render(request, 'hangout/share.html', context={
         "ss": ss,
-        "user": ss.user
+        "user": ss.user,
+        "schedule_users": schedule_users
     })
