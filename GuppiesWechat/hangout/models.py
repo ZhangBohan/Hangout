@@ -93,7 +93,7 @@ class ScheduleShare(models.Model):
     @transaction.atomic
     def get_schedule_share(cls, schedule) -> "ScheduleShare":
         ss, created = cls.objects.get_or_create(user=schedule.user, schedule=schedule)
-        if created or (ss.expire_at > timezone.now()):
+        if created or (ss.expire_at < timezone.now()):
             ss = ss.create_qr()
 
         return ss

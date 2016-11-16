@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "wechat.apps.WechatConfig",
     "hangout.apps.HangoutConfig",
     'raven.contrib.django.raven_compat',
+    'django_cron',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -167,3 +168,7 @@ WECHAT_NOTIFY_TEMPLATE_ID = 'L3lXXopUqFOMUeXj3K8IuOO5xbuWXv0Xpq6LzcyZDWM'
 
 DATE_FORMAT = 'y年m月d日'
 DATETIME_FORMAT = 'y年m月d日 H时i分s秒'
+
+CRON_CLASSES = [
+    'hangout.cron_job.HangoutCronJob'
+]
