@@ -6,3 +6,4 @@ djangorestframework
 ipython
 django-rest-swagger==0.3.8
 raven
+django_cron
