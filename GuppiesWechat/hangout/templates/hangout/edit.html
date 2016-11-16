@@ -97,9 +97,17 @@
         $("input[name='started_date']").val(tomorrow.toJSON().slice(0,16));
         $("input[name='started_date']").attr("min", local.toJSON().slice(0,16));
 
+        $("input[name='ended_date']").val(tomorrow.toJSON().slice(0,16));
+        $("input[name='ended_date']").attr("min", local.toJSON().slice(0,16));
+
+        $("input[name='started_date']").change(function () {
+            console.log($(this).val());
+            $("input[name='ended_date']").val($(this).val());
+            $("input[name='ended_date']").attr("min", $(this).val());
+        });
+
         $("textarea[name='content']").bind('input propertychange', function (event) {
-            var target = $(event.target);
-            var value = target.val();
+            var value = $(this).val();
             var count = value.length;
             $(this).parent().children(".weui-textarea-counter").children("span").text(count);
         });

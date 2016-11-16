@@ -39,7 +39,7 @@ class Schedule(models.Model):
     notify_other = models.IntegerField("何时通知别人", default=0, help_text="何时通知别人")
 
     is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
-    accepted_count = models.IntegerField("模板使用次数", default=1, help_text="模板使用次数")
+    accepted_count = models.IntegerField("已接受人数", default=1, help_text="已接受人数")
 
     def save(self, *args, **kwargs):
         template, created = Template.objects.get_or_create(title=self.title, user=self.user, defaults={
