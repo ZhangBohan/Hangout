@@ -47,7 +47,21 @@ def create(request):
             return redirect(resolve_url('hangout.share') + '?schedule_id=%s' % schedule.id)
         print(form.errors.as_json())
         raise Exception(form.errors.as_json())
-
+    else:
+        template_id = request.GET.get("template_id")
+        if template_id:
+            template = Template.objects.get(pk=template_id)
+            schedule = Schedule()
+            schedule.title = template.title
+            schedule.content = template.content
+            schedule.started_date = template.started_date
+            schedule.ended_date = template.ended_date
+            schedule.notify_me = template.notify_me
+            schedule.notify_other = template.notify_other
+            print(schedule)
+            return render(request, 'hangout/edit.html', context={
+                "schedule": schedule
+            })
     return render(request, 'hangout/edit.html')
 
 

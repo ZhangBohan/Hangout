@@ -21,7 +21,7 @@
             <div class="weui-cells__title">历史模板</div>
             <div class="weui-cells">
                 {% for template in templates %}
-                <a class="weui-cell weui-cell_access" href="javascript:;">
+                <a class="weui-cell weui-cell_access" href="{% url 'hangout.edit' %}?template_id={{ template.id }}">
                     <div class="weui-cell__hd"><img src="{{ template.user.userinfo.avatar_url }}" alt="" style="width:20px;margin-right:5px;display:block"></div>
                     <div class="weui-cell__bd">
                         <p>{{ template.title }}</p>

@@ -20,7 +20,7 @@
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <input name="title" class="weui-input" type="text" placeholder="请输入文本" required="true" maxlength="20"/>
+                        <input name="title" class="weui-input" type="text" value="{{ schedule.title }}" placeholder="请输入文本" required="true" maxlength="20"/>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <textarea name="content" class="weui-textarea" placeholder="请输入文本" required="true" maxlength="200" rows="3"></textarea>
+                        <textarea name="content" class="weui-textarea" placeholder="请输入文本" required="true" maxlength="200" rows="3">{{ schedule.content }}</textarea>
                         <div class="weui-textarea-counter"><span>0</span>/200</div>
                     </div>
                 </div>
@@ -40,13 +40,13 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">开始时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="started_date" class="weui-input" type="datetime-local" value="" required="true" placeholder=""/>
+                        <input name="started_date" class="weui-input" type="datetime-local" value="{{ schedule.started_date }}" required="true" placeholder=""/>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">结束时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="ended_date" class="weui-input" type="datetime-local" value="" required="true" placeholder=""/>
+                        <input name="ended_date" class="weui-input" type="datetime-local" value="{{ schedule.ended_date }}" required="true" placeholder=""/>
                     </div>
                 </div>
             </div>

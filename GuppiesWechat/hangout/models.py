@@ -43,6 +43,7 @@ class Schedule(models.Model):
 
     def save(self, *args, **kwargs):
         template, created = Template.objects.get_or_create(title=self.title, user=self.user, defaults={
+            "content": self.content,
             "address": self.address,
             "address_location": self.address_location,
             "started_date": self.started_date,
