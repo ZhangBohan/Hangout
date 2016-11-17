@@ -15,10 +15,11 @@ class Command(BaseCommand):
             settings.WECHAT_BASIC.send_template_message(user_id=schedule.wechatauth.openid,
                                                         template_id=settings.WECHAT_NOTIFY_TEMPLATE_ID,
                                                         data={
-                                                            'title': schedule.title,
-                                                            'content': schedule.content,
-                                                            'address': schedule.address,
-                                                            'started_date': schedule.started_date,
+                                                            'first': "恭喜你预约成功!",
+                                                            'keyword1': schedule.title,
+                                                            'keyword2': "已预约",
+                                                            'keyword3': now.strftime('%Y年%m月%d日 %H时%M分'),
+                                                            'remark': '',
                                                         })
             schedule.is_notified = True
             schedule.save()

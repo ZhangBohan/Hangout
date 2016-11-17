@@ -2,7 +2,6 @@ import json
 from urllib.parse import quote_plus
 
 import time
-import datetime
 
 import requests
 from django.contrib.auth import login, authenticate
@@ -22,14 +21,26 @@ def callback(request):
     nonce = request.GET.get('nonce')
     echostr = request.GET.get('echostr')
 
+    wechat_base = settings.WECHAT_BASIC
+
     print(request.GET, settings.WECHAT_CONF.appid, signature, timestamp, nonce, echostr)
 
-    if settings.WECHAT_BASIC.check_signature(request.GET.get('signature'),
-                                request.GET.get('timestamp'),
-                                request.GET.get('nonce')):
+    if wechat_base.check_signature(request.GET.get('signature'),
+                                   request.GET.get('timestamp'),
+                                   request.GET.get('nonce')):
         return HttpResponse(echostr)
-    else:
-        return HttpResponse(settings.WECHAT_BASIC.response_text('工程师正在努力开发中'))
+    elif wechat_base.message.type == 'subscribe':
+        key = wechat_base.message.key
+        if not key:
+            return HttpResponse(wechat_base.response_text('关注成功!'))
+        if key.starts_with('qrscene_'):
+            # FIXME 未关注用户扫二维码
+            pass
+
+        # 已关注用户扫二维码
+        return HttpResponse()
+
+    return HttpResponse(wechat_base.response_text('成功: %s' % wechat_base.message.type))
 
 
 def auth(request):
