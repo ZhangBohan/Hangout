@@ -40,13 +40,15 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">开始时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="started_date" class="weui-input" type="datetime-local" value="{{ schedule.started_date }}" required="true" placeholder=""/>
+                        <input name="started_date" class="weui-input" type="datetime-local" required="true" placeholder=""
+                               value="{{ schedule.started_date | date:"Y-m-d"}}T{{ schedule.started_date | time:"H:i"}}"/>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">结束时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="ended_date" class="weui-input" type="datetime-local" value="{{ schedule.ended_date }}" required="true" placeholder=""/>
+                        <input name="ended_date" class="weui-input" type="datetime-local" required="true" placeholder=""
+                            value="{{ schedule.ended_date | date:"Y-m-d"}}T{{ schedule.ended_date | time:"H:i"}}"/>
                     </div>
                 </div>
             </div>
@@ -94,10 +96,14 @@
         var tomorrow = new Date(local);
         tomorrow.setMinutes(tomorrow.getMinutes() + 24*60);
 
-        $("input[name='started_date']").val(tomorrow.toJSON().slice(0,16));
+        if ($("input[name='started_date']").val() == "") {
+            $("input[name='started_date']").val(tomorrow.toJSON().slice(0, 16));
+        }
         $("input[name='started_date']").attr("min", local.toJSON().slice(0,16));
 
-        $("input[name='ended_date']").val(tomorrow.toJSON().slice(0,16));
+        if ($("input[name='ended_date']").val() == "") {
+            $("input[name='ended_date']").val(tomorrow.toJSON().slice(0, 16));
+        }
         $("input[name='ended_date']").attr("min", local.toJSON().slice(0,16));
 
         $("input[name='started_date']").change(function () {

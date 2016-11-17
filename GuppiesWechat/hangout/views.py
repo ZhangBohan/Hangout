@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, resolve_url
 
 from hangout.forms import ScheduleForm
 from hangout.models import Schedule, Template, ScheduleShare, ScheduleUser
+import time
 
 
 @login_required
@@ -58,7 +59,6 @@ def create(request):
             schedule.ended_date = template.ended_date
             schedule.notify_me = template.notify_me
             schedule.notify_other = template.notify_other
-            print(schedule)
             return render(request, 'hangout/edit.html', context={
                 "schedule": schedule
             })
