@@ -17,14 +17,27 @@ class HangoutCronJob(CronJobBase):
         schedules = Schedule.objects.filter(started_date__lt=now, is_notified=False).all()
         print('schedules: ', len(schedules))
         for schedule in schedules:
-            # FIXME wechat notify
+            # wechat notify
             settings.WECHAT_BASIC.send_template_message(user_id=schedule.wechatauth.openid,
-                                                        template_id=settings.WECHAT_NOTIFY_TEMPLATE_ID,
+                                                        template_id=settings.WECHAT_TODO_TEMPLATE_ID,
                                                         data={
-                                                            'title': schedule.title,
-                                                            'content': schedule.content,
-                                                            'address': schedule.address,
-                                                            'started_date': schedule.started_date,
+                                                            'first': {
+                                                                "value": "别忘了今天的预约哦!",
+                                                                "color": "#173177"
+                                                            },
+                                                            'keyword1': {
+                                                                "value": schedule.title,
+                                                                "color": "#173177"
+                                                            },
+                                                            'keyword2': {
+                                                                "value": schedule.started_date.strftime(
+                                                                    '%Y年%m月%d日 %H时%M分'),
+                                                                "color": "#173177"
+                                                            },
+                                                            'remark': {
+                                                                "value": schedule.content,
+                                                                "color": "#173177"
+                                                            },
                                                         })
             schedule.is_notified = True
             schedule.save()

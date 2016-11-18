@@ -14,12 +14,28 @@ class Command(BaseCommand):
             # FIXME wechat notify
             settings.WECHAT_BASIC.send_template_message(user_id=schedule.wechatauth.openid,
                                                         template_id=settings.WECHAT_NOTIFY_TEMPLATE_ID,
+                                                        url="https://www.speedx.com",
                                                         data={
-                                                            'first': "恭喜你预约成功!",
-                                                            'keyword1': schedule.title,
-                                                            'keyword2': "已预约",
-                                                            'keyword3': now.strftime('%Y年%m月%d日 %H时%M分'),
-                                                            'remark': '',
+                                                            'first': {
+                                                                "value": "恭喜你预约成功!",
+                                                                "color":"#173177"
+                                                            },
+                                                            'keyword1': {
+                                                                "value": "标题",
+                                                                "color":"#173177"
+                                                            },
+                                                            'keyword2': {
+                                                                "value": "已预约",
+                                                                "color":"#173177"
+                                                            },
+                                                            'keyword3': {
+                                                                "value": '%Y年%m月%d日 %H时%M分',
+                                                                "color":"#173177"
+                                                            },
+                                                            'remark': {
+                                                                "value": 'laasljflsadkfjbalablab',
+                                                                "color":"#173177"
+                                                            },
                                                         })
             schedule.is_notified = True
             schedule.save()

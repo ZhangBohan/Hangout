@@ -145,12 +145,12 @@ STATIC_ROOT = BASE_DIR + '/static/'
 
 LOGIN_URL = '/wechat/auth'
 
-# RAVEN_CONFIG = {
-#     'dsn': 'https://0295646ba4bd4f71bfed6f401833c67a:bf0f6796a3df41d28680e4a903ae7416@sentry.io/82095',
-#     # If you are using git, you can also automatically configure the
-#     # release based on the git info.
-#     'release': raven.fetch_git_sha(os.path.dirname(BASE_DIR)),
-# }
+RAVEN_CONFIG = {
+    'dsn': 'https://0295646ba4bd4f71bfed6f401833c67a:bf0f6796a3df41d28680e4a903ae7416@sentry.io/82095',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(BASE_DIR)),
+}
 
 
 WECHAT_CONF = WechatConf(
