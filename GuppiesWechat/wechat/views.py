@@ -7,11 +7,12 @@ import requests
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, HttpResponse, redirect
+from django.http import Http404
+from django.shortcuts import HttpResponse, redirect
 
 from django.conf import settings
 
-from hangout.models import Schedule, ScheduleShare, ScheduleUser
+from hangout.models import ScheduleShare, ScheduleUser
 from wechat.models import WechatAuth, UserInfo, UserLocation
 from wechat.utils import upload_url_to_qiniu
 import logging
@@ -25,34 +26,58 @@ def callback(request):
 
     wechat_base = settings.WECHAT_BASIC
 
-    print(request.GET, settings.WECHAT_CONF.appid, signature, timestamp, nonce, echostr)
+    print('初始化:', request.GET, settings.WECHAT_CONF.appid, signature, timestamp, nonce, echostr)
+    print('body:', request.body.decode())
 
-    if wechat_base.check_signature(request.GET.get('signature'),
-                                   request.GET.get('timestamp'),
-                                   request.GET.get('nonce')):
-        return HttpResponse(echostr)
-    elif wechat_base.message.type == 'subscribe':
+    if not wechat_base.check_signature(request.GET.get('signature'),
+                                       request.GET.get('timestamp'),
+                                       request.GET.get('nonce')):
+        print('验证不通过!')
+        raise Http404()
+
+    from wechat_sdk.exceptions import ParseError
+    try:
+        wechat_base.parse_data(request.body)
+    except ParseError:
+        print('Invalid Body Text')
+        raise Http404()
+
+    print('wechat_base.message:', wechat_base.message, wechat_base.message.type)
+
+    if wechat_base.message.type in ['scan', 'subscribe']:
         key = wechat_base.message.key
         source = wechat_base.message.source
+        print('关注事件', key, source)
         wechat_auth = _get_wechat_auth(wechat_base, openid=source)
         if not key:
-            return HttpResponse(wechat_base.response_text('关注成功!'))
+            text = wechat_base.response_text('关注成功!')
+            print('return by empty key', text)
+            return HttpResponse(text)
 
         prefix = 'qrscene_'
         key = key.replace(prefix, '')
 
         # 已关注用户扫二维码
+        print('auth', wechat_auth, wechat_auth.user)
         try:
             schedule_share = _accept_schedule(ss_id=int(key), user=wechat_auth.user)
-        except (ValueError, ScheduleShare.DoesNotExist):
+        except (ValueError, ScheduleShare.DoesNotExist) as e:
+            logging.exception(e)
             return HttpResponse(wechat_base.response_text('该邀请不存在!ID: %s' % key))
 
-        wechat_base.send_template_message(user_id=source.openid,
+        print("发送模板消息。。。。。。。。。")
+
+        if schedule_share.schedule.user_id == wechat_auth.user_id:
+            text = '该事件是您创建的, 您无需加入!'
+        else:
+            text = '恭喜你预约成功!'
+
+        wechat_base.send_template_message(user_id=source,
                                           template_id=settings.WECHAT_NOTIFY_TEMPLATE_ID,
                                           url="https://www.speedx.com",
                                           data={
                                               'first': {
-                                                  "value": "恭喜你预约成功!",
+                                                  "value": text,
                                                   "color": "#173177"
                                               },
                                               'keyword1': {
@@ -72,48 +97,61 @@ def callback(request):
                                                   "color": "#173177"
                                               },
                                           })
-        return HttpResponse("")
 
-    return HttpResponse(wechat_base.response_text('成功: %s' % wechat_base.message.type))
+    return HttpResponse(wechat_base.response_text(""))
 
 
 def _accept_schedule(ss_id, user):
     schedule_share = ScheduleShare.objects.get(pk=ss_id)
-    su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule, user=user)
-    if created:
-        su.save()
+
+    if not schedule_share.schedule.user_id == user.id:
+        su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule, user=user)
+        if created:
+            su.save()
 
     return schedule_share
 
 
 def _get_wechat_auth(wechat_base, openid):
     access_token = wechat_base.get_access_token().get('access_token')
-    wechat_auth = WechatAuth.objects.get(openid=openid)
-    if not wechat_auth:
+    try:
+        wechat_auth = WechatAuth.objects.get(openid=openid)
+    except WechatAuth.DoesNotExist:
         wechat_user_dict = wechat_base.get_user_info(openid)
         for key in ['subscribe', 'subscribe_time', 'remark', 'groupid']:
             wechat_user_dict.pop(key)
 
-        wechat_auth = WechatAuth.objects.create(openid=openid,
-                                                access_token=access_token,
+        wechat_auth = WechatAuth.objects.create(access_token=access_token,
                                                 refresh_token=access_token,
                                                 **wechat_user_dict)
-        user = User.objects.create_user(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id),
-                                        password=wechat_auth.openid)
+
+    user = wechat_auth.user
+
+    if not user:
+        username = 'wechat_{auth_id}'.format(auth_id=wechat_auth.id)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=username,
+                                            password=wechat_auth.openid)
+            user.save()
+
         wechat_auth.user = user
-        user.save()
         wechat_auth.save()
 
-        if wechat_auth.headimgurl:
-            url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
-        else:
-            # FIXME default avatar
-            url = 'http://bohan.qiniudn.com/2016-07-20_github.png'
+    if wechat_auth.headimgurl:
+        key = '{user_id}_avatar_{timestamp}'.format(user_id=user.id, timestamp=time.time())
+        url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
+    else:
+        # FIXME default avatar
+        url = 'http://bohan.qiniudn.com/2016-07-20_github.png'
 
-        UserInfo.objects.create(user=user,
-                                nickname=wechat_auth.nickname,
-                                avatar_url=url
-                                ).save()
+    UserInfo.objects.get_or_create(user=user,
+                                   defaults={
+                                       'nickname': wechat_auth.nickname,
+                                       'avatar_url': url
+                                   }
+                                   )
 
     return wechat_auth
 
@@ -211,7 +249,7 @@ def auth(request):
         # the password verified for the user
         if auth_user.is_active:
             login(request, auth_user)
-            return redirect('photo-index')
+            return redirect('hangout.index')
         else:
             return HttpResponse("The password is valid, but the account has been disabled!")
     return HttpResponse("user or password error", status=500)
