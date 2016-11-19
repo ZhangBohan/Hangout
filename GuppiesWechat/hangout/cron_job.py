@@ -17,6 +17,7 @@ class HangoutCronJob(CronJobBase):
         schedules = Schedule.objects.filter(started_date__lt=now, is_notified=False).all()
         print('schedules: ', len(schedules))
         for schedule in schedules:
+            print('current schedule is: %s' % schedule)
             # wechat notify
             settings.WECHAT_BASIC.send_template_message(user_id=schedule.wechatauth.openid,
                                                         template_id=settings.WECHAT_TODO_TEMPLATE_ID,

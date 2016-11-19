@@ -41,6 +41,9 @@ class Schedule(models.Model):
     is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
     accepted_count = models.IntegerField("已接受人数", default=1, help_text="已接受人数")
 
+    def __str__(self):
+        return "ID: %s" % self.id
+
     def save(self, *args, **kwargs):
         template, created = Template.objects.get_or_create(title=self.title, user=self.user, defaults={
             "content": self.content,
