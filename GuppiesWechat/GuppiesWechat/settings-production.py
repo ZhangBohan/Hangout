@@ -1,7 +1,7 @@
 import raven
 from .settings import *
 
-DEBUG = False
+DEBUG = True
 
 RAVEN_CONFIG = {
     'dsn': 'https://0295646ba4bd4f71bfed6f401833c67a:bf0f6796a3df41d28680e4a903ae7416@sentry.io/82095',
