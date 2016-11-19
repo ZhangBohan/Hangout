@@ -74,6 +74,11 @@ class ScheduleUser(models.Model):
     schedule = models.ForeignKey(Schedule, help_text="事件")
     is_accepted = models.BooleanField("是否接受", help_text="是否接受", default=True)
 
+    @property
+    def wechatauth(self):
+        from wechat.models import WechatAuth
+        return WechatAuth.objects.get(user=self.user)
+
     def save(self, *args, **kwargs):
         item = super(ScheduleUser, self).save(*args, **kwargs)
         self.schedule.accepted_count += 1
