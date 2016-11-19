@@ -41,8 +41,13 @@ class Schedule(models.Model):
     is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
     accepted_count = models.IntegerField("已接受人数", default=1, help_text="已接受人数")
 
+    @property
+    def wechatauth(self):
+        from wechat.models import WechatAuth
+        return WechatAuth.objects.get(user=self.user)
+
     def __str__(self):
-        return "ID: %s" % self.id
+        return "ID: %s, title: %s" % (self.id, self.title)
 
     def save(self, *args, **kwargs):
         template, created = Template.objects.get_or_create(title=self.title, user=self.user, defaults={
