@@ -1,11 +1,12 @@
+from datetime import timedelta
+
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect, resolve_url
+from django.utils import timezone
 
 from hangout.forms import ScheduleForm
 from hangout.models import Schedule, Template, ScheduleShare, ScheduleUser
-import time
 
 
 @login_required
@@ -55,8 +56,8 @@ def create(request):
             schedule = Schedule()
             schedule.title = template.title
             schedule.content = template.content
-            schedule.started_date = template.started_date
-            schedule.ended_date = template.ended_date
+            schedule.started_date = timezone.now() + timedelta(minutes=30)
+            schedule.ended_date = timezone.now() + timedelta(minutes=60)
             schedule.notify_me = template.notify_me
             schedule.notify_other = template.notify_other
             return render(request, 'hangout/edit.html', context={
