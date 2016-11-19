@@ -118,12 +118,15 @@ def _get_wechat_auth(wechat_base, openid):
         wechat_auth = WechatAuth.objects.get(openid=openid)
     except WechatAuth.DoesNotExist:
         wechat_user_dict = wechat_base.get_user_info(openid)
-        for key in ['subscribe', 'subscribe_time', 'remark', 'groupid']:
-            wechat_user_dict.pop(key)
+        data = {}
+        # FIXME unionid is empty。只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段
+        for key in ['openid', 'nickname', 'sex', 'city', 'province', 'language', 'headimgurl']:
+            data[key] = wechat_user_dict[key]
 
         wechat_auth = WechatAuth.objects.create(access_token=access_token,
                                                 refresh_token=access_token,
-                                                **wechat_user_dict)
+                                                expires_in=-1,
+                                                **data)
 
     user = wechat_auth.user
 
