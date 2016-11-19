@@ -98,7 +98,7 @@ def callback(request):
                                               },
                                           })
 
-    return HttpResponse(wechat_base.response_text(""))
+    return HttpResponse("")
 
 
 def _accept_schedule(ss_id, user):
