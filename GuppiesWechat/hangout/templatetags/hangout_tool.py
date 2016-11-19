@@ -8,8 +8,9 @@ register = template.Library()
 
 def natural_time(value: datetime):
     now = timezone.now()
-    delta = now - value
-    if delta > 0:
+
+    if now > value:
+        delta = now - value
         if delta.days:
             return "%s天前" % delta.days
 
