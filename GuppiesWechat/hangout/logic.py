@@ -5,8 +5,11 @@ from django.conf import settings
 from django.utils import timezone
 from django.shortcuts import resolve_url
 
+from hangout.models import Schedule
+from wechat.models import WechatAuth
 
-def template_notify(wechat_auth, schedule, title):
+
+def template_notify(wechat_auth: WechatAuth, schedule: Schedule, title: str):
     try:
         # wechat notify
         url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
