@@ -13,6 +13,7 @@ from django.shortcuts import HttpResponse, redirect, resolve_url
 from django.conf import settings
 
 from hangout.models import ScheduleShare, ScheduleUser
+from hangout import logic as hangout_logic
 from wechat.models import WechatAuth, UserInfo, UserLocation
 from wechat.utils import upload_url_to_qiniu
 import logging
@@ -66,39 +67,14 @@ def callback(request):
             return HttpResponse(wechat_base.response_text('该邀请不存在!ID: %s' % key))
 
         print("发送模板消息。。。。。。。。。")
+        schedule = schedule_share.schedule
 
-        if schedule_share.schedule.user_id == wechat_auth.user_id:
-            text = '该事件是您创建的, 您无需加入!'
+        if schedule.user_id == wechat_auth.user_id:
+            text = '该事件是您创建的, 您无需扫码加入!'
         else:
-            text = '恭喜你预约成功!'
+            text = '恭喜你预约成功!我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
 
-        url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule_share.schedule.id)
-        wechat_base.send_template_message(user_id=source,
-                                          template_id=settings.WECHAT_NOTIFY_TEMPLATE_ID,
-                                          url=url,
-                                          data={
-                                              'first': {
-                                                  "value": text,
-                                                  "color": "#173177"
-                                              },
-                                              'keyword1': {
-                                                  "value": schedule_share.schedule.title,
-                                                  "color": "#173177"
-                                              },
-                                              'keyword2': {
-                                                  "value": "已预约",
-                                                  "color": "#173177"
-                                              },
-                                              'keyword3': {
-                                                  "value": schedule_share.created_at.strftime('%Y年%m月%d日 %H时%M分'),
-                                                  "color": "#173177"
-                                              },
-                                              'remark': {
-                                                  "value": schedule_share.schedule.content,
-                                                  "color": "#173177"
-                                              },
-                                          })
-
+        hangout_logic.template_notify(wechat_auth, schedule, title=text)
     return HttpResponse("")
 
 

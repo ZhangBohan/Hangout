@@ -1,11 +1,9 @@
-import logging
 from datetime import timedelta
 
-from django.conf import settings
-from django.shortcuts import resolve_url
 from django_cron import CronJobBase, Schedule as CronSchedule
 from django.utils import timezone
 
+from hangout import logic as hangout_logic
 from hangout.models import Schedule, ScheduleUser
 
 
@@ -29,40 +27,11 @@ class HangoutCronJob(CronJobBase):
                 print('will be notify at: %s' % notify_at)
                 continue
 
-            self.notify(schedule, schedule.wechatauth)
+            hangout_logic.template_notify(schedule, schedule.wechatauth, title="别忘了今天的预约哦!")
 
             for su in ScheduleUser.objects.filter(schedule=schedule).all():
-                self.notify(schedule, su.wechatauth)
+                hangout_logic.template_notify(schedule, su.wechatauth, title="别忘了今天的预约哦!")
 
             schedule.is_notified = True
             schedule.save()
         print('end HangoutCronJob')
-
-    def notify(self, schedule, wechat_auth):
-        try:
-            # wechat notify
-            url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
-            settings.WECHAT_BASIC.send_template_message(user_id=wechat_auth.openid,
-                                                        template_id=settings.WECHAT_TODO_TEMPLATE_ID,
-                                                        url=url,
-                                                        data={
-                                                            'first': {
-                                                                "value": "别忘了今天的预约哦!",
-                                                                "color": "#173177"
-                                                            },
-                                                            'keyword1': {
-                                                                "value": schedule.title,
-                                                                "color": "#173177"
-                                                            },
-                                                            'keyword2': {
-                                                                "value": schedule.started_date.strftime(
-                                                                    '%Y年%m月%d日 %H时%M分'),
-                                                                "color": "#173177"
-                                                            },
-                                                            'remark': {
-                                                                "value": schedule.content,
-                                                                "color": "#173177"
-                                                            },
-                                                        })
-        except Exception as e:
-            logging.exception(e)
