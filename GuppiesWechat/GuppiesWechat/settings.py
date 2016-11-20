@@ -164,3 +164,5 @@ DATETIME_FORMAT = 'y年m月d日 H时i分s秒'
 CRON_CLASSES = [
     'hangout.cron_job.HangoutCronJob'
 ]
+
+GUPPIES_URL_PREFIX = 'https://guppies.bohanzhang.com'

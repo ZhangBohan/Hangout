@@ -2,6 +2,7 @@ import logging
 from datetime import timedelta
 
 from django.conf import settings
+from django.shortcuts import resolve_url
 from django_cron import CronJobBase, Schedule as CronSchedule
 from django.utils import timezone
 
@@ -40,8 +41,10 @@ class HangoutCronJob(CronJobBase):
     def notify(self, schedule, wechat_auth):
         try:
             # wechat notify
+            url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
             settings.WECHAT_BASIC.send_template_message(user_id=wechat_auth.openid,
                                                         template_id=settings.WECHAT_TODO_TEMPLATE_ID,
+                                                        url=url,
                                                         data={
                                                             'first': {
                                                                 "value": "别忘了今天的预约哦!",

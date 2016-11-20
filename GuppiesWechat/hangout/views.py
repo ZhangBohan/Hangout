@@ -46,7 +46,7 @@ def create(request):
             schedule = Schedule(**form.cleaned_data)
             schedule.user = request.user
             schedule.save()
-            return redirect(resolve_url('hangout.share') + '?schedule_id=%s' % schedule.id)
+            return redirect(resolve_url('hangout.detail', pk=schedule.id))
         print(form.errors.as_json())
         raise Exception(form.errors.as_json())
     else:
@@ -66,14 +66,11 @@ def create(request):
     return render(request, 'hangout/edit.html')
 
 
-def share(request):
-    schedule_id = request.GET.get('schedule_id')
+def detail(request, pk):
     user_id = request.GET.get('user_id')
-    if not schedule_id:
-        raise Http404()
 
     try:
-        schedule = Schedule.objects.get(pk=schedule_id)
+        schedule = Schedule.objects.get(pk=pk)
     except Schedule.DoesNotExist:
         raise Http404()
 

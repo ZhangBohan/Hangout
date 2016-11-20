@@ -7,5 +7,5 @@ urlpatterns = [
     url(r'^create$', views.create, name='hangout.edit'),
     url(r'^me$', views.me, name='hangout.me'),
     url(r'^hangout$', views.hangout, name='hangout.hangout'),
-    url(r'^share$', views.share, name='hangout.share'),
+    url(r'^(?P<pk>\d+)/$', views.detail, name='hangout.detail'),
 ]

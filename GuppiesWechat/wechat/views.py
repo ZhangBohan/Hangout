@@ -8,7 +8,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import Http404
-from django.shortcuts import HttpResponse, redirect
+from django.shortcuts import HttpResponse, redirect, resolve_url
 
 from django.conf import settings
 
@@ -72,9 +72,10 @@ def callback(request):
         else:
             text = '恭喜你预约成功!'
 
+        url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule_share.schedule.id)
         wechat_base.send_template_message(user_id=source,
                                           template_id=settings.WECHAT_NOTIFY_TEMPLATE_ID,
-                                          url="https://www.speedx.com",
+                                          url=url,
                                           data={
                                               'first': {
                                                   "value": text,
