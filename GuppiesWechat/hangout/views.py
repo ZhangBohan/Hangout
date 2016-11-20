@@ -12,7 +12,7 @@ from hangout.models import Schedule, Template, ScheduleShare, ScheduleUser
 @login_required
 def index(request):
 
-    templates = Template.objects.filter(user=request.user).order_by('-updated_at').all()[:10]
+    templates = Template.objects.filter(user=request.user).order_by('-used_count').all()[:10]
     return render(request, 'hangout/index.html', context={
         "templates": templates
     })
