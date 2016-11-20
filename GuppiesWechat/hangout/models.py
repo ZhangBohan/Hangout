@@ -5,6 +5,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 
 from django.utils import timezone
+from wechat_sdk import WechatBasic
 
 
 class Template(models.Model):
@@ -115,7 +116,8 @@ class ScheduleShare(models.Model):
     def create_qr(self):
 
         from django.conf import settings
-        result = settings.WECHAT_BASIC.create_qrcode({
+        wechat_base = WechatBasic(conf=settings.WECHAT_CONF)
+        result = wechat_base.create_qrcode({
             "expire_seconds": QR_MAX_EXPIRE_SECONDS,
             "action_name": "QR_SCENE",
             "action_info": {

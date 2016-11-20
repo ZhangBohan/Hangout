@@ -153,8 +153,6 @@ WECHAT_CONF = WechatConf(
     # encoding_aes_key='your_encoding_aes_key'  # 如果传入此值则必须保证同时传入 token, appid
 )
 
-WECHAT_BASIC = WechatBasic(conf=WECHAT_CONF)
-
 WECHAT_NOTIFY_TEMPLATE_ID = 'J-aNQpG-wovUB3qxBnQ-iLNH5TrCHO4x4er3NTRYIxQ'
 WECHAT_TODO_TEMPLATE_ID = 'AswFc63iemsfyrcj1YH6DPkA6GNjBFLE6EnQ6XE8D3Q'
 

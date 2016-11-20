@@ -4,6 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.utils import timezone
 from django.shortcuts import resolve_url
+from wechat_sdk import WechatBasic
 
 from hangout.models import Schedule
 from wechat.models import WechatAuth
@@ -13,28 +14,30 @@ def template_notify(wechat_auth: WechatAuth, schedule: Schedule, title: str):
     try:
         # wechat notify
         url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
-        settings.WECHAT_BASIC.send_template_message(user_id=wechat_auth.openid,
-                                                    template_id=settings.WECHAT_TODO_TEMPLATE_ID,
-                                                    url=url,
-                                                    data={
-                                                        'first': {
-                                                            "value": title,
-                                                            "color": "#173177"
-                                                        },
-                                                        'keyword1': {
-                                                            "value": schedule.title,
-                                                            "color": "#173177"
-                                                        },
-                                                        'keyword2': {
-                                                            "value": schedule.started_date.strftime(
-                                                                '%Y年%m月%d日 %H时%M分'),
-                                                            "color": "#173177"
-                                                        },
-                                                        'remark': {
-                                                            "value": schedule.content,
-                                                            "color": "#173177"
-                                                        },
-                                                    })
+
+        wechat_base = WechatBasic(conf=settings.WECHAT_CONF)
+        wechat_base.send_template_message(user_id=wechat_auth.openid,
+                                          template_id=settings.WECHAT_TODO_TEMPLATE_ID,
+                                          url=url,
+                                          data={
+                                              'first': {
+                                                  "value": title,
+                                                  "color": "#173177"
+                                              },
+                                              'keyword1': {
+                                                  "value": schedule.title,
+                                                  "color": "#173177"
+                                              },
+                                              'keyword2': {
+                                                  "value": schedule.started_date.strftime(
+                                                      '%Y年%m月%d日 %H时%M分'),
+                                                  "color": "#173177"
+                                              },
+                                              'remark': {
+                                                  "value": schedule.content,
+                                                  "color": "#173177"
+                                              },
+                                          })
     except Exception as e:
         logging.exception(e)
 

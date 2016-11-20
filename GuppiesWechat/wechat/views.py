@@ -11,6 +11,7 @@ from django.http import Http404
 from django.shortcuts import HttpResponse, redirect, resolve_url
 
 from django.conf import settings
+from wechat_sdk import WechatBasic
 
 from hangout.models import ScheduleShare, ScheduleUser
 from hangout import logic as hangout_logic
@@ -25,7 +26,7 @@ def callback(request):
     nonce = request.GET.get('nonce')
     echostr = request.GET.get('echostr')
 
-    wechat_base = settings.WECHAT_BASIC
+    wechat_base = WechatBasic(conf=settings.WECHAT_CONF)
 
     print('初始化:', request.GET, settings.WECHAT_CONF.appid, signature, timestamp, nonce, echostr)
     print('body:', request.body.decode())
