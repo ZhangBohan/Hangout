@@ -27,8 +27,12 @@ class HangoutCronJob(CronJobBase):
                 print('will be notify at: %s' % notify_at)
                 continue
 
+            natural_time = hangout_logic.natural_time(schedule.started_date)
+
             text = "别忘了%s的预约哦!" % hangout_logic.natural_time(schedule.started_date)
             hangout_logic.template_notify(schedule.wechatauth, schedule, title=text)
+
+            text = "别忘了与%s%s的预约哦!" % (schedule.user.userinfo.nickname, natural_time)
 
             for su in ScheduleUser.objects.filter(schedule=schedule).all():
                 hangout_logic.template_notify(su.wechatauth, schedule, title=text)
