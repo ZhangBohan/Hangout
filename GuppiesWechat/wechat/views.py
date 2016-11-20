@@ -12,6 +12,7 @@ from django.shortcuts import HttpResponse, redirect, resolve_url
 
 from django.conf import settings
 from wechat_sdk import WechatBasic
+from wechat_sdk.exceptions import ParseError
 
 from hangout.models import ScheduleShare, ScheduleUser
 from hangout import logic as hangout_logic
@@ -37,7 +38,6 @@ def callback(request):
         print('验证不通过!')
         raise Http404()
 
-    from wechat_sdk.exceptions import ParseError
     try:
         wechat_base.parse_data(request.body)
     except ParseError:
@@ -120,19 +120,20 @@ def _get_wechat_auth(wechat_base, openid):
         wechat_auth.user = user
         wechat_auth.save()
 
-    if wechat_auth.headimgurl:
-        key = '{user_id}_avatar_{timestamp}'.format(user_id=user.id, timestamp=time.time())
-        url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
-    else:
-        # FIXME default avatar
-        url = 'http://bohan.qiniudn.com/2016-07-20_github.png'
+    try:
+        userinfo = UserInfo.objects.get(user=user)
+    except UserInfo.DoesNotExist:
+        if wechat_auth.headimgurl:
+            key = '{user_id}_avatar_{timestamp}'.format(user_id=user.id, timestamp=time.time())
+            url = upload_url_to_qiniu(key, wechat_auth.headimgurl)
+        else:
+            # FIXME default avatar
+            url = 'http://bohan.qiniudn.com/2016-07-20_github.png'
 
-    UserInfo.objects.get_or_create(user=user,
-                                   defaults={
-                                       'nickname': wechat_auth.nickname,
-                                       'avatar_url': url
-                                   }
-                                   )
+        userinfo = UserInfo.objects.create(user=user,
+                                           nickname=wechat_auth.nickname,
+                                           avatar_url=url
+                                           )
 
     return wechat_auth
 
