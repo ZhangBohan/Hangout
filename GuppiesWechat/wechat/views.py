@@ -72,7 +72,7 @@ def callback(request):
         if schedule.user_id == wechat_auth.user_id:
             text = '该事件是您创建的, 您无需扫码加入!'
         else:
-            text = '恭喜你预约成功!我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
+            text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
 
         hangout_logic.template_notify(wechat_auth, schedule, title=text)
     return HttpResponse("")
