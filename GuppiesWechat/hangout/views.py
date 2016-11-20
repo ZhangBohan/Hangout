@@ -56,8 +56,6 @@ def create(request):
             schedule = Schedule()
             schedule.title = template.title
             schedule.content = template.content
-            schedule.started_date = timezone.now() + timedelta(minutes=30)
-            schedule.ended_date = timezone.now() + timedelta(minutes=60)
             schedule.notify_me = template.notify_me
             schedule.notify_other = template.notify_other
             return render(request, 'hangout/edit.html', context={

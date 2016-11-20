@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="/static/wechat/css/weui.css"/>
     <link rel="stylesheet" href="/static/wechat/css/hangout.css"/>
     <link rel="stylesheet" href="/static/wechat/example/example.css"/>
-    <script type="text/javascript" src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://cdn.staticfile.org/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/static/wechat/js/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="/static/wechat/js/jquery.validate.min.js"></script>
+
 </head>
 <body ontouchstart>
 <div class="weui-toptips weui-toptips_warn js_tooltips">错误提示</div>
@@ -40,15 +41,15 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">开始时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="started_date" class="weui-input" type="datetime-local" required="true" placeholder=""
-                               value="{{ schedule.started_date | date:"Y-m-d"}}T{{ schedule.started_date | time:"H:i"}}"/>
+                        <input id="started_date" name="started_date" class="weui-input"
+                               type="datetime-local" required="true" />
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label for="" class="weui-label">结束时间</label></div>
                     <div class="weui-cell__bd">
-                        <input name="ended_date" class="weui-input" type="datetime-local" required="true" placeholder=""
-                            value="{{ schedule.ended_date | date:"Y-m-d"}}T{{ schedule.ended_date | time:"H:i"}}"/>
+                        <input id="ended_date" name="ended_date" class="weui-input"
+                               type="datetime-local" required="true" />
                     </div>
                 </div>
             </div>
@@ -81,21 +82,21 @@
         var local = new Date();
         local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
         var tomorrow = new Date(local);
-        tomorrow.setMinutes(tomorrow.getMinutes() + 24*60);
+        tomorrow.setMinutes(24*60);
 
-        if ($("input[name='started_date']").val() == "") {
-            $("input[name='started_date']").val(tomorrow.toJSON().slice(0, 16));
-        }
+        $("input[name='started_date']").val(tomorrow.toJSON().slice(0, 16));
         $("input[name='started_date']").attr("min", local.toJSON().slice(0,16));
 
-        if ($("input[name='ended_date']").val() == "") {
-            $("input[name='ended_date']").val(tomorrow.toJSON().slice(0, 16));
-        }
+        tomorrow.setMinutes(tomorrow.getMinutes() + 60);
+        $("input[name='ended_date']").val(tomorrow.toJSON().slice(0, 16));
         $("input[name='ended_date']").attr("min", local.toJSON().slice(0,16));
 
         $("input[name='started_date']").change(function () {
+            var started_date_str = $(this).val();
             console.log($(this).val());
-            $("input[name='ended_date']").val($(this).val());
+            var started_date = new Date(started_date_str);
+            started_date.setMinutes(started_date.getMinutes() + 60);
+            $("input[name='ended_date']").val(started_date.toJSON().slice(0, 16));
             $("input[name='ended_date']").attr("min", $(this).val());
         });
 
@@ -126,6 +127,11 @@
             errorPlacement: function(error, element) {
                 //内置错误信息不显示
             }
+        });
+
+        $("#edit").submit(function () {
+            $("#started_date").val($("#started_date").val().slice(0, 16));
+            $("#ended_date").val($("#ended_date").val().slice(0, 16));
         });
     });
 </script>

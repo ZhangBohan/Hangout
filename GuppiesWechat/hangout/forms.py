@@ -12,6 +12,7 @@ class ScheduleForm(forms.Form):
     INPUT_DATE_TIME_FORMATS = [
         '%Y-%m-%dT%H:%M',
         '%Y-%m-%dT%H:%M:%S',
+        '%Y-%m-%dT%H:%M:%S',
     ]
 
     title = forms.CharField(help_text='标题', max_length=20)
