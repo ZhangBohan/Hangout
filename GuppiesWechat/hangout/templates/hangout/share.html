@@ -21,7 +21,7 @@
             <p class="share__desc">{{ ss.schedule.content }}</p>
         </div>
 
-        {% if not ss.schedule.is_notified %}
+        {% if not ss.schedule.is_past %}
             <div class="page__bd center">
                 <img class="qr_image" src="{{ ss.qr_url }}">
                 <p>扫码接受日程</p>

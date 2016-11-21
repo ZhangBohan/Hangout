@@ -17,9 +17,4 @@ class Migration(migrations.Migration):
             name='openid',
             field=models.CharField(max_length=100, unique=True, verbose_name='openid'),
         ),
-        migrations.AlterField(
-            model_name='wechatauth',
-            name='unionid',
-            field=models.CharField(max_length=100, unique=True, verbose_name='unionid'),
-        ),
     ]

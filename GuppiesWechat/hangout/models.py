@@ -46,6 +46,10 @@ class Schedule(models.Model):
     accepted_count = models.IntegerField("已接受人数", default=1, help_text="已接受人数")
 
     @property
+    def is_past(self):
+        return timezone.now() > self.started_date
+
+    @property
     def wechatauth(self):
         from wechat.models import WechatAuth
         return WechatAuth.objects.get(user=self.user)
