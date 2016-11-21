@@ -7,6 +7,7 @@ import requests
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.http import Http404
 from django.shortcuts import HttpResponse, redirect, resolve_url
 
@@ -21,6 +22,7 @@ from wechat.utils import upload_url_to_qiniu
 import logging
 
 
+@transaction.atomic
 def callback(request):
     signature = request.GET.get('signature')
     timestamp = request.GET.get('timestamp')

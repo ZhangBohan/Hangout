@@ -81,8 +81,8 @@ class WechatAuth(CommonModelMixin, models.Model):
     subscribe_time	用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
     unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。详见：获取用户个人信息（UnionID机制）
     """
-    openid = models.CharField("openid", max_length=100)
-    unionid = models.CharField("unionid", max_length=100)
+    openid = models.CharField("openid", max_length=100, unique=True)
+    unionid = models.CharField("unionid", max_length=100, unique=True)
     nickname = models.CharField("昵称", max_length=100)
     sex = models.SmallIntegerField("性别", choices=((0, "未知"), (1, "男性"), (2, "女性")))
     city = models.CharField("城市", max_length=100)
