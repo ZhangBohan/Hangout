@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.db import transaction
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
@@ -116,7 +117,7 @@ class ScheduleShare(models.Model):
     def create_qr(self):
 
         from django.conf import settings
-        wechat_base = WechatBasic(conf=settings.WECHAT_CONF)
+        wechat_base = WechatBasic(conf=settings.WECHAT_CONF, **HangoutConfig.get_access_token())
         result = wechat_base.create_qrcode({
             "expire_seconds": QR_MAX_EXPIRE_SECONDS,
             "action_name": "QR_SCENE",
@@ -129,3 +130,35 @@ class ScheduleShare(models.Model):
         self.expire_at = self.created_at + timedelta(days=30)
         self.save()
         return self
+
+
+class HangoutConfig(models.Model):
+    ACCESS_TOKEN_KEY = 'access_token'
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    key = models.CharField("key", max_length=255, help_text="key", unique=True)
+    desc = models.CharField("描述", max_length=255, help_text="描述", null=True)
+    content = models.TextField("正文", blank=True, null=True, help_text="正文")
+
+    @classmethod
+    def get_access_token(cls):
+        expired_at = timezone.now() - timedelta(seconds=6000)
+        config = cls.objects.filter(key=cls.ACCESS_TOKEN_KEY).first()
+        if not config or config.updated_at < expired_at:
+            access_token_dict = settings.WECHAT_CONF.get_access_token()
+            access_token = access_token_dict.get('access_token')
+            access_token_expires_at = 6000
+            cls.objects.update_or_create(key=cls.ACCESS_TOKEN_KEY,
+                                         defaults={
+                                             "content": access_token
+                                         })
+        else:
+            access_token = config.content
+            access_token_expires_at = (config.updated_at - expired_at).seconds
+
+        return {
+            "access_token_expires_at": access_token_expires_at,
+            "access_token": access_token
+        }

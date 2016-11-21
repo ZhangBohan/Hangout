@@ -10,12 +10,11 @@ from hangout.models import Schedule
 from wechat.models import WechatAuth
 
 
-def template_notify(wechat_auth: WechatAuth, schedule: Schedule, title: str):
+def template_notify(wechat_base: WechatBasic, wechat_auth: WechatAuth, schedule: Schedule, title: str):
     try:
         # wechat notify
         url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
 
-        wechat_base = WechatBasic(conf=settings.WECHAT_CONF)
         wechat_base.send_template_message(user_id=wechat_auth.openid,
                                           template_id=settings.WECHAT_TODO_TEMPLATE_ID,
                                           url=url,

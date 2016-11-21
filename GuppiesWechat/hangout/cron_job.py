@@ -1,10 +1,12 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django_cron import CronJobBase, Schedule as CronSchedule
 from django.utils import timezone
+from wechat_sdk import WechatBasic
 
 from hangout import logic as hangout_logic
-from hangout.models import Schedule, ScheduleUser
+from hangout.models import Schedule, ScheduleUser, HangoutConfig
 
 
 class HangoutCronJob(CronJobBase):
@@ -18,6 +20,10 @@ class HangoutCronJob(CronJobBase):
         cursor_date = timezone.now() + timedelta(hours=1)   # 取一小时内的数据
         schedules = Schedule.objects.filter(started_date__lt=cursor_date, is_notified=False).all()
         print('schedules: ', len(schedules))
+
+        wechat_config = settings.WECHAT_CONF
+
+        wechat_base = WechatBasic(conf=wechat_config, **HangoutConfig.get_access_token())
         for schedule in schedules:
             notify_at = schedule.started_date - timedelta(minutes=schedule.notify_other)
             is_notify = notify_at < timezone.now()
@@ -30,12 +36,12 @@ class HangoutCronJob(CronJobBase):
             natural_time = hangout_logic.natural_time(schedule.started_date)
 
             text = "别忘了%s的预约哦!" % hangout_logic.natural_time(schedule.started_date)
-            hangout_logic.template_notify(schedule.wechatauth, schedule, title=text)
+            hangout_logic.template_notify(wechat_base, schedule.wechatauth, schedule, title=text)
 
             text = "别忘了与%s%s的预约哦!" % (schedule.user.userinfo.nickname, natural_time)
 
             for su in ScheduleUser.objects.filter(schedule=schedule).all():
-                hangout_logic.template_notify(su.wechatauth, schedule, title=text)
+                hangout_logic.template_notify(wechat_base, su.wechatauth, schedule, title=text)
 
             schedule.is_notified = True
             schedule.save()

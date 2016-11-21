@@ -14,7 +14,7 @@ from django.conf import settings
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 
-from hangout.models import ScheduleShare, ScheduleUser
+from hangout.models import ScheduleShare, ScheduleUser, HangoutConfig
 from hangout import logic as hangout_logic
 from wechat.models import WechatAuth, UserInfo, UserLocation
 from wechat.utils import upload_url_to_qiniu
@@ -22,14 +22,15 @@ import logging
 
 
 def callback(request):
+    wechat_config = settings.WECHAT_CONF
     signature = request.GET.get('signature')
     timestamp = request.GET.get('timestamp')
     nonce = request.GET.get('nonce')
     echostr = request.GET.get('echostr')
 
-    wechat_base = WechatBasic(conf=settings.WECHAT_CONF)
+    wechat_base = WechatBasic(conf=wechat_config, **HangoutConfig.get_access_token())
 
-    print('初始化:', request.GET, settings.WECHAT_CONF.appid, signature, timestamp, nonce, echostr)
+    print('初始化:', request.GET, wechat_config.appid, signature, timestamp, nonce, echostr)
     print('body:', request.body.decode())
 
     if not wechat_base.check_signature(request.GET.get('signature'),
@@ -75,7 +76,7 @@ def callback(request):
         else:
             text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
 
-        hangout_logic.template_notify(wechat_auth, schedule, title=text)
+        hangout_logic.template_notify(wechat_base, wechat_auth, schedule, title=text)
     return HttpResponse("")
 
 
@@ -139,6 +140,8 @@ def _get_wechat_auth(wechat_base, openid):
 
 
 def auth(request):
+    wechat_config = settings.WECHAT_CONF
+
     if 'account' in request.session:
         return HttpResponse("ok")
 
@@ -147,12 +150,12 @@ def auth(request):
         encoded_url = quote_plus(request.build_absolute_uri(reverse('auth')))
         url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&' \
               'scope=%s&state=%s#wechat_redirect' % (
-                  settings.WECHAT_CONF.appid, encoded_url, 'snsapi_userinfo', None)
+                wechat_config.appid, encoded_url, 'snsapi_userinfo', None)
         return redirect(url)
 
     params = {
-        "appid": settings.WECHAT_CONF.appid,
-        "secret": settings.WECHAT_CONF.appsecret,
+        "appid": wechat_config.appid,
+        "secret": wechat_config.appsecret,
         "code": code,
         "grant_type": 'authorization_code'
     }
