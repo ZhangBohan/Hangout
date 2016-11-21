@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django_cron import CronJobBase, Schedule as CronSchedule
 from django.utils import timezone
 from wechat_sdk import WechatBasic
@@ -21,8 +20,7 @@ class HangoutCronJob(CronJobBase):
         schedules = Schedule.objects.filter(started_date__lt=cursor_date, is_notified=False).all()
         print('schedules: ', len(schedules))
 
-        wechat_config = settings.WECHAT_CONF
-        wechat_base = WechatBasic(conf=wechat_config, **HangoutConfig.get_access_token())
+        wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
 
         for schedule in schedules:
             notify_at = schedule.started_date - timedelta(minutes=schedule.notify_other)
@@ -37,16 +35,14 @@ class HangoutCronJob(CronJobBase):
             print('natural_time is: %s' % natural_time)
 
             text = "别忘了%s的预约哦!" % natural_time
-            hangout_logic.template_notify(wechat_base,
-                                          schedule.wechatauth, schedule, title=text)
+            hangout_logic.template_notify(wechat_base, schedule.wechatauth, schedule, title=text)
 
             print('template send to owner ok')
 
             text = "别忘了与%s%s的预约哦!" % (schedule.user.userinfo.nickname, natural_time)
 
             for su in ScheduleUser.objects.filter(schedule=schedule).all():
-                hangout_logic.template_notify(wechat_base,
-                                              su.wechatauth, schedule, title=text)
+                hangout_logic.template_notify(wechat_base, su.wechatauth, schedule, title=text)
 
             print('template send to other ok')
             schedule.is_notified = True

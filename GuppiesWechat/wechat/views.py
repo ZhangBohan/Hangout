@@ -28,7 +28,7 @@ def callback(request):
     nonce = request.GET.get('nonce')
     echostr = request.GET.get('echostr')
 
-    wechat_base = WechatBasic(conf=wechat_config, **HangoutConfig.get_access_token())
+    wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
 
     print('初始化:', request.GET, wechat_config.appid, signature, timestamp, nonce, echostr)
     print('body:', request.body.decode())

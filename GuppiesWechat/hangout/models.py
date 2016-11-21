@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import requests
 from django.conf import settings
 from django.db import transaction
 from django.contrib.gis.db import models
@@ -7,6 +8,7 @@ from django.contrib.auth.models import User
 
 from django.utils import timezone
 from wechat_sdk import WechatBasic
+from wechat_sdk import WechatConf
 
 
 class Template(models.Model):
@@ -117,7 +119,7 @@ class ScheduleShare(models.Model):
     def create_qr(self):
 
         from django.conf import settings
-        wechat_base = WechatBasic(conf=settings.WECHAT_CONF, **HangoutConfig.get_access_token())
+        wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
         result = wechat_base.create_qrcode({
             "expire_seconds": QR_MAX_EXPIRE_SECONDS,
             "action_name": "QR_SCENE",
@@ -143,14 +145,23 @@ class HangoutConfig(models.Model):
     content = models.TextField("正文", blank=True, null=True, help_text="正文")
 
     @classmethod
-    def get_access_token(cls):
-        expired_at = timezone.now() - timedelta(seconds=6000)
+    def _get_access_token(cls):
+        expire_second = 3000
+
+        expired_at = timezone.now() - timedelta(seconds=expire_second)
         config = cls.objects.filter(key=cls.ACCESS_TOKEN_KEY).first()
         if not config or config.updated_at < expired_at:
-            access_token_dict = settings.WECHAT_CONF.get_access_token()
+            response_json = requests.get(
+                url="https://api.weixin.qq.com/cgi-bin/token",
+                params={
+                    "grant_type": "client_credential",
+                    "appid": settings.WECHAT_APPID,
+                    "secret": settings.WECHAT_APPSECRET,
+                }
+            )
             print('get access_token_dict from wechat')
-            access_token = access_token_dict.get('access_token')
-            access_token_expires_at = 6000
+            access_token = response_json.json().get('access_token')
+            access_token_expires_at = expire_second
             cls.objects.update_or_create(key=cls.ACCESS_TOKEN_KEY,
                                          defaults={
                                              "content": access_token
@@ -164,3 +175,15 @@ class HangoutConfig(models.Model):
             "access_token_expires_at": access_token_expires_at,
             "access_token": access_token
         }
+
+    @classmethod
+    def get_wechat_config(cls):
+        conf = WechatConf(
+            token=settings.WECHAT_TOKEN,
+            appid=settings.WECHAT_APPID,
+            appsecret=settings.WECHAT_APPSECRET,
+            encrypt_mode='normal',  # 可选项：normal/compatible/safe，分别对应于 明文/兼容/安全 模式
+            access_token_getfunc=cls._get_access_token().get('access_token'),
+        )
+
+        return conf

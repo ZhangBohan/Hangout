@@ -4,13 +4,9 @@ from datetime import datetime
 from django.conf import settings
 from django.utils import timezone
 from django.shortcuts import resolve_url
-from wechat_sdk import WechatBasic
-
-from hangout.models import Schedule
-from wechat.models import WechatAuth
 
 
-def template_notify(wechat_base: WechatBasic, wechat_auth: WechatAuth, schedule: Schedule, title: str):
+def template_notify(wechat_base, wechat_auth, schedule, title):
     print('start template notify: %s, title: %s' % (schedule, title))
     try:
         # wechat notify
