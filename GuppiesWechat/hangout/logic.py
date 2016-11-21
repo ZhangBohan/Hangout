@@ -11,6 +11,7 @@ from wechat.models import WechatAuth
 
 
 def template_notify(wechat_base: WechatBasic, wechat_auth: WechatAuth, schedule: Schedule, title: str):
+    print('start template notify: %s, title: %s' % (schedule, title))
     try:
         # wechat notify
         url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
