@@ -39,6 +39,7 @@ def template_notify(wechat_base: WechatBasic, wechat_auth: WechatAuth, schedule:
                                               },
                                           })
     except Exception as e:
+        print(e)
         logging.exception(e)
 
 

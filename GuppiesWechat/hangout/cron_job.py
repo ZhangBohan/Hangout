@@ -36,7 +36,7 @@ class HangoutCronJob(CronJobBase):
             natural_time = hangout_logic.natural_time(schedule.started_date)
             print('natural_time is: %s' % natural_time)
 
-            text = "别忘了%s的预约哦!" % hangout_logic.natural_time(schedule.started_date)
+            text = "别忘了%s的预约哦!" % natural_time
             hangout_logic.template_notify(wechat_base,
                                           schedule.wechatauth, schedule, title=text)
 
