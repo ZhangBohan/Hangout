@@ -22,7 +22,6 @@ import logging
 
 
 def callback(request):
-    wechat_config = settings.WECHAT_CONF
     signature = request.GET.get('signature')
     timestamp = request.GET.get('timestamp')
     nonce = request.GET.get('nonce')
@@ -30,7 +29,7 @@ def callback(request):
 
     wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
 
-    print('初始化:', request.GET, wechat_config.appid, signature, timestamp, nonce, echostr)
+    print('初始化:', request.GET, signature, timestamp, nonce, echostr)
     print('body:', request.body.decode())
 
     if not wechat_base.check_signature(request.GET.get('signature'),
@@ -140,7 +139,6 @@ def _get_wechat_auth(wechat_base, openid):
 
 
 def auth(request):
-    wechat_config = settings.WECHAT_CONF
 
     if 'account' in request.session:
         return HttpResponse("ok")
@@ -150,12 +148,12 @@ def auth(request):
         encoded_url = quote_plus(request.build_absolute_uri(reverse('auth')))
         url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&' \
               'scope=%s&state=%s#wechat_redirect' % (
-                wechat_config.appid, encoded_url, 'snsapi_userinfo', None)
+                settings.WECHAT_APPID, encoded_url, 'snsapi_userinfo', None)
         return redirect(url)
 
     params = {
-        "appid": wechat_config.appid,
-        "secret": wechat_config.appsecret,
+        "appid": settings.WECHAT_APPID,
+        "secret": settings.WECHAT_APPSECRET,
         "code": code,
         "grant_type": 'authorization_code'
     }
