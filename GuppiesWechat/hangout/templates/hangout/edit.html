@@ -102,9 +102,12 @@
 
         $("textarea[name='content']").bind('input propertychange', function (event) {
             var value = $(this).val();
-            var count = value.length;
-            $(this).parent().children(".weui-textarea-counter").children("span").text(count);
+            var content_length = value.length;
+            $(this).parent().children(".weui-textarea-counter").children("span").text(content_length);
         });
+
+        var content_length = $("textarea[name='content']").val().length;
+        $("textarea[name='content']").parent().children(".weui-textarea-counter").children("span").text(content_length);
 
         $("#edit").validate({
             onfocusout: function(element) {
