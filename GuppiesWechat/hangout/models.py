@@ -148,6 +148,7 @@ class HangoutConfig(models.Model):
         config = cls.objects.filter(key=cls.ACCESS_TOKEN_KEY).first()
         if not config or config.updated_at < expired_at:
             access_token_dict = settings.WECHAT_CONF.get_access_token()
+            print('get access_token_dict from wechat')
             access_token = access_token_dict.get('access_token')
             access_token_expires_at = 6000
             cls.objects.update_or_create(key=cls.ACCESS_TOKEN_KEY,
@@ -157,6 +158,7 @@ class HangoutConfig(models.Model):
         else:
             access_token = config.content
             access_token_expires_at = (config.updated_at - expired_at).seconds
+            print('get access_token from config. access_token_expires_at: %s' % access_token_expires_at)
 
         return {
             "access_token_expires_at": access_token_expires_at,
