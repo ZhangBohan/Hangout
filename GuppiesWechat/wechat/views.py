@@ -245,3 +245,7 @@ def auth(request):
         else:
             return HttpResponse("The password is valid, but the account has been disabled!")
     return HttpResponse("user or password error", status=500)
+
+
+def wechat_static(request):
+    return HttpResponse("uOogv1DnFLL1owmu")

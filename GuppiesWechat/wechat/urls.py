@@ -5,6 +5,7 @@ from wechat import apis
 
 urlpatterns = [url(r'^callback$', views.callback, name='callback'),
                url(r'^auth$', views.auth, name='auth'),
+               url(r'^MP_verify_uOogv1DnFLL1owmu.txt$', views.wechat_static),
                ]
 
 urlpatterns += [url(r'^api/my_photos$', apis.MinePhotoView.as_view()),
