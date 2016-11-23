@@ -41,6 +41,9 @@ def callback(request):
         print('验证不通过!')
         raise Http404()
 
+    if not request.body.decode():
+        return HttpResponse(echostr)
+
     try:
         wechat_base.parse_data(request.body)
     except ParseError:
