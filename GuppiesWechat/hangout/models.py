@@ -122,7 +122,6 @@ class ScheduleShare(models.Model):
 
     def create_qr(self):
 
-        from django.conf import settings
         wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
         result = wechat_base.create_qrcode({
             "expire_seconds": QR_MAX_EXPIRE_SECONDS,
