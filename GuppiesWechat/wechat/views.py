@@ -51,12 +51,13 @@ def callback(request):
         raise Http404()
 
     print('wechat_base.message:', wechat_base.message, wechat_base.message.type)
+    source = wechat_base.message.source
+    wechat_auth = _get_wechat_auth(wechat_base, openid=source)
 
     if wechat_base.message.type in ['scan', 'subscribe']:
         key = wechat_base.message.key
-        source = wechat_base.message.source
         print('关注事件', key, source)
-        wechat_auth = _get_wechat_auth(wechat_base, openid=source)
+
         if not key:
             text = wechat_base.response_text('关注成功!')
             print('return by empty key', text)
@@ -84,7 +85,7 @@ def callback(request):
             text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
             hangout_logic.template_notify(wechat_base, wechat_auth, schedule, title=text)
 
-        login(request, wechat_auth.user)
+    login(request, wechat_auth.user)
     return HttpResponse("")
 
 
