@@ -85,7 +85,6 @@ def callback(request):
             text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
             hangout_logic.template_notify(wechat_base, wechat_auth, schedule, title=text)
 
-    login(request, wechat_auth.user)
     return HttpResponse("")
 
 
