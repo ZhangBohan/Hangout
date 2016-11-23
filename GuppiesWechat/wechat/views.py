@@ -31,7 +31,7 @@ def callback(request):
 
     wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
 
-    print('初始化:', request.GET, signature, timestamp, nonce, echostr)
+    print('初始化:', settings.WECHAT_APPID, request.GET, signature, timestamp, nonce, echostr)
     print('body:', request.body.decode())
 
     if not wechat_base.check_signature(request.GET.get('signature'),
