@@ -155,7 +155,7 @@ def auth(request):
 
     code = request.GET.get('code')
     if not code:
-        encoded_url = quote_plus(request.build_absolute_uri(reverse('auth')))
+        encoded_url = quote_plus(settings.GUPPIES_URL_PREFIX + reverse('auth'))
         url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&' \
               'scope=%s&state=%s#wechat_redirect' % (
                 settings.WECHAT_APPID, encoded_url, 'snsapi_userinfo', None)
