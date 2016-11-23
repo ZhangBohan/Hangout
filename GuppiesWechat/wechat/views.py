@@ -201,11 +201,11 @@ def auth(request):
                                                                                      refresh_token=refresh_token,
                                                                                      **user_data))
     if not created:
-        wechat_auth, created = WechatAuth.objects.update_or_create(openid=openid,
-                                                                   expires_in=expires_in,
-                                                                   defaults=dict(access_token=access_token,
-                                                                                 refresh_token=refresh_token,
-                                                                                 **user_data))
+        wechat_auth, created = WechatAuth.objects.get_or_create(openid=openid,
+                                                                expires_in=expires_in,
+                                                                defaults=dict(access_token=access_token,
+                                                                              refresh_token=refresh_token,
+                                                                              **user_data))
 
     try:
         user = User.objects.get(username='wechat_{auth_id}'.format(auth_id=wechat_auth.id))
