@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
+from wechat import views as wechat_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,4 +26,5 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^MP_verify_uOogv1DnFLL1owmu.txt$', wechat_views.wechat_static),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
