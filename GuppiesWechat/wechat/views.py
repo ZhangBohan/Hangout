@@ -74,7 +74,7 @@ def callback(request):
 
         if schedule.user_id == wechat_auth.user_id:
             url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
-            text = '该事件是您创建的, 您无需扫码加入!%s' % url
+            text = '该事件是您创建的, 您无需扫码加入!\r\n%s' % url
             return HttpResponse(wechat_base.response_text(text))
         else:
             text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
