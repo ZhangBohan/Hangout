@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from hangout.models import *
+
+admin.register(Template)
+admin.register(Schedule)
+admin.register(ScheduleUser)
+admin.register(ScheduleShare)
+admin.register(HangoutConfig)
