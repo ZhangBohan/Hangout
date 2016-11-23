@@ -7,11 +7,14 @@ class ScheduleAdmin(admin.ModelAdmin):
     fields = ['title', 'content', 'user', 'is_notified', 'started_date', 'ended_date']
     list_display = ('id',
                     'title',
-                    'user',
+                    'wechatauth',
                     'is_notified',
                     'started_date',
                     'notify_other',
-                    'accepted_count',)
+                    'accepted_count',
+                    'updated_at',
+                    'created_at',
+                    )
 
 admin.site.register(Template)
 admin.site.register(Schedule, ScheduleAdmin)

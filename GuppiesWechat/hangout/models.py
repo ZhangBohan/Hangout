@@ -54,6 +54,10 @@ class Schedule(models.Model):
         from wechat.models import WechatAuth
         return WechatAuth.objects.get(user=self.user)
 
+    @property
+    def nickname(self):
+        return self.user.userinfo.nickname
+
     def __str__(self):
         return "ID: %s, title: %s" % (self.id, self.title)
 
