@@ -68,7 +68,6 @@ def create(request):
     return render(request, 'hangout/edit.html')
 
 
-@login_required
 def detail(request, pk):
     user_id = request.GET.get('user_id')
 
@@ -77,7 +76,7 @@ def detail(request, pk):
     except Schedule.DoesNotExist:
         raise Http404()
 
-    ss = ScheduleShare.get_schedule_share(schedule=schedule, user=request.user)
+    ss = ScheduleShare.get_schedule_share(schedule=schedule)
 
     schedule_users = ScheduleUser.objects.filter(schedule=schedule).all()
 
