@@ -16,7 +16,7 @@
        - "3000"
    web:
      build: .
-     command: bash -c "./manage.py migrate && gunicorn --workers=8 -b 0.0.0.0:8001 GuppiesWechat.wsgi"
+     command: bash -c "./manage.py migrate && DJANGO_SETTINGS_MODULE=GuppiesWechat.settings-production gunicorn --workers=8 -b 0.0.0.0:8001 GuppiesWechat.wsgi"
      volumes:
        - .:/code
      ports:
