@@ -4,6 +4,14 @@
      image: mdillon/postgis
      volumes:
       - .data/postgres:/var/lib/postgresql/data
+   metabase:
+     image: metabase/metabase
+     volumes:
+      - .data/metabase:/tmp
+     environment:
+      MB_DB_FILE: /tmp/metabase.db
+     depends_on:
+       - db
    web:
      build: .
      command: bash -c "./manage.py migrate && gunicorn --workers=8 -b 0.0.0.0:8001 GuppiesWechat.wsgi"
