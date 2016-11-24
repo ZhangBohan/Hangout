@@ -74,7 +74,6 @@ def callback(request):
             logging.exception(e)
             return HttpResponse(wechat_base.response_text('该邀请不存在!ID: %s' % key))
 
-        print("发送模板消息。。。。。。。。。")
         schedule = schedule_share.schedule
 
         if schedule.user_id == wechat_auth.user_id:
@@ -85,10 +84,19 @@ def callback(request):
             text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
             hangout_logic.template_notify(wechat_base, wechat_auth, schedule, title=text)
 
+            # notify owner who join the schedule
+            try:
+                text = '%s接爱了您的邀请' % wechat_auth.user.userinfo.nickname
+                owner_wechat_auth = WechatAuth.objects.get(user=schedule_share.user)
+
+                hangout_logic.template_notify(wechat_base, owner_wechat_auth, schedule, title=text)
+            except Exception as e:
+                logging.exception(e)
+
     return HttpResponse("")
 
 
-def _accept_schedule(ss_id, user):
+def _accept_schedule(ss_id: int, user: User) -> ScheduleShare:
     schedule_share = ScheduleShare.objects.get(pk=ss_id)
 
     if not schedule_share.schedule.user_id == user.id:
