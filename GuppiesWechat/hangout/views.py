@@ -29,11 +29,14 @@ def me(request):
 def hangout(request):
     query = Schedule.objects.filter(user=request.user)
 
+    my_schedules = [schedule for schedule in ScheduleUser.objects.filter(user=request.user)]
+
     recent_schedules = query.filter(is_notified__in=[False, None]).order_by('-updated_at').all()[:10]
     notified_schedules = query.filter(is_notified=True).order_by('-updated_at').all()[:10]
     return render(request, 'hangout/hangout.html', context={
         "notified_schedules": notified_schedules,
         "recent_schedules": recent_schedules,
+        "my_schedules": my_schedules,
     })
 
 
