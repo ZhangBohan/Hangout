@@ -69,42 +69,47 @@ def callback(request):
         # 已关注用户扫二维码
         print('auth', wechat_auth, wechat_auth.user)
         try:
-            schedule_share = _accept_schedule(ss_id=int(key), user=wechat_auth.user)
+            schedule_share, created = _accept_schedule(ss_id=int(key), user=wechat_auth.user)
         except (ValueError, ScheduleShare.DoesNotExist) as e:
             logging.exception(e)
             return HttpResponse(wechat_base.response_text('该邀请不存在!ID: %s' % key))
 
         schedule = schedule_share.schedule
+        url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
 
         if schedule.user_id == wechat_auth.user_id:
-            url = settings.GUPPIES_URL_PREFIX + resolve_url('hangout.detail', pk=schedule.id)
-            text = '该事件是您创建的, 您无需扫码加入!\r\n%s' % url
+            text = '该事件是您创建的, 您无需扫码加入! 您可点击下方链接查看详情\r\n%s' % url
             return HttpResponse(wechat_base.response_text(text))
-        else:
-            text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
-            hangout_logic.template_notify(wechat_base, wechat_auth, schedule, title=text)
 
-            # notify owner who join the schedule
-            try:
-                text = '%s接爱了您的邀请' % wechat_auth.user.userinfo.nickname
-                owner_wechat_auth = WechatAuth.objects.get(user=schedule_share.user)
+        if not created:
+            text = '您已接受该邀请, 无需重复加入! 您可点击下方链接查看详情\r\n%s' % url
+            return HttpResponse(wechat_base.response_text(text))
 
-                hangout_logic.template_notify(wechat_base, owner_wechat_auth, schedule, title=text)
-            except Exception as e:
-                logging.exception(e)
+        text = '恭喜你预约成功, 我将于%s提醒您!' % (hangout_logic.natural_time(schedule.started_date))
+        hangout_logic.template_notify(wechat_base, wechat_auth, schedule, title=text)
+
+        # notify owner who join the schedule
+        try:
+            text = '%s接爱了您的邀请' % wechat_auth.user.userinfo.nickname
+            owner_wechat_auth = WechatAuth.objects.get(user=schedule_share.user)
+
+            hangout_logic.template_notify(wechat_base, owner_wechat_auth, schedule, title=text)
+        except Exception as e:
+            logging.exception(e)
 
     return HttpResponse("")
 
 
-def _accept_schedule(ss_id: int, user: User) -> ScheduleShare:
+def _accept_schedule(ss_id, user):
     schedule_share = ScheduleShare.objects.get(pk=ss_id)
+    created = False
 
     if not schedule_share.schedule.user_id == user.id:
         su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule, user=user)
         if created:
             su.save()
 
-    return schedule_share
+    return schedule_share, created
 
 
 def _get_wechat_auth(wechat_base, openid):
