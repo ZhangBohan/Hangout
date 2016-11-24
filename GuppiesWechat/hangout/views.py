@@ -76,7 +76,7 @@ def detail(request, pk):
     except Schedule.DoesNotExist:
         raise Http404()
 
-    ss = ScheduleShare.get_schedule_share(schedule=schedule)
+    ss = ScheduleShare.get_schedule_share(schedule=schedule, user=request.user)
 
     schedule_users = ScheduleUser.objects.filter(schedule=schedule).all()
 
