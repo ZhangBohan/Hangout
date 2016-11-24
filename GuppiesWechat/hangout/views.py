@@ -68,6 +68,7 @@ def create(request):
     return render(request, 'hangout/edit.html')
 
 
+@login_required
 def detail(request, pk):
     user_id = request.GET.get('user_id')
 
