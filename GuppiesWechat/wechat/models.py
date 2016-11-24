@@ -93,7 +93,7 @@ class WechatAuth(CommonModelMixin, models.Model):
 
     access_token = models.CharField("access_token", max_length=255)
     refresh_token = models.CharField("refresh_token", max_length=255)
-    expires_in = models.IntegerField("超时时间", help_text="access_token接口调用凭证超时时间，单位（秒）")
+    expires_in = models.IntegerField("超时时间", help_text="access_token接口调用凭证超时时间，单位（秒）", null=True)
 
     user = models.ForeignKey(User, null=True)
 
