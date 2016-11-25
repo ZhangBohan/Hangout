@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import transaction
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
+from django.db.models import F
 
 from django.utils import timezone
 from wechat_sdk import WechatBasic
@@ -93,7 +94,8 @@ class ScheduleUser(models.Model):
 
     def save(self, *args, **kwargs):
         item = super(ScheduleUser, self).save(*args, **kwargs)
-        self.schedule.accepted_count += 1
+        self.schedule.accepted_count = F('accepted_count') + 1
+        self.schedule.save()
         return item
 
 
