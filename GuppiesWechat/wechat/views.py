@@ -106,8 +106,6 @@ def _accept_schedule(ss_id, user):
 
     if not schedule_share.schedule.user_id == user.id:
         su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule, user=user)
-        if created:
-            su.save()
 
     return schedule_share, created
 
