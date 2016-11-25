@@ -90,7 +90,7 @@ def callback(request):
 
         # notify owner who join the schedule
         try:
-            text = '%s接爱了您的邀请' % wechat_auth.user.userinfo.nickname
+            text = '%s接受了您的邀请' % wechat_auth.user.userinfo.nickname
             owner_wechat_auth = WechatAuth.objects.get(user=schedule_share.user)
 
             hangout_logic.template_notify(wechat_base, owner_wechat_auth, schedule, title=text)
