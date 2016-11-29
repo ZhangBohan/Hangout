@@ -14,20 +14,47 @@
 
 <div class="container" id="container">
     <div class="page js_show">
-        <div class="page__bd me-avatar">
-            <div class="weui-flex">
-                <div class="weui-flex__item">
-                    <img class="avatar-big" src="{{ user.userinfo.avatar_url }}">
+        <div class="weui-tab">
+            <div class="weui-tab__panel">
+                <div class="page__hd me-avatar">
+                    <div class="weui-flex">
+                        <div class="weui-flex__item">
+                            <img class="avatar-big" src="{{ user.userinfo.avatar_url }}">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="weui-flex__item">
+                            {{ user.userinfo.nickname }}
+                        </div>
+                    </div>
+                </div>
+                <div class="page__bd">
+                    <div class="weui-cells__title">我的</div>
+                    <div class="weui-cells">
+                        <a class="weui-cell weui-cell_access" href="{% url 'hangout.hangout' %}">
+                            <div class="weui-cell__bd">
+                                <p>最近约我的</p>
+                            </div>
+                            <div class="weui-cell__ft">{{ joined_recent_count }}</div>
+                        </a>
+                        <a class="weui-cell weui-cell_access" href="{% url 'hangout.hangout' %}">
+                            <div class="weui-cell__bd">
+                                <p>最近我约的</p>
+                            </div>
+                            <div class="weui-cell__ft">{{ created_recent_count }}</div>
+                        </a>
+                        <a class="weui-cell weui-cell_access" href="{% url 'hangout.hangout' %}">
+                            <div class="weui-cell__bd">
+                                <p>已约的</p>
+                            </div>
+                            <div class="weui-cell__ft">{{ notified_count }}</div>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div>
-                <div class="weui-flex__item">
-                    {{ user.userinfo.nickname }}
-                </div>
-            </div>
+            {% include 'hangout/_tabbar.html' with current_tab="me" %}
         </div>
     </div>
-    {% include 'hangout/_tabbar.html' with current_tab="me" %}
 </div>
 </body>
 </html>

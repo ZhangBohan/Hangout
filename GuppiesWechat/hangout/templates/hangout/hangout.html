@@ -15,85 +15,89 @@
 
 <div class="container" id="container">
     <div class="page js_show">
-        {% if my_schedules %}
-        <div class="weui-panel">
-            <div class="weui-panel__hd">约我的</div>
-            <div class="weui-panel__bd">
-                <div class="weui-media-box weui-media-box_small-appmsg">
-                    <div class="weui-cells">
-                        {% for schedule in my_schedules %}
-                            <a class="weui-cell weui-cell_access"
-                               href="{% url 'hangout.detail' pk=schedule.id %}">
-                                <div class="weui-cell__hd">
-                                    <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
-                                         style="width:20px;margin-right:5px;display:block">
-                                </div>
-                                <div class="weui-cell__bd weui-cell_primary">
-                                    <p>{{ schedule.title }}</p>
-                                </div>
-                                <span class="weui-cell__ft">
-                                    {{ schedule.started_date | natural_time }}
-                                </span>
-                            </a>
-                        {% endfor %}
+        <div class="weui-tab">
+            <div class="weui-tab__panel">
+                {% if joined_recent_schedules %}
+                <div class="weui-panel">
+                    <div class="weui-panel__hd">最近约我的</div>
+                    <div class="weui-panel__bd">
+                        <div class="weui-media-box weui-media-box_small-appmsg">
+                            <div class="weui-cells">
+                                {% for schedule in joined_recent_schedules %}
+                                    <a class="weui-cell weui-cell_access"
+                                       href="{% url 'hangout.detail' pk=schedule.id %}">
+                                        <div class="weui-cell__hd">
+                                            <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
+                                                 style="width:20px;margin-right:5px;display:block">
+                                        </div>
+                                        <div class="weui-cell__bd weui-cell_primary">
+                                            <p>{{ schedule.title }}</p>
+                                        </div>
+                                        <span class="weui-cell__ft">
+                                            {{ schedule.started_date | natural_time }}
+                                        </span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        {% endif %}
-        {% if recent_schedules %}
-        <div class="weui-panel">
-            <div class="weui-panel__hd">最近</div>
-            <div class="weui-panel__bd">
-                <div class="weui-media-box weui-media-box_small-appmsg">
-                    <div class="weui-cells">
-                        {% for schedule in recent_schedules %}
-                            <a class="weui-cell weui-cell_access"
-                               href="{% url 'hangout.detail' pk=schedule.id %}">
-                                <div class="weui-cell__hd">
-                                    <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
-                                         style="width:20px;margin-right:5px;display:block">
-                                </div>
-                                <div class="weui-cell__bd weui-cell_primary">
-                                    <p>{{ schedule.title }}</p>
-                                </div>
-                                <span class="weui-cell__ft">
-                                    {{ schedule.started_date | natural_time }}
-                                </span>
-                            </a>
-                        {% endfor %}
+                {% endif %}
+                {% if created_recent_schedules %}
+                <div class="weui-panel">
+                    <div class="weui-panel__hd">最近我约的</div>
+                    <div class="weui-panel__bd">
+                        <div class="weui-media-box weui-media-box_small-appmsg">
+                            <div class="weui-cells">
+                                {% for schedule in created_recent_schedules %}
+                                    <a class="weui-cell weui-cell_access"
+                                       href="{% url 'hangout.detail' pk=schedule.id %}">
+                                        <div class="weui-cell__hd">
+                                            <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
+                                                 style="width:20px;margin-right:5px;display:block">
+                                        </div>
+                                        <div class="weui-cell__bd weui-cell_primary">
+                                            <p>{{ schedule.title }}</p>
+                                        </div>
+                                        <span class="weui-cell__ft">
+                                            {{ schedule.started_date | natural_time }}
+                                        </span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        {% endif %}
-        {% if notified_schedules %}
-        <div class="weui-panel">
-            <div class="weui-panel__hd">已约</div>
-            <div class="weui-panel__bd">
-                <div class="weui-media-box weui-media-box_small-appmsg">
-                    <div class="weui-cells">
-                        {% for schedule in notified_schedules %}
-                            <a class="weui-cell weui-cell_access" href="javascript:;">
-                                <div class="weui-cell__hd">
-                                    <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
-                                         style="width:20px;margin-right:5px;display:block">
-                                </div>
-                                <div class="weui-cell__bd weui-cell_primary">
-                                    <p>{{ schedule.title }}</p>
-                                </div>
-                                <span class="weui-cell__ft">
-                                    {{ schedule.started_date | natural_time }}
-                                </span>
-                            </a>
-                        {% endfor %}
+                {% endif %}
+                {% if notified_schedules %}
+                <div class="weui-panel">
+                    <div class="weui-panel__hd">已约的</div>
+                    <div class="weui-panel__bd">
+                        <div class="weui-media-box weui-media-box_small-appmsg">
+                            <div class="weui-cells">
+                                {% for schedule in notified_schedules %}
+                                    <a class="weui-cell weui-cell_access" href="javascript:;">
+                                        <div class="weui-cell__hd">
+                                            <img src="{{ schedule.user.userinfo.avatar_url }}" alt=""
+                                                 style="width:20px;margin-right:5px;display:block">
+                                        </div>
+                                        <div class="weui-cell__bd weui-cell_primary">
+                                            <p>{{ schedule.title }}</p>
+                                        </div>
+                                        <span class="weui-cell__ft">
+                                            {{ schedule.started_date | natural_time }}
+                                        </span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
+            {% include 'hangout/_tabbar.html' with current_tab="hangout" %}
         </div>
-        {% endif %}
     </div>
-    {% include 'hangout/_tabbar.html' with current_tab="hangout" %}
 </div>
 </body>
 </html>
