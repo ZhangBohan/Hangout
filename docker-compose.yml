@@ -29,7 +29,7 @@
        DJANGO_SETTINGS_MODULE: GuppiesWechat.settings-production
    test_web:
      build: .
-     command: bash -c "./manage.py migrate && gunicorn --workers=8 -b 0.0.0.0:8002 GuppiesWechat.wsgi"
+     command: bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8002"
      volumes:
        - .:/code
      ports:
