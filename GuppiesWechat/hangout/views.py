@@ -25,9 +25,6 @@ def me(request):
     joined_recent_count = recent_query.exclude(schedule__user=request.user).count()
     created_recent_count = recent_query.filter(schedule__user=request.user).count()
     notified_count = query.filter(is_notified=True).count()
-    request.user.userinfo = UserInfo()
-    request.user.userinfo.nickname = "mei"
-    request.user.userinfo.avatar_url = "http://bohan.qiniudn.com/2016-07-20_github.png"
     return render(request, 'hangout/me.html', context={
         "user": request.user,
         "joined_recent_count": joined_recent_count,
