@@ -11,7 +11,6 @@ from hangout.models import Schedule, Template, ScheduleShare, ScheduleUser
 
 @login_required
 def index(request):
-
     templates = Template.objects.filter(user=request.user).order_by('-used_count').all()[:10]
     return render(request, 'hangout/index.html', context={
         "templates": templates
@@ -20,13 +19,21 @@ def index(request):
 
 @login_required
 def me(request):
+    query = Schedule.objects.filter(user=request.user)
+    recent_count = query.filter(is_notified__in=[False, None]).count()
+    notified_count = query.filter(is_notified=True).count()
+    my_count = ScheduleUser.objects.filter(user=request.user).count()
     return render(request, 'hangout/me.html', context={
-        "user": request.user
+        "user": request.user,
+        "recent_count": recent_count,
+        "notified_count": notified_count,
+        "my_count": my_count
     })
 
 
 @login_required
 def hangout(request):
+    # TODO is_notified字段已经迁移到ScheduleUser中，按照ScheduleUser进行查找和统计
     query = Schedule.objects.filter(user=request.user)
 
     schedule_users = ScheduleUser.objects.filter(user=request.user).all()
@@ -43,7 +50,6 @@ def hangout(request):
 
 @login_required
 def create(request):
-
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
@@ -60,8 +66,6 @@ def create(request):
             schedule = Schedule()
             schedule.title = template.title
             schedule.content = template.content
-            schedule.notify_me = template.notify_me
-            schedule.notify_other = template.notify_other
             return render(request, 'hangout/edit.html', context={
                 "schedule": schedule
             })
