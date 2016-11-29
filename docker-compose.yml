@@ -4,6 +4,10 @@
      image: mdillon/postgis
      volumes:
       - .data/postgres:/var/lib/postgresql/data
+   test_db:
+     image: mdillon/postgis
+     volumes:
+      - .data/postgres:/var/lib/postgresql/data
    metabase:
      image: metabase/metabase
      volumes:
@@ -25,3 +29,12 @@
        - db
      environment:
        DJANGO_SETTINGS_MODULE: GuppiesWechat.settings-production
+   test_web:
+     build: .
+     command: bash -c "./manage.py migrate && gunicorn --workers=8 -b 0.0.0.0:8001 GuppiesWechat.wsgi"
+     volumes:
+       - .:/code
+     ports:
+       - "8002:8002"
+     depends_on:
+       - test_db
