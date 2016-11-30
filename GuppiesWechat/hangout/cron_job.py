@@ -37,15 +37,14 @@ class HangoutCronJob(CronJobBase):
             text = "别忘了%s的预约哦!" % natural_time
             hangout_logic.template_notify(wechat_base, schedule.wechatauth, schedule, title=text)
 
-            print('template send to owner ok')
+            print('schedule send to owner ok')
 
             text = "别忘了与%s%s的预约哦!" % (schedule.user.userinfo.nickname, natural_time)
 
             for su in ScheduleUser.objects.filter(schedule=schedule).all():
                 hangout_logic.template_notify(wechat_base, su.wechatauth, schedule, title=text)
-
-            print('template send to other ok')
-            schedule.is_notified = True
-            schedule.save()
-            print('save')
+                su.notified_date = timezone.now()
+                su.is_notified = True
+                su.save()
+            print('schedule send to other ok')
         print('end HangoutCronJob')

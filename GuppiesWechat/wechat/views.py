@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import HttpResponse, redirect, resolve_url
+from django.db.models import F
 
 from django.conf import settings
 from wechat_sdk import WechatBasic
@@ -106,7 +107,9 @@ def _accept_schedule(ss_id, user):
 
     if not schedule_share.schedule.user_id == user.id:
         su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule, user=user)
-
+        if created:
+            schedule_share.schedule.accepted_count = F('accepted_count') + 1
+            schedule_share.schedule.save()
     return schedule_share, created
 
 

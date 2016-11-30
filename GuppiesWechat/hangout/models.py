@@ -21,10 +21,7 @@ class Template(models.Model):
     content = models.TextField("正文", blank=True, null=True, help_text="正文")
     address = models.CharField("地址", blank=True, null=True, max_length=255, help_text="地址")
     address_location = models.PointField("地址坐标", blank=True, null=True, help_text="地址坐标")
-    started_date = models.DateTimeField("开始时间", help_text="开始时间")
-    ended_date = models.DateTimeField("结束时间", help_text="结束时间")
-    notify_me = models.IntegerField("何时通知我", default=0, help_text="何时通知我")
-    notify_other = models.IntegerField("何时通知别人", default=0, help_text="何时通知别人")
+    duration = models.IntegerField("用时", default=0, help_text="用时，单位分钟")
 
     used_count = models.IntegerField("模板使用次数", default=1, help_text="模板使用次数")
 
@@ -43,7 +40,6 @@ class Schedule(models.Model):
     notify_me = models.IntegerField("何时通知我", default=0, help_text="何时通知我")
     notify_other = models.IntegerField("何时通知别人", default=0, help_text="何时通知别人")
 
-    is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
     accepted_count = models.IntegerField("已接受人数", default=1, help_text="已接受人数")
 
     @property
@@ -62,21 +58,27 @@ class Schedule(models.Model):
     def __str__(self):
         return "ID: %s, title: %s" % (self.id, self.title)
 
+    @transaction.atomic
     def save(self, *args, **kwargs):
+
+        item = super(Schedule, self).save(*args, **kwargs)
+
+        schedule_user, created = ScheduleUser.objects.get_or_create(schedule=self, user=self.user)
+        if not created:
+            return item
+
         template, created = Template.objects.get_or_create(title=self.title, user=self.user, defaults={
             "content": self.content,
             "address": self.address,
             "address_location": self.address_location,
-            "started_date": self.started_date,
-            "ended_date": self.ended_date,
-            "notify_me": self.notify_me,
-            "notify_other": self.notify_other
+            "duration": (self.ended_date - self.started_date).total_seconds() / 60
         })
 
         if not created:
             template.used_count += 1
             template.save()
-        return super(Schedule, self).save(*args, **kwargs)
+
+        return item
 
 
 class ScheduleUser(models.Model):
@@ -86,17 +88,13 @@ class ScheduleUser(models.Model):
 
     schedule = models.ForeignKey(Schedule, help_text="事件")
     is_accepted = models.BooleanField("是否接受", help_text="是否接受", default=True)
+    is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
+    notified_date = models.DateTimeField("通知时间", null=True, help_text="通知时间的记录")
 
     @property
     def wechatauth(self):
         from wechat.models import WechatAuth
         return WechatAuth.objects.get(user=self.user)
-
-    def save(self, *args, **kwargs):
-        item = super(ScheduleUser, self).save(*args, **kwargs)
-        self.schedule.accepted_count = F('accepted_count') + 1
-        self.schedule.save()
-        return item
 
 
 QR_MAX_EXPIRE_SECONDS = 2592000  # 30天
