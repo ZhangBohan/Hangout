@@ -72,15 +72,15 @@ docker-compose -f docker-compose-test.yml up -d
 
 #### 重启测试服务器
 ```
-docker-compose restart test_web
+docker-compose -f docker-compose-test.yml restart test_web
 ```
 
 #### 删除测试数据库并重启
 ```
-docker-compose stop test_db
-docker-compose rm test_db
+docker-compose -f docker-compose-test.yml stop test_db
+docker-compose -f docker-compose-test.yml rm test_db
 rm -r .data/test_postgres/
-docker-compose up -d
+docker-compose -f docker-compose-test.yml up -d
 ```
 
 #### 数据库访问
