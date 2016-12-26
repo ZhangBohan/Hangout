@@ -63,7 +63,8 @@ class Schedule(models.Model):
 
         item = super(Schedule, self).save(*args, **kwargs)
 
-        schedule_user, created = ScheduleUser.objects.get_or_create(schedule=self, user=self.user)
+        schedule_user, created = ScheduleUser.objects.get_or_create(schedule=self, user=self.user,
+                                                                    notify_at=self.notify_other)
         if not created:
             return item
 
@@ -89,6 +90,7 @@ class ScheduleUser(models.Model):
     schedule = models.ForeignKey(Schedule, help_text="事件")
     is_accepted = models.BooleanField("是否接受", help_text="是否接受", default=True)
     is_notified = models.BooleanField("是否已通知", help_text="是否已通知", default=False)
+    notify_at = models.DateTimeField("何时通知")
     notified_date = models.DateTimeField("通知时间", null=True, help_text="通知时间的记录")
 
     @property

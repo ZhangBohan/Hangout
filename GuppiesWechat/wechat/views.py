@@ -106,7 +106,9 @@ def _accept_schedule(ss_id, user):
     created = False
 
     if not schedule_share.schedule.user_id == user.id:
-        su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule, user=user)
+        su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule,
+                                                         user=user,
+                                                         notify_at=schedule_share.schedule.notify_other)
         if created:
             schedule_share.schedule.accepted_count = F('accepted_count') + 1
             schedule_share.schedule.save()

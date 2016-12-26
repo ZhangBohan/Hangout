@@ -17,15 +17,20 @@ class HangoutCronJob(CronJobBase):
     def do(self):
         print('start HangoutCronJob')
         cursor_date = timezone.now() + timedelta(hours=1)   # 取一小时内的数据
-        schedules = Schedule.objects.filter(started_date__lt=cursor_date).all()
-        print('schedules: ', len(schedules))
+        end_date = timezone.now() - timedelta(days=1)
+        schedule_users = ScheduleUser.objects.filter(notify_at__lt=cursor_date,
+                                                     notify_at__gt=end_date,
+                                                     is_notified=False
+                                                     ).all()
+        print('schedule_users: ', len(schedule_users))
 
         wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
 
-        for schedule in schedules:
-            notify_at = schedule.started_date - timedelta(minutes=schedule.notify_other)
+        for schedule_user in schedule_users:
+            notify_at = schedule_user.notified_date
             is_notify = notify_at < timezone.now()
 
+            schedule = schedule_user.schedule
             print('current schedule is: %s' % schedule)
             if not is_notify:
                 print('will be notify at: %s' % notify_at)
@@ -40,11 +45,9 @@ class HangoutCronJob(CronJobBase):
             print('schedule send to owner ok')
 
             text = "别忘了与%s%s的预约哦!" % (schedule.user.userinfo.nickname, natural_time)
-
-            for su in ScheduleUser.objects.filter(schedule=schedule).all():
-                hangout_logic.template_notify(wechat_base, su.wechatauth, schedule, title=text)
-                su.notified_date = timezone.now()
-                su.is_notified = True
-                su.save()
+            hangout_logic.template_notify(wechat_base, schedule_user.wechatauth, schedule, title=text)
+            schedule_user.is_notified = True
+            schedule_user.notified_date = timezone.now()
+            schedule_user.save()
             print('schedule send to other ok')
         print('end HangoutCronJob')
