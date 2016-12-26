@@ -17,7 +17,7 @@ class HangoutCronJob(CronJobBase):
     def do(self):
         print('start HangoutCronJob')
         cursor_date = timezone.now() + timedelta(hours=1)   # 取一小时内的数据
-        schedules = Schedule.objects.filter(started_date__lt=cursor_date, is_past=False).all()
+        schedules = Schedule.objects.filter(started_date__lt=cursor_date).all()
         print('schedules: ', len(schedules))
 
         wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
