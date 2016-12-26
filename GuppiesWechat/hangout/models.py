@@ -63,8 +63,11 @@ class Schedule(models.Model):
 
         item = super(Schedule, self).save(*args, **kwargs)
 
-        schedule_user, created = ScheduleUser.objects.get_or_create(schedule=self, user=self.user,
-                                                                    notify_at=self.notify_other)
+        schedule_user, created = ScheduleUser.objects.get_or_create(schedule=self,
+                                                                    user=self.user,
+                                                                    notify_at=self.started_date - timedelta(
+                                                                        minutes=self.notify_other)
+                                                                    )
         if not created:
             return item
 

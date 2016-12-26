@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 import time
 
 import requests
+from datetime import timedelta
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -105,13 +106,17 @@ def _accept_schedule(ss_id, user):
     schedule_share = ScheduleShare.objects.get(pk=ss_id)
     created = False
 
-    if not schedule_share.schedule.user_id == user.id:
-        su, created = ScheduleUser.objects.get_or_create(schedule=schedule_share.schedule,
+    schedule = schedule_share.schedule
+
+    if not schedule.user_id == user.id:
+        su, created = ScheduleUser.objects.get_or_create(schedule=schedule,
                                                          user=user,
-                                                         notify_at=schedule_share.schedule.notify_other)
+                                                         notify_at=schedule.started_date - timedelta(
+                                                             minutes=schedule.notify_other)
+                                                         )
         if created:
-            schedule_share.schedule.accepted_count = F('accepted_count') + 1
-            schedule_share.schedule.save()
+            schedule.accepted_count = F('accepted_count') + 1
+            schedule.save()
     return schedule_share, created
 
 
