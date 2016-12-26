@@ -27,7 +27,7 @@ class HangoutCronJob(CronJobBase):
         wechat_base = WechatBasic(conf=HangoutConfig.get_wechat_config())
 
         for schedule_user in schedule_users:
-            notify_at = schedule_user.notified_date
+            notify_at = schedule_user.notify_at
             is_notify = notify_at < timezone.now()
 
             schedule = schedule_user.schedule
